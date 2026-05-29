@@ -8,8 +8,20 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const MAX_FILES = 6
 const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads')
 
+// Ensure upload directory exists on first request
+let dirEnsured = false
+
+async function ensureUploadDir() {
+  if (!dirEnsured) {
+    await mkdir(UPLOAD_DIR, { recursive: true })
+    dirEnsured = true
+  }
+}
+
 export async function POST(request: Request) {
   try {
+    await ensureUploadDir()
+
     const formData = await request.formData()
     const files = formData.getAll('files') as File[]
 
@@ -20,9 +32,6 @@ export async function POST(request: Request) {
     if (files.length > MAX_FILES) {
       return NextResponse.json({ error: `Maximum ${MAX_FILES} images allowed` }, { status: 400 })
     }
-
-    // Ensure upload directory exists
-    await mkdir(UPLOAD_DIR, { recursive: true })
 
     const urls: string[] = []
     const errors: string[] = []
@@ -42,8 +51,17 @@ export async function POST(request: Request) {
         continue
       }
 
+      // Validate file name for path traversal
+      const sanitizedName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+      const ext = sanitizedName.split('.').pop()?.toLowerCase() || 'jpg'
+
+      // Only allow safe extensions
+      if (!['jpg', 'jpeg', 'png', 'webp'].includes(ext)) {
+        errors.push(`"${file.name}" has unsupported extension.`)
+        continue
+      }
+
       // Generate unique filename
-      const ext = file.name.split('.').pop() || 'jpg'
       const uniqueName = `${randomUUID()}-${Date.now()}.${ext}`
       const filePath = path.join(UPLOAD_DIR, uniqueName)
 

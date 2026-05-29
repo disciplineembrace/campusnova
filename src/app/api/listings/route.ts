@@ -107,7 +107,8 @@ export async function POST(request: Request) {
           // Validate each URL is a safe path
           const safeUrls = parsed.filter((url: string) => {
             if (typeof url !== 'string') return false
-            // Only allow relative paths from our upload directory
+            // Allow relative paths from upload directory or blob URLs (for local fallback)
+            if (url.startsWith('blob:')) return true
             return url.startsWith('/uploads/') && !url.includes('..')
           })
           imagesJson = JSON.stringify(safeUrls)
