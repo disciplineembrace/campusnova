@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 import { db } from './db'
 import { cookies } from 'next/headers'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-admin-secret-key-2024-secure'
+const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-jwt-secret-2024-secure'
 const ADMIN_COOKIE_NAME = 'cnx_admin_session'
 const SESSION_DURATION = 4 * 60 * 60 * 1000 // 4 hours
 
@@ -18,19 +18,24 @@ export interface AdminPayload {
 
 // Generate JWT token for admin session
 export async function createAdminSession(userId: string, email: string, role: AdminRole, ipAddress?: string, userAgent?: string) {
-  const token = jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '4h' })
+  try {
+    const token = jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '4h' })
 
-  await db.adminSession.create({
-    data: {
-      userId,
-      token,
-      ipAddress: ipAddress || null,
-      userAgent: userAgent || null,
-      expiresAt: new Date(Date.now() + SESSION_DURATION),
-    }
-  })
+    await db.adminSession.create({
+      data: {
+        userId,
+        token,
+        ipAddress: ipAddress || null,
+        userAgent: userAgent || null,
+        expiresAt: new Date(Date.now() + SESSION_DURATION),
+      }
+    })
 
-  return token
+    return token
+  } catch (error) {
+    console.error('Create admin session error:', error)
+    throw error
+  }
 }
 
 // Verify admin JWT token
@@ -68,17 +73,25 @@ export async function getAdminFromCookies(): Promise<AdminPayload | null> {
 
 // Revoke admin session
 export async function revokeAdminSession(token: string) {
-  await db.adminSession.update({
-    where: { token },
-    data: { isRevoked: true }
-  })
+  try {
+    await db.adminSession.update({
+      where: { token },
+      data: { isRevoked: true }
+    })
+  } catch {
+    // Session may not exist
+  }
 }
 
 // Clean expired sessions
 export async function cleanExpiredSessions() {
-  await db.adminSession.deleteMany({
-    where: { expiresAt: { lt: new Date() } }
-  })
+  try {
+    await db.adminSession.deleteMany({
+      where: { expiresAt: { lt: new Date() } }
+    })
+  } catch {
+    // Ignore cleanup errors
+  }
 }
 
 // Role permissions
@@ -90,6 +103,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
 
 export function hasPermission(role: AdminRole, permission: string): boolean {
   const perms = ROLE_PERMISSIONS[role]
+  if (!perms) return false
   if (perms.includes('all')) return true
   return perms.includes(permission)
 }
