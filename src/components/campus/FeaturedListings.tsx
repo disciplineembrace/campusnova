@@ -45,12 +45,12 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
 
   return (
     <motion.div
-      className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-brand/20 transition-all duration-300 cursor-pointer"
+      className="group card-premium glow-hover overflow-hidden cursor-pointer"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6 }}
       onClick={handleCardClick}
     >
       {/* Image placeholder */}
@@ -60,17 +60,17 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {listing.isFeatured && (
-            <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5">
+            <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
               <Star className="w-3 h-3 mr-0.5" /> Featured
             </Badge>
           )}
           {listing.isUrgent && (
-            <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5">
+            <Badge className="bg-red-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
               <Flame className="w-3 h-3 mr-0.5" /> Urgent
             </Badge>
           )}
           {listing.isVerified && (
-            <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5">
+            <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
               <BadgeCheck className="w-3 h-3 mr-0.5" /> Verified
             </Badge>
           )}
@@ -78,18 +78,18 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
 
         {/* Wishlist */}
         <motion.button
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 flex items-center justify-center backdrop-blur-sm"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 flex items-center justify-center backdrop-blur-sm hover:scale-110 transition-transform"
           whileTap={{ scale: 0.85 }}
           onClick={(e) => { e.stopPropagation(); toggleWishlist(listing.id) }}
         >
-          <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
+          <Heart className={`w-4 h-4 transition-colors ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-gray-300'}`} />
         </motion.button>
 
         {/* Savings badge */}
         {savings > 0 && (
           <div className="absolute bottom-3 left-3">
-            <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold">
-              {savings}% OFF
+            <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">
+              Save {savings}%
             </Badge>
           </div>
         )}
@@ -114,17 +114,17 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
         </div>
 
         <div className="flex items-center gap-2 mb-3 flex-wrap">
-          <Badge variant="secondary" className={`text-[10px] ${conditionColor[listing.condition] || ''}`}>
+          <Badge variant="secondary" className={`text-[10px] rounded-full ${conditionColor[listing.condition] || ''}`}>
             {listing.condition}
           </Badge>
-          <Badge variant="secondary" className="text-[10px] gap-1">
+          <Badge variant="secondary" className="text-[10px] gap-1 rounded-full">
             <MapPin className="w-2.5 h-2.5" /> {listing.city}
           </Badge>
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t border-border">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-blue-700 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-[10px] font-bold shrink-0 ring-2 ring-brand/10">
               {listing.seller.name.charAt(0)}
             </div>
             <div className="min-w-0">
@@ -135,12 +135,12 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
             </div>
           </div>
           <a
-            href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusBazaar`}
+            href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
           >
-            <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-2.5 gap-1">
+            <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-3 gap-1 rounded-full">
               <MessageCircle className="w-3 h-3" /> Chat
             </Button>
           </a>
@@ -152,7 +152,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
 
 function ListingSkeleton() {
   return (
-    <div className="bg-card rounded-2xl border border-border overflow-hidden">
+    <div className="card-premium overflow-hidden">
       <Skeleton className="aspect-[4/3]" />
       <div className="p-4 space-y-3">
         <Skeleton className="h-4 w-3/4" />
@@ -186,16 +186,16 @@ export default function FeaturedListings() {
   }, [])
 
   return (
-    <section className="py-16 sm:py-20">
+    <section className="py-16 sm:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
-          className="text-center mb-10"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 font-heading">
             Featured <span className="gradient-text">Listings</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">

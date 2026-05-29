@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { BookOpen, ArrowRight, ShoppingBag, GraduationCap, Users, Library } from 'lucide-react'
+import { Sparkles, ArrowRight, Rocket, BookOpen, Users, Library, GraduationCap } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 
@@ -17,37 +17,41 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-16">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-navy dark:via-background dark:to-navy-light" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-navy dark:via-background dark:to-navy-light" />
       <div className="absolute inset-0 bg-pattern opacity-40" />
+
+      {/* Decorative gradient orbs */}
+      <div className="absolute top-20 left-[10%] w-72 h-72 bg-brand/10 rounded-full blur-[100px] dark:bg-brand/5" />
+      <div className="absolute bottom-20 right-[10%] w-96 h-96 bg-purple/10 rounded-full blur-[120px] dark:bg-purple/5" />
 
       {/* Floating elements */}
       <motion.div
-        className="absolute top-24 left-[10%] hidden lg:block"
+        className="absolute top-28 left-[8%] hidden lg:block"
         animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="w-16 h-20 rounded-lg bg-gradient-to-br from-blue-200 to-blue-300 dark:from-blue-800 dark:to-blue-900 flex items-center justify-center shadow-lg">
-          <BookOpen className="w-8 h-8 text-blue-600 dark:text-blue-300" />
+        <div className="w-16 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-light dark:from-brand dark:to-purple flex items-center justify-center shadow-xl shadow-brand/20 animate-pulse-glow">
+          <Sparkles className="w-8 h-8 text-white" />
         </div>
       </motion.div>
 
       <motion.div
-        className="absolute top-40 right-[8%] hidden lg:block"
+        className="absolute top-44 right-[8%] hidden lg:block"
         animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       >
-        <div className="w-14 h-18 rounded-lg bg-gradient-to-br from-emerald-200 to-emerald-300 dark:from-emerald-800 dark:to-emerald-900 flex items-center justify-center shadow-lg p-3">
-          <GraduationCap className="w-8 h-8 text-emerald-600 dark:text-emerald-300" />
+        <div className="w-14 h-18 rounded-2xl bg-gradient-to-br from-purple to-purple-light dark:from-purple dark:to-purple-light flex items-center justify-center shadow-xl shadow-purple/20 p-3">
+          <Rocket className="w-8 h-8 text-white" />
         </div>
       </motion.div>
 
       <motion.div
         className="absolute bottom-32 left-[15%] hidden lg:block"
         animate={{ y: [0, -12, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
       >
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-200 to-orange-300 dark:from-amber-800 dark:to-orange-900 flex items-center justify-center shadow-lg">
-          <ShoppingBag className="w-6 h-6 text-amber-700 dark:text-amber-300" />
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan to-cyan-light flex items-center justify-center shadow-xl shadow-cyan/20">
+          <BookOpen className="w-6 h-6 text-white" />
         </div>
       </motion.div>
 
@@ -58,29 +62,30 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/10 text-brand text-sm font-medium mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
-              India&apos;s #1 Student Marketplace
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-brand/10 text-brand text-sm font-medium mb-6 border border-brand/20">
+              <Sparkles className="w-4 h-4" />
+              India&apos;s Premium Student Ecosystem
             </div>
           </motion.div>
 
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-6 font-heading"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
           >
             Buy & Sell Old Books{' '}
+            <br className="hidden sm:block" />
             <span className="gradient-text">Directly With Students</span>
           </motion.h1>
 
           <motion.p
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
+            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
           >
-            India&apos;s trusted student marketplace for books, notes, and study essentials. Save up to 70% on textbooks. No middleman, no hassle.
+            India&apos;s most trusted student marketplace for books, notes, and study essentials. Save up to 70% on textbooks with zero middleman.
           </motion.p>
 
           <motion.div
@@ -93,16 +98,18 @@ export default function HeroSection() {
               onClick={() => setCurrentPage('sell')}
               className="btn-gradient text-white border-0 h-12 px-8 text-base font-semibold rounded-xl w-full sm:w-auto"
             >
-              Sell Now
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <span className="flex items-center gap-2">
+                Start Selling
+                <ArrowRight className="w-4 h-4" />
+              </span>
             </Button>
             <Button
               onClick={() => setCurrentPage('explore')}
               variant="outline"
-              className="h-12 px-8 text-base font-semibold rounded-xl border-2 w-full sm:w-auto"
+              className="h-12 px-8 text-base font-semibold rounded-xl border-2 border-brand/30 text-brand hover:bg-brand/5 w-full sm:w-auto"
             >
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Browse Books
+              <BookOpen className="w-4 h-4 mr-2" />
+              Explore Books
             </Button>
           </motion.div>
 
@@ -115,11 +122,11 @@ export default function HeroSection() {
           >
             {STATS.map(stat => (
               <div key={stat.label} className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-brand/10 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center border border-brand/10">
                   <stat.icon className="w-5 h-5 text-brand" />
                 </div>
                 <div className="text-left">
-                  <p className="text-xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-xl font-bold text-foreground font-heading">{stat.value}</p>
                   <p className="text-xs text-muted-foreground">{stat.label}</p>
                 </div>
               </div>

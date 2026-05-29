@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { BookOpen, Upload, Check, ArrowLeft, Eye } from 'lucide-react'
+import { BookOpen, Upload, Check, ArrowLeft, Eye, Sparkles, Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText } from 'lucide-react'
 import { useAppStore, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, formatINR } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText,
+}
 
 export default function SellProductPage() {
   const { currentUser, setCurrentPage } = useAppStore()
@@ -97,11 +101,11 @@ export default function SellProductPage() {
           <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-6">
             <Check className="w-10 h-10 text-emerald-600" />
           </div>
-          <h2 className="text-2xl font-bold text-foreground mb-3">Listing Created! 🎉</h2>
-          <p className="text-muted-foreground mb-6">Your book is now live on CampusBazaar. Students will be able to find and contact you on WhatsApp.</p>
+          <h2 className="text-2xl font-bold text-foreground mb-3 font-heading">Listing Created! 🎉</h2>
+          <p className="text-muted-foreground mb-6">Your book is now live on CampusNova. Students will be able to find and contact you on WhatsApp.</p>
           <div className="flex gap-3 justify-center">
             <Button onClick={() => setCurrentPage('explore')} className="btn-gradient text-white border-0">
-              Browse Books
+              <span>Browse Books</span>
             </Button>
             <Button variant="outline" onClick={() => setSuccess(false)}>
               List Another
@@ -124,7 +128,7 @@ export default function SellProductPage() {
           <h3 className="text-xl font-bold text-foreground mb-2">Login to Sell</h3>
           <p className="text-muted-foreground mb-6">You need to be logged in to list your books</p>
           <Button onClick={() => setCurrentPage('login')} className="btn-gradient text-white border-0">
-            Login Now
+            <span>Login Now</span>
           </Button>
         </motion.div>
       </div>
@@ -136,7 +140,7 @@ export default function SellProductPage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Back button */}
         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="mb-6">
-          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2">
+          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2 rounded-xl">
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </motion.div>
@@ -146,8 +150,8 @@ export default function SellProductPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-            Sell Your <span className="gradient-text">Books</span>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
+            Sell on <span className="gradient-text">CampusNova</span>
           </h1>
           <p className="text-muted-foreground">List your book in under 2 minutes and reach thousands of students</p>
         </motion.div>
@@ -213,16 +217,34 @@ export default function SellProductPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="mb-1.5 block">Category *</Label>
-                <Select value={form.category} onValueChange={v => handleChange('category', v)} required>
-                  <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Select category" /></SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
-                  </SelectContent>
-                </Select>
+            {/* Category Visual Grid */}
+            <div>
+              <Label className="mb-1.5 block">Category *</Label>
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                {CATEGORIES.map(c => {
+                  const Icon = ICON_MAP[c.icon] || FileText
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => handleChange('category', c.id)}
+                      className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all text-center ${
+                        form.category === c.id
+                          ? 'border-brand bg-brand/5 text-brand shadow-md shadow-brand/10'
+                          : 'border-border hover:border-brand/30 text-muted-foreground hover:text-foreground'
+                      }`}
+                    >
+                      <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${c.color} flex items-center justify-center`}>
+                        <Icon className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-[10px] font-medium leading-tight">{c.name}</span>
+                    </button>
+                  )
+                })}
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="mb-1.5 block">Condition *</Label>
                 <Select value={form.condition} onValueChange={v => handleChange('condition', v)} required>
@@ -231,18 +253,6 @@ export default function SellProductPage() {
                     {CONDITIONS.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
                   </SelectContent>
                 </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="mb-1.5 block">Course</Label>
-                <Input
-                  value={form.course}
-                  onChange={e => handleChange('course', e.target.value)}
-                  placeholder="e.g., Physics, CSE"
-                  className="h-11 rounded-xl"
-                />
               </div>
               <div>
                 <Label className="mb-1.5 block">Semester</Label>
@@ -253,6 +263,16 @@ export default function SellProductPage() {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+
+            <div>
+              <Label className="mb-1.5 block">Course</Label>
+              <Input
+                value={form.course}
+                onChange={e => handleChange('course', e.target.value)}
+                placeholder="e.g., Physics, CSE"
+                className="h-11 rounded-xl"
+              />
             </div>
 
             <div>
@@ -295,8 +315,8 @@ export default function SellProductPage() {
             {/* Image Upload */}
             <div>
               <Label className="mb-1.5 block">Upload Images</Label>
-              <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-brand/40 transition-colors cursor-pointer">
-                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+              <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-brand/40 transition-colors cursor-pointer group">
+                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-2 group-hover:text-brand transition-colors" />
                 <p className="text-sm text-muted-foreground">Click to upload or drag & drop</p>
                 <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 5MB (Coming soon)</p>
               </div>
@@ -307,7 +327,7 @@ export default function SellProductPage() {
               disabled={submitting}
               className="w-full h-12 btn-gradient text-white border-0 rounded-xl text-base font-semibold"
             >
-              {submitting ? 'Publishing...' : 'Publish Listing'}
+              <span>{submitting ? 'Publishing...' : 'Post Listing'}</span>
             </Button>
           </motion.form>
 
@@ -319,15 +339,15 @@ export default function SellProductPage() {
             transition={{ delay: 0.2 }}
           >
             <div className="sticky top-24">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Eye className="w-4 h-4" /> Preview
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2 font-heading">
+                <Eye className="w-4 h-4" /> Live Preview
               </h3>
-              <Card className="overflow-hidden">
-                <div className={`aspect-[4/3] bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
+              <Card className="overflow-hidden card-premium">
+                <div className={`relative aspect-[4/3] bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
                   <BookOpen className="w-16 h-16 text-white/50" />
                   {savings > 0 && (
-                    <Badge className="absolute bottom-3 left-3 bg-emerald-500 text-white border-0 font-bold">
-                      {savings}% OFF
+                    <Badge className="absolute bottom-3 left-3 bg-emerald-500 text-white border-0 font-bold rounded-full">
+                      Save {savings}%
                     </Badge>
                   )}
                 </div>
@@ -347,14 +367,14 @@ export default function SellProductPage() {
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     {form.condition && (
-                      <Badge variant="secondary" className="text-[10px]">{form.condition}</Badge>
+                      <Badge variant="secondary" className="text-[10px] rounded-full">{form.condition}</Badge>
                     )}
                     {form.city && (
-                      <Badge variant="secondary" className="text-[10px]">{form.city}</Badge>
+                      <Badge variant="secondary" className="text-[10px] rounded-full">{form.city}</Badge>
                     )}
                   </div>
                   <div className="pt-2 border-t border-border flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-blue-700 flex items-center justify-center text-white text-[10px] font-bold">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-[10px] font-bold">
                       {currentUser.name.charAt(0)}
                     </div>
                     <span className="text-xs font-medium">{currentUser.name}</span>

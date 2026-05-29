@@ -30,10 +30,10 @@ interface Listing {
 }
 
 const SORT_OPTIONS = [
-  { value: 'newest', label: 'Newest First' },
-  { value: 'price-low', label: 'Price: Low → High' },
-  { value: 'price-high', label: 'Price: High → Low' },
-  { value: 'popular', label: 'Most Viewed' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'price-low', label: 'Price ↑' },
+  { value: 'price-high', label: 'Price ↓' },
+  { value: 'popular', label: 'Popular' },
 ]
 
 export default function ExplorePage() {
@@ -115,7 +115,7 @@ export default function ExplorePage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
             {cat ? cat.name : 'Explore'} <span className="gradient-text">Books</span>
           </h1>
           <p className="text-muted-foreground text-sm">
@@ -130,16 +130,16 @@ export default function ExplorePage() {
           transition={{ delay: 0.1 }}
           className="flex gap-3 mb-6"
         >
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="flex-1 search-modern rounded-xl flex items-center">
+            <Search className="ml-3 w-4 h-4 text-muted-foreground shrink-0" />
             <Input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search books, notes, courses..."
-              className="pl-10 h-11 rounded-xl"
+              className="h-11 border-0 bg-transparent focus-visible:ring-0 pl-3"
             />
             {searchQuery && (
-              <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2">
+              <button onClick={() => setSearchQuery('')} className="mr-3">
                 <X className="w-4 h-4 text-muted-foreground" />
               </button>
             )}
@@ -147,7 +147,7 @@ export default function ExplorePage() {
           <Button
             variant="outline"
             onClick={() => setFiltersOpen(!filtersOpen)}
-            className="h-11 px-4 rounded-xl gap-2 relative"
+            className="h-11 px-4 rounded-xl gap-2 relative shrink-0"
           >
             <SlidersHorizontal className="w-4 h-4" /> Filters
             {activeFilters.length > 0 && (
@@ -156,24 +156,30 @@ export default function ExplorePage() {
               </Badge>
             )}
           </Button>
-          <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="h-11 w-[160px] rounded-xl hidden sm:flex">
-              <ArrowUpDown className="w-4 h-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {SORT_OPTIONS.map(opt => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </motion.div>
+
+        {/* Sort pills */}
+        <div className="flex gap-2 mb-4 overflow-x-auto scrollbar-hide">
+          {SORT_OPTIONS.map(opt => (
+            <button
+              key={opt.value}
+              onClick={() => setSortBy(opt.value)}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap ${
+                sortBy === opt.value
+                  ? 'bg-brand text-white shadow-md shadow-brand/20'
+                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
 
         {/* Active Filters */}
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {activeFilters.map(f => (
-              <Badge key={f} variant="secondary" className="gap-1 py-1 px-3">
+              <Badge key={f} variant="secondary" className="gap-1 py-1 px-3 rounded-full">
                 {f}
                 <button onClick={() => {
                   if (f === selectedCategory) setSelectedCategory(null)
@@ -200,11 +206,11 @@ export default function ExplorePage() {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden mb-6"
             >
-              <div className="p-5 rounded-2xl bg-card border border-border grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-5 rounded-2xl card-premium grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category</label>
                   <Select value={selectedCategory || 'all'} onValueChange={v => setSelectedCategory(v === 'all' ? null : v)}>
-                    <SelectTrigger className="h-9 rounded-lg"><SelectValue placeholder="All Categories" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="All Categories" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
                       {CATEGORIES.map(c => (
@@ -216,7 +222,7 @@ export default function ExplorePage() {
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">City</label>
                   <Select value={city} onValueChange={setCity}>
-                    <SelectTrigger className="h-9 rounded-lg"><SelectValue placeholder="All Cities" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="All Cities" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Cities</SelectItem>
                       {INDIAN_CITIES.map(c => (
@@ -228,7 +234,7 @@ export default function ExplorePage() {
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Condition</label>
                   <Select value={condition} onValueChange={setCondition}>
-                    <SelectTrigger className="h-9 rounded-lg"><SelectValue placeholder="Any Condition" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="Any Condition" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Any Condition</SelectItem>
                       {CONDITIONS.map(c => (
@@ -240,7 +246,7 @@ export default function ExplorePage() {
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Semester</label>
                   <Select value={semester} onValueChange={setSemester}>
-                    <SelectTrigger className="h-9 rounded-lg"><SelectValue placeholder="Any Semester" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="Any Semester" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Any Semester</SelectItem>
                       {SEMESTERS.map(s => (
@@ -258,7 +264,7 @@ export default function ExplorePage() {
         {loading && listings.length === 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div key={i} className="card-premium overflow-hidden">
                 <Skeleton className="aspect-[4/3]" />
                 <div className="p-4 space-y-3">
                   <Skeleton className="h-4 w-3/4" />
@@ -295,19 +301,19 @@ export default function ExplorePage() {
                 return (
                   <motion.div
                     key={listing.id}
-                    className="group bg-card rounded-2xl border border-border overflow-hidden hover:shadow-lg hover:border-brand/20 transition-all duration-300 cursor-pointer"
+                    className="group card-premium glow-hover overflow-hidden cursor-pointer"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: i * 0.03 }}
-                    whileHover={{ y: -4 }}
+                    whileHover={{ y: -6 }}
                     onClick={() => handleCardClick(listing.id)}
                   >
                     <div className={`relative aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
                       <BookOpen className="w-12 h-12 text-white/60" />
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                        {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5"><Star className="w-3 h-3 mr-0.5" />Featured</Badge>}
-                        {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5"><Flame className="w-3 h-3 mr-0.5" />Urgent</Badge>}
-                        {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5"><BadgeCheck className="w-3 h-3 mr-0.5" />Verified</Badge>}
+                        {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Star className="w-3 h-3 mr-0.5" />Featured</Badge>}
+                        {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Flame className="w-3 h-3 mr-0.5" />Urgent</Badge>}
+                        {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><BadgeCheck className="w-3 h-3 mr-0.5" />Verified</Badge>}
                       </div>
                       <motion.button
                         className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 flex items-center justify-center backdrop-blur-sm"
@@ -318,7 +324,7 @@ export default function ExplorePage() {
                       </motion.button>
                       {savings > 0 && (
                         <div className="absolute bottom-3 left-3">
-                          <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold">{savings}% OFF</Badge>
+                          <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">Save {savings}%</Badge>
                         </div>
                       )}
                       <div className="absolute bottom-3 right-3 flex items-center gap-1 text-white/80 text-xs">
@@ -332,18 +338,18 @@ export default function ExplorePage() {
                         {listing.originalPrice > 0 && <span className="text-xs text-muted-foreground line-through">{formatINR(listing.originalPrice)}</span>}
                       </div>
                       <div className="flex items-center gap-2 mb-3 flex-wrap">
-                        <Badge variant="secondary" className={`text-[10px] ${conditionColor[listing.condition] || ''}`}>{listing.condition}</Badge>
-                        <Badge variant="secondary" className="text-[10px] gap-1"><MapPin className="w-2.5 h-2.5" />{listing.city}</Badge>
+                        <Badge variant="secondary" className={`text-[10px] rounded-full ${conditionColor[listing.condition] || ''}`}>{listing.condition}</Badge>
+                        <Badge variant="secondary" className="text-[10px] gap-1 rounded-full"><MapPin className="w-2.5 h-2.5" />{listing.city}</Badge>
                       </div>
                       <div className="flex items-center justify-between pt-3 border-t border-border">
                         <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-blue-700 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-[10px] font-bold shrink-0">
                             {listing.seller.name.charAt(0)}
                           </div>
                           <p className="text-xs font-medium text-foreground truncate">{listing.seller.name}</p>
                         </div>
-                        <a href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusBazaar`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
-                          <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-2.5 gap-1">
+                        <a href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
+                          <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-3 gap-1 rounded-full">
                             <MessageCircle className="w-3 h-3" /> Chat
                           </Button>
                         </a>

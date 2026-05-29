@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Smartphone, Bell, ArrowRight } from 'lucide-react'
+import { Smartphone, Bell, ArrowRight, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -19,7 +19,7 @@ export default function AppDownloadSection() {
   }
 
   return (
-    <section className="py-16 sm:py-20 bg-gradient-to-br from-navy via-navy-light to-navy text-white relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-gradient-to-br from-brand via-purple to-brand relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern opacity-20" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
@@ -30,13 +30,13 @@ export default function AppDownloadSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium mb-6">
-                <Smartphone className="w-4 h-4" /> Coming Soon
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/10 text-sm font-medium mb-6 border border-white/20">
+                <Smartphone className="w-4 h-4" /> Coming Soon on Play Store
               </div>
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Get CampusBazaar on Your Phone
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-heading text-white">
+                Get CampusNova on Your Phone
               </h2>
-              <p className="text-blue-200/70 max-w-lg mb-8 leading-relaxed">
+              <p className="text-white/70 max-w-lg mb-8 leading-relaxed">
                 Browse, buy and sell on the go. Get notified instantly when someone lists a book you need. Be the first to grab the best deals!
               </p>
 
@@ -44,7 +44,7 @@ export default function AppDownloadSection() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/20 text-emerald-300"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
                 >
                   <Bell className="w-5 h-5" /> You&apos;re on the list! We&apos;ll notify you.
                 </motion.div>
@@ -58,7 +58,7 @@ export default function AppDownloadSection() {
                     required
                     className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-brand"
                   />
-                  <Button type="submit" className="h-12 btn-gradient text-white border-0 px-6 font-semibold whitespace-nowrap">
+                  <Button type="submit" className="h-12 bg-white text-brand hover:bg-white/90 px-6 font-semibold whitespace-nowrap rounded-xl">
                     Notify Me <ArrowRight className="w-4 h-4 ml-1" />
                   </Button>
                 </form>
@@ -75,13 +75,13 @@ export default function AppDownloadSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="relative w-56 sm:w-64">
-              <div className="w-full aspect-[9/18] rounded-[2.5rem] border-4 border-white/20 bg-gradient-to-b from-brand/20 to-blue-900/40 backdrop-blur-sm overflow-hidden p-3">
+              <div className="w-full aspect-[9/18] rounded-[2.5rem] border-4 border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-sm overflow-hidden p-3">
                 <div className="w-full h-full rounded-[2rem] bg-navy/80 flex flex-col items-center justify-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-blue-600 flex items-center justify-center shadow-lg">
-                    <Smartphone className="w-7 h-7 text-white" />
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-purple flex items-center justify-center shadow-lg shadow-brand/30">
+                    <Sparkles className="w-7 h-7 text-white" />
                   </div>
-                  <p className="text-sm font-bold text-white">CampusBazaar</p>
-                  <p className="text-[10px] text-blue-200/60">Coming to Play Store</p>
+                  <p className="text-sm font-bold text-white font-heading">CampusNova</p>
+                  <p className="text-[10px] text-white/60">Coming to Play Store</p>
                   <div className="flex gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <div className="w-2 h-2 rounded-full bg-brand animate-pulse" style={{ animationDelay: '0.5s' }} />

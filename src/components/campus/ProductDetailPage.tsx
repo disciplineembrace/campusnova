@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Heart, MessageCircle, MapPin, Star, Shield, BadgeCheck, Eye, Flag, BookOpen, Share2, Clock, Calendar } from 'lucide-react'
+import { ArrowLeft, Heart, MessageCircle, MapPin, Star, Shield, BadgeCheck, Eye, Flag, BookOpen, Share2, Clock } from 'lucide-react'
 import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -147,7 +147,7 @@ export default function ProductDetailPage() {
           animate={{ opacity: 1, x: 0 }}
           className="mb-6"
         >
-          <Button variant="ghost" onClick={() => setCurrentPage('explore')} className="gap-2 -ml-2">
+          <Button variant="ghost" onClick={() => setCurrentPage('explore')} className="gap-2 -ml-2 rounded-xl">
             <ArrowLeft className="w-4 h-4" /> Back to listings
           </Button>
         </motion.div>
@@ -165,9 +165,9 @@ export default function ProductDetailPage() {
 
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0"><Star className="w-3 h-3 mr-1" />Featured</Badge>}
-                {listing.isUrgent && <Badge className="bg-red-500 text-white border-0">Urgent Sale</Badge>}
-                {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0"><BadgeCheck className="w-3 h-3 mr-1" />Verified</Badge>}
+                {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 rounded-full"><Star className="w-3 h-3 mr-1" />Featured</Badge>}
+                {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 rounded-full">Urgent Sale</Badge>}
+                {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0 rounded-full"><BadgeCheck className="w-3 h-3 mr-1" />Verified</Badge>}
               </div>
 
               {/* Image nav dots */}
@@ -184,7 +184,7 @@ export default function ProductDetailPage() {
                 <button
                   key={i}
                   onClick={() => setCurrentImageIndex(i)}
-                  className={`flex-1 aspect-[4/3] rounded-lg bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity ${currentImageIndex === i ? 'ring-2 ring-brand opacity-100' : ''}`}
+                  className={`flex-1 aspect-[4/3] rounded-xl bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity ${currentImageIndex === i ? 'ring-2 ring-brand opacity-100' : ''}`}
                 >
                   <BookOpen className="w-6 h-6 text-white/50" />
                 </button>
@@ -202,13 +202,13 @@ export default function ProductDetailPage() {
             <div className="space-y-5">
               {/* Title & Price */}
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">{listing.title}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 font-heading">{listing.title}</h1>
                 <div className="flex items-baseline gap-3 flex-wrap">
                   <span className="text-3xl font-bold text-brand">{formatINR(listing.sellingPrice)}</span>
                   {listing.originalPrice > 0 && (
                     <>
                       <span className="text-lg text-muted-foreground line-through">{formatINR(listing.originalPrice)}</span>
-                      <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 font-bold">
+                      <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 font-bold rounded-full">
                         Save {savings}%
                       </Badge>
                     </>
@@ -218,14 +218,14 @@ export default function ProductDetailPage() {
 
               {/* Quick info */}
               <div className="flex flex-wrap gap-2">
-                <Badge variant="secondary" className={`gap-1 ${conditionColor[listing.condition] || ''}`}>
+                <Badge variant="secondary" className={`gap-1 rounded-full ${conditionColor[listing.condition] || ''}`}>
                   {listing.condition}
                 </Badge>
-                <Badge variant="secondary" className="gap-1"><MapPin className="w-3 h-3" />{listing.city}</Badge>
-                {listing.course && <Badge variant="secondary">{listing.course}</Badge>}
-                {listing.semester && <Badge variant="secondary">{listing.semester} Semester</Badge>}
-                <Badge variant="secondary" className="gap-1"><Eye className="w-3 h-3" />{listing.views} views</Badge>
-                <Badge variant="secondary" className="gap-1"><Clock className="w-3 h-3" />{timeAgo(listing.createdAt)}</Badge>
+                <Badge variant="secondary" className="gap-1 rounded-full"><MapPin className="w-3 h-3" />{listing.city}</Badge>
+                {listing.course && <Badge variant="secondary" className="rounded-full">{listing.course}</Badge>}
+                {listing.semester && <Badge variant="secondary" className="rounded-full">{listing.semester} Semester</Badge>}
+                <Badge variant="secondary" className="gap-1 rounded-full"><Eye className="w-3 h-3" />{listing.views} views</Badge>
+                <Badge variant="secondary" className="gap-1 rounded-full"><Clock className="w-3 h-3" />{timeAgo(listing.createdAt)}</Badge>
               </div>
 
               {/* Description */}
@@ -242,10 +242,10 @@ export default function ProductDetailPage() {
               )}
 
               {/* Seller Card */}
-              <div className="p-4 rounded-2xl bg-muted/50 border border-border">
+              <div className="p-5 rounded-2xl card-premium glow-hover">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Seller Information</h3>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-blue-700 flex items-center justify-center text-white text-lg font-bold">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-lg font-bold ring-2 ring-brand/10">
                     {listing.seller.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -268,19 +268,19 @@ export default function ProductDetailPage() {
               {/* Action Buttons */}
               <div className="flex gap-3 pt-2">
                 <a
-                  href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusBazaar`}
+                  href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1"
                 >
-                  <Button className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white border-0 rounded-xl text-base font-semibold gap-2">
+                  <Button className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white border-0 rounded-xl text-base font-semibold gap-2 hover:shadow-lg hover:shadow-emerald-500/20 transition-all">
                     <MessageCircle className="w-5 h-5" /> WhatsApp Connect
                   </Button>
                 </a>
                 <Button
                   variant="outline"
                   onClick={() => toggleWishlist(listing.id)}
-                  className={`h-12 px-4 rounded-xl ${isWishlisted ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' : ''}`}
+                  className={`h-12 px-4 rounded-xl transition-all ${isWishlisted ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' : ''}`}
                 >
                   <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
                 </Button>
@@ -296,7 +296,7 @@ export default function ProductDetailPage() {
                   <div>
                     <p className="text-sm font-semibold text-foreground">Trust & Safety</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Always meet in a public place. Check the book before paying. CampusBazaar never asks for payment directly.
+                      Always meet in a public place. Check the book before paying. CampusNova never asks for payment directly.
                     </p>
                   </div>
                 </div>
@@ -322,14 +322,14 @@ export default function ProductDetailPage() {
                           value={reportReason}
                           onChange={e => setReportReason(e.target.value)}
                           placeholder="Why are you reporting this listing? (e.g., inappropriate content, scam, wrong information)"
-                          className="min-h-[100px]"
+                          className="min-h-[100px] rounded-xl"
                         />
                         <Button
                           onClick={handleReport}
                           disabled={!reportReason || !currentUser}
                           className="w-full btn-gradient text-white border-0"
                         >
-                          Submit Report
+                          <span>Submit Report</span>
                         </Button>
                         {!currentUser && <p className="text-xs text-muted-foreground text-center">Please login to report a listing</p>}
                       </div>

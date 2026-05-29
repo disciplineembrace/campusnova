@@ -86,7 +86,9 @@ export default function ProfilePage() {
         <div className="text-center">
           <User className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-foreground mb-2">Please login</h3>
-          <Button onClick={() => setCurrentPage('login')} className="btn-gradient text-white border-0">Login</Button>
+          <Button onClick={() => setCurrentPage('login')} className="btn-gradient text-white border-0">
+            <span>Login</span>
+          </Button>
         </div>
       </div>
     )
@@ -96,7 +98,7 @@ export default function ProfilePage() {
     <div className="pt-20 pb-10 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="mb-6">
-          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2">
+          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2 rounded-xl">
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </motion.div>
@@ -107,16 +109,16 @@ export default function ProfilePage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <Card className="p-6">
+          <Card className="p-6 card-premium">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-blue-700 flex items-center justify-center text-white text-2xl font-bold shrink-0">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-2xl font-bold shrink-0 ring-4 ring-brand/10">
                 {currentUser.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold text-foreground">{currentUser.name}</h1>
+                  <h1 className="text-2xl font-bold text-foreground font-heading">{currentUser.name}</h1>
                   {currentUser.isVerified && <BadgeCheck className="w-5 h-5 text-brand" />}
-                  {currentUser.isAdmin && <Badge className="bg-brand text-white border-0 text-xs">Admin</Badge>}
+                  {currentUser.isAdmin && <Badge className="bg-brand text-white border-0 text-xs rounded-full">Admin</Badge>}
                 </div>
                 <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" />{currentUser.email}</span>
@@ -131,7 +133,7 @@ export default function ProfilePage() {
                   <span className="text-sm text-muted-foreground">{currentUser.totalSales} sales</span>
                 </div>
               </div>
-              <Button variant="outline" onClick={() => setEditing(!editing)} className="gap-2 shrink-0">
+              <Button variant="outline" onClick={() => setEditing(!editing)} className="gap-2 shrink-0 rounded-xl">
                 <Settings className="w-4 h-4" /> {editing ? 'Cancel' : 'Edit Profile'}
               </Button>
             </div>
@@ -170,18 +172,33 @@ export default function ProfilePage() {
                   </div>
                 </div>
                 <Button onClick={handleSaveProfile} disabled={saving} className="btn-gradient text-white border-0 rounded-xl">
-                  {saving ? 'Saving...' : 'Save Changes'}
+                  <span>{saving ? 'Saving...' : 'Save Changes'}</span>
                 </Button>
               </motion.div>
             )}
           </Card>
         </motion.div>
 
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          {[
+            { label: 'Listings', value: myListings.length, icon: BookOpen },
+            { label: 'Sales', value: currentUser.totalSales, icon: Star },
+            { label: 'Rating', value: currentUser.rating.toFixed(1), icon: BadgeCheck },
+          ].map(stat => (
+            <Card key={stat.label} className="p-4 card-premium text-center">
+              <stat.icon className="w-5 h-5 text-brand mx-auto mb-2" />
+              <p className="text-xl font-bold text-foreground font-heading">{stat.value}</p>
+              <p className="text-xs text-muted-foreground">{stat.label}</p>
+            </Card>
+          ))}
+        </div>
+
         {/* Tabs */}
         <Tabs defaultValue="listings">
           <TabsList className="mb-6">
-            <TabsTrigger value="listings" className="gap-2"><BookOpen className="w-4 h-4" /> My Listings</TabsTrigger>
-            <TabsTrigger value="wishlist" className="gap-2"><Heart className="w-4 h-4" /> Wishlist</TabsTrigger>
+            <TabsTrigger value="listings" className="gap-2 rounded-xl"><BookOpen className="w-4 h-4" /> My Listings</TabsTrigger>
+            <TabsTrigger value="wishlist" className="gap-2 rounded-xl"><Heart className="w-4 h-4" /> Wishlist</TabsTrigger>
           </TabsList>
 
           <TabsContent value="listings">
@@ -190,7 +207,9 @@ export default function ProfilePage() {
                 <BookOpen className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold mb-2">No listings yet</h3>
                 <p className="text-muted-foreground text-sm mb-4">Start selling your books!</p>
-                <Button onClick={() => setCurrentPage('sell')} className="btn-gradient text-white border-0">Sell Now</Button>
+                <Button onClick={() => setCurrentPage('sell')} className="btn-gradient text-white border-0">
+                  <span>Sell Now</span>
+                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -199,12 +218,12 @@ export default function ProfilePage() {
                   return (
                     <Card
                       key={listing.id}
-                      className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                      className="overflow-hidden cursor-pointer hover:shadow-md transition-all card-premium"
                       onClick={() => { setSelectedProductId(listing.id); setCurrentPage('product') }}
                     >
-                      <div className={`aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
+                      <div className={`aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center relative`}>
                         <BookOpen className="w-8 h-8 text-white/50" />
-                        {listing.isSold && <Badge className="absolute bg-gray-500 text-white border-0">Sold</Badge>}
+                        {listing.isSold && <Badge className="absolute bg-gray-500 text-white border-0 rounded-full">Sold</Badge>}
                       </div>
                       <div className="p-3">
                         <h4 className="text-sm font-medium line-clamp-1">{listing.title}</h4>
@@ -223,7 +242,7 @@ export default function ProfilePage() {
                 <Heart className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
                 <h3 className="text-lg font-semibold mb-2">Your wishlist is empty</h3>
                 <p className="text-muted-foreground text-sm mb-4">Save books you&apos;re interested in</p>
-                <Button onClick={() => setCurrentPage('explore')} variant="outline">Browse Books</Button>
+                <Button onClick={() => setCurrentPage('explore')} variant="outline" className="rounded-xl">Browse Books</Button>
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -232,7 +251,7 @@ export default function ProfilePage() {
                   return (
                     <Card
                       key={listing.id}
-                      className="overflow-hidden cursor-pointer hover:shadow-md transition-all"
+                      className="overflow-hidden cursor-pointer hover:shadow-md transition-all card-premium"
                       onClick={() => { setSelectedProductId(listing.id); setCurrentPage('product') }}
                     >
                       <div className={`aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>

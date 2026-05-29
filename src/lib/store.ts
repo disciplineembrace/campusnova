@@ -80,7 +80,7 @@ export const useAppStore = create<AppState>()(
       setMobileMenuOpen: (val: boolean) => set({ mobileMenuOpen: val }),
     }),
     {
-      name: 'campusbazaar-storage',
+      name: 'campusnova-storage',
       partialize: (state) => ({
         currentUser: state.currentUser,
         darkMode: state.darkMode,
@@ -92,15 +92,15 @@ export const useAppStore = create<AppState>()(
 )
 
 export const CATEGORIES = [
-  { id: 'medical', name: 'Medical', icon: 'Stethoscope', color: 'from-red-500 to-rose-500' },
-  { id: 'engineering', name: 'Engineering', icon: 'Wrench', color: 'from-blue-500 to-cyan-500' },
-  { id: 'school', name: 'School (11-12th)', icon: 'GraduationCap', color: 'from-purple-500 to-violet-500' },
-  { id: 'neet-jee', name: 'NEET / JEE', icon: 'Target', color: 'from-orange-500 to-amber-500' },
-  { id: 'upsc', name: 'UPSC / GPSC', icon: 'Landmark', color: 'from-emerald-500 to-teal-500' },
-  { id: 'law', name: 'Law', icon: 'Scale', color: 'from-slate-600 to-slate-700' },
-  { id: 'commerce', name: 'Commerce', icon: 'Calculator', color: 'from-green-500 to-emerald-500' },
-  { id: 'hostel', name: 'Hostel Essentials', icon: 'Bed', color: 'from-pink-500 to-rose-500' },
-  { id: 'notes', name: 'Notes & PDFs', icon: 'FileText', color: 'from-yellow-500 to-orange-500' },
+  { id: 'medical', name: 'Medical', icon: 'Stethoscope', color: 'from-rose-500 to-pink-500' },
+  { id: 'engineering', name: 'Engineering', icon: 'Wrench', color: 'from-blue-600 to-cyan-500' },
+  { id: 'school', name: 'School (11-12th)', icon: 'GraduationCap', color: 'from-violet-500 to-purple-600' },
+  { id: 'neet-jee', name: 'NEET / JEE', icon: 'Target', color: 'from-orange-500 to-red-500' },
+  { id: 'upsc', name: 'UPSC / GPSC', icon: 'Landmark', color: 'from-teal-500 to-emerald-600' },
+  { id: 'law', name: 'Law', icon: 'Scale', color: 'from-slate-700 to-gray-800' },
+  { id: 'commerce', name: 'Commerce', icon: 'Calculator', color: 'from-emerald-500 to-green-600' },
+  { id: 'hostel', name: 'Hostel Essentials', icon: 'Bed', color: 'from-pink-500 to-fuchsia-500' },
+  { id: 'notes', name: 'Notes & PDFs', icon: 'FileText', color: 'from-amber-500 to-yellow-500' },
 ] as const
 
 export const INDIAN_CITIES = [

@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <div className="pt-20 pb-10 min-h-screen">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} className="mb-6">
-          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2">
+          <Button variant="ghost" onClick={() => setCurrentPage('home')} className="gap-2 -ml-2 rounded-xl">
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>
         </motion.div>
@@ -22,7 +22,7 @@ export default function PrivacyPage() {
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center">
               <Shield className="w-5 h-5 text-brand" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Privacy Policy</h1>
+            <h1 className="text-2xl font-bold text-foreground font-heading">Privacy <span className="gradient-text">Policy</span></h1>
           </div>
 
           <div className="prose prose-sm dark:prose-invert max-w-none space-y-6 text-muted-foreground">
@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">1. Information We Collect</h3>
-              <p>We collect information you provide directly to us, including your name, email address, phone number, college name, city, and WhatsApp number. We also collect information about your listings and transactions on CampusBazaar.</p>
+              <p>We collect information you provide directly to us, including your name, email address, phone number, college name, city, and WhatsApp number. We also collect information about your listings and transactions on CampusNova.</p>
             </section>
 
             <section>
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">5. Cookies</h3>
-              <p>We use cookies and similar technologies to improve your experience on CampusBazaar. These help us remember your preferences, keep you logged in, and understand how you use our platform.</p>
+              <p>We use cookies and similar technologies to improve your experience on CampusNova. These help us remember your preferences, keep you logged in, and understand how you use our platform.</p>
             </section>
 
             <section>
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">7. Children&apos;s Privacy</h3>
-              <p>CampusBazaar is not intended for children under 16. We do not knowingly collect personal information from children under 16. If we learn that we have collected information from a child under 16, we will take steps to delete it.</p>
+              <p>CampusNova is not intended for children under 16. We do not knowingly collect personal information from children under 16. If we learn that we have collected information from a child under 16, we will take steps to delete it.</p>
             </section>
 
             <section>
@@ -70,7 +70,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">9. Contact</h3>
-              <p>If you have questions about this Privacy Policy, please contact us at privacy@campusbazaar.in</p>
+              <p>If you have questions about this Privacy Policy, please contact us at privacy@campusnova.in</p>
             </section>
           </div>
         </motion.div>
