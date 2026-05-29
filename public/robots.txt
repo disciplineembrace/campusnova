@@ -12,3 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+Disallow: /cnx-admin-panel
+Disallow: /api/cnx-admin
+Disallow: /api/cnx-admin-auth

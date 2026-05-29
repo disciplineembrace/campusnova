@@ -17,7 +17,7 @@ export interface User {
   whatsapp?: string | null
 }
 
-export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'admin' | 'terms' | 'privacy' | 'reader' | 'dashboard' | 'saved' | 'categories'
+export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'terms' | 'privacy' | 'reader' | 'dashboard' | 'saved' | 'categories'
 
 interface AppState {
   currentPage: PageType

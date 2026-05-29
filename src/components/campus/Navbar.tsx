@@ -200,14 +200,7 @@ export default function Navbar() {
                           >
                             <Heart className="w-4 h-4" /> Wishlist
                           </button>
-                          {currentUser.isAdmin && (
-                            <button
-                              onClick={() => { setCurrentPage('admin'); setProfileOpen(false) }}
-                              className="w-full text-left px-3 py-2.5 text-sm rounded-xl hover:bg-muted flex items-center gap-2.5 transition-colors"
-                            >
-                              <Sparkles className="w-4 h-4" /> Admin Panel
-                            </button>
-                          )}
+
                           <button
                             onClick={handleLogout}
                             className="w-full text-left px-3 py-2.5 text-sm rounded-xl hover:bg-muted text-destructive flex items-center gap-2.5 transition-colors"
@@ -324,14 +317,7 @@ export default function Navbar() {
                         <Heart className="w-4 h-4" /> Wishlist
                         {wishlist.length > 0 && <Badge className="bg-brand text-white border-0 text-[10px] ml-auto">{wishlist.length}</Badge>}
                       </button>
-                      {currentUser.isAdmin && (
-                        <button
-                          onClick={() => setCurrentPage('admin')}
-                          className="w-full text-left px-4 py-3 rounded-2xl text-sm hover:bg-muted flex items-center gap-3"
-                        >
-                          <Sparkles className="w-4 h-4" /> Admin Panel
-                        </button>
-                      )}
+
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-3 rounded-2xl text-sm text-destructive hover:bg-muted flex items-center gap-3"

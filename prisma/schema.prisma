@@ -18,6 +18,7 @@ model User {
   avatar        String?
   isVerified    Boolean   @default(false)
   isAdmin       Boolean   @default(false)
+  adminRole     String?   // "super_admin" | "moderator" | "support_admin"
   isBanned      Boolean   @default(false)
   rating        Float     @default(0)
   totalSales    Int       @default(0)
@@ -27,6 +28,8 @@ model User {
   listings      Listing[]
   wishlistItems Wishlist[]
   reports       Report[]  @relation("Reporter")
+  adminSessions AdminSession[]
+  auditLogs     AuditLog[] @relation("AuditActor")
 }
 
 model Listing {
@@ -83,4 +86,47 @@ model Report {
   listing    Listing  @relation(fields: [listingId], references: [id])
   reporter   User     @relation("Reporter", fields: [reporterId], references: [id])
   createdAt  DateTime @default(now())
+}
+
+model AdminSession {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  ipAddress    String?
+  userAgent    String?
+  expiresAt    DateTime
+  isRevoked    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+
+  @@index([token])
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String
+  actor      User     @relation("AuditActor", fields: [actorId], references: [id])
+  action     String   // "ban_user" | "delete_listing" | "verify_seller" | etc.
+  targetType String   // "user" | "listing" | "report"
+  targetId   String
+  details    String?  // JSON string with extra info
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  @@index([actorId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model RateLimitEntry {
+  id        String   @id @default(cuid())
+  key       String   @unique // IP or userId + route
+  count     Int      @default(1)
+  resetAt   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([key])
+  @@index([resetAt])
 }

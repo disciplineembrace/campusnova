@@ -18,7 +18,6 @@ import SellProductPage from '@/components/campus/SellProductPage'
 import LoginPage from '@/components/campus/LoginPage'
 import ProfilePage from '@/components/campus/ProfilePage'
 import WishlistPage from '@/components/campus/WishlistPage'
-import AdminDashboard from '@/components/campus/AdminDashboard'
 import TermsPage from '@/components/campus/TermsPage'
 import PrivacyPage from '@/components/campus/PrivacyPage'
 import BookReaderPage from '@/components/campus/BookReaderPage'
@@ -47,7 +46,6 @@ const PAGE_COMPONENTS: Record<PageType, React.ComponentType> = {
   login: LoginPage,
   profile: ProfilePage,
   wishlist: WishlistPage,
-  admin: AdminDashboard,
   terms: TermsPage,
   privacy: PrivacyPage,
   reader: BookReaderPage,
@@ -67,7 +65,7 @@ const MOBILE_NAV_ITEMS = [
 function MobileBottomNav() {
   const { currentPage, setCurrentPage, currentUser } = useAppStore()
 
-  if (currentPage === 'admin' || currentPage === 'reader') return null
+  if (currentPage === 'reader') return null
 
   const handleNavClick = (page: PageType) => {
     if (page === 'dashboard' && !currentUser) {
@@ -181,7 +179,7 @@ export default function CampusNova() {
           </motion.div>
         </AnimatePresence>
       </main>
-      {!isReaderMode && currentPage !== 'admin' && <Footer />}
+      {!isReaderMode && <Footer />}
       <MobileBottomNav />
     </div>
   )

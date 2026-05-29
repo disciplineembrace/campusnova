@@ -1,8 +1,15 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
+import { getAdminFromCookies } from '@/lib/admin-auth'
 
 export async function GET() {
   try {
+    // Only admins can list users
+    const admin = await getAdminFromCookies()
+    if (!admin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const users = await db.user.findMany({
       include: { _count: { select: { listings: true } } },
       orderBy: { createdAt: 'desc' }
@@ -16,6 +23,12 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
+    // Only admins can update users
+    const admin = await getAdminFromCookies()
+    if (!admin) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { id, ...updates } = await request.json()
     if (!id) {
       return NextResponse.json({ error: 'User ID required' }, { status: 400 })
