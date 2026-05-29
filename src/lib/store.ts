@@ -17,7 +17,7 @@ export interface User {
   whatsapp?: string | null
 }
 
-export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'admin' | 'terms' | 'privacy'
+export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'admin' | 'terms' | 'privacy' | 'reader' | 'dashboard' | 'saved' | 'categories'
 
 interface AppState {
   currentPage: PageType
@@ -40,6 +40,14 @@ interface AppState {
   setIsSeeded: (val: boolean) => void
   mobileMenuOpen: boolean
   setMobileMenuOpen: (val: boolean) => void
+  recentlyViewed: string[]
+  addRecentlyViewed: (id: string) => void
+  savedMaterials: string[]
+  toggleSavedMaterial: (id: string) => void
+  bookmarks: string[]
+  toggleBookmark: (id: string) => void
+  readingProgress: Record<string, number>
+  setReadingProgress: (id: string, page: number) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -78,6 +86,34 @@ export const useAppStore = create<AppState>()(
       setIsSeeded: (val: boolean) => set({ isSeeded: val }),
       mobileMenuOpen: false,
       setMobileMenuOpen: (val: boolean) => set({ mobileMenuOpen: val }),
+      recentlyViewed: [],
+      addRecentlyViewed: (id: string) => {
+        const current = get().recentlyViewed
+        const filtered = current.filter(rid => rid !== id)
+        set({ recentlyViewed: [id, ...filtered].slice(0, 10) })
+      },
+      savedMaterials: [],
+      toggleSavedMaterial: (id: string) => {
+        const current = get().savedMaterials
+        if (current.includes(id)) {
+          set({ savedMaterials: current.filter(sid => sid !== id) })
+        } else {
+          set({ savedMaterials: [...current, id] })
+        }
+      },
+      bookmarks: [],
+      toggleBookmark: (id: string) => {
+        const current = get().bookmarks
+        if (current.includes(id)) {
+          set({ bookmarks: current.filter(bid => bid !== id) })
+        } else {
+          set({ bookmarks: [...current, id] })
+        }
+      },
+      readingProgress: {},
+      setReadingProgress: (id: string, page: number) => {
+        set({ readingProgress: { ...get().readingProgress, [id]: page } })
+      },
     }),
     {
       name: 'campusnova-storage',
@@ -86,21 +122,41 @@ export const useAppStore = create<AppState>()(
         darkMode: state.darkMode,
         wishlist: state.wishlist,
         isSeeded: state.isSeeded,
+        recentlyViewed: state.recentlyViewed,
+        savedMaterials: state.savedMaterials,
+        bookmarks: state.bookmarks,
+        readingProgress: state.readingProgress,
       }),
     }
   )
 )
 
 export const CATEGORIES = [
-  { id: 'medical', name: 'Medical', icon: 'Stethoscope', color: 'from-rose-500 to-pink-500' },
-  { id: 'engineering', name: 'Engineering', icon: 'Wrench', color: 'from-blue-600 to-cyan-500' },
-  { id: 'school', name: 'School (11-12th)', icon: 'GraduationCap', color: 'from-violet-500 to-purple-600' },
-  { id: 'neet-jee', name: 'NEET / JEE', icon: 'Target', color: 'from-orange-500 to-red-500' },
-  { id: 'upsc', name: 'UPSC / GPSC', icon: 'Landmark', color: 'from-teal-500 to-emerald-600' },
-  { id: 'law', name: 'Law', icon: 'Scale', color: 'from-slate-700 to-gray-800' },
-  { id: 'commerce', name: 'Commerce', icon: 'Calculator', color: 'from-emerald-500 to-green-600' },
-  { id: 'hostel', name: 'Hostel Essentials', icon: 'Bed', color: 'from-pink-500 to-fuchsia-500' },
-  { id: 'notes', name: 'Notes & PDFs', icon: 'FileText', color: 'from-amber-500 to-yellow-500' },
+  { id: 'school-books', name: 'School Books', icon: 'BookOpen', color: 'from-blue-500 to-blue-600', description: 'Std 1–12 textbooks' },
+  { id: 'cbse', name: 'CBSE Books', icon: 'BookMarked', color: 'from-blue-600 to-indigo-600', description: 'CBSE board textbooks' },
+  { id: 'gseb', name: 'GSEB Books', icon: 'BookMarked', color: 'from-orange-500 to-amber-500', description: 'Gujarat Board textbooks' },
+  { id: 'icse', name: 'ICSE Books', icon: 'BookMarked', color: 'from-teal-500 to-cyan-500', description: 'ICSE board textbooks' },
+  { id: 'college-books', name: 'College Books', icon: 'GraduationCap', color: 'from-purple-500 to-violet-600', description: 'All semester textbooks' },
+  { id: 'medical', name: 'Medical Books', icon: 'Stethoscope', color: 'from-rose-500 to-pink-500', description: 'MBBS, BDS, Pharmacy' },
+  { id: 'engineering', name: 'Engineering Books', icon: 'Wrench', color: 'from-brand to-cyan', description: 'All branches' },
+  { id: 'commerce-law', name: 'Commerce & Law', icon: 'Scale', color: 'from-emerald-500 to-green-600', description: 'BCom, CA, LLB' },
+  { id: 'competitive', name: 'UPSC / NEET / JEE', icon: 'Target', color: 'from-amber-500 to-orange-500', description: 'Competitive exam prep' },
+  { id: 'notes-pdfs', name: 'Notes & PDFs', icon: 'FileText', color: 'from-cyan to-brand', description: 'Study notes & guides' },
+  { id: 'handwritten', name: 'Handwritten Notes', icon: 'PenTool', color: 'from-pink-500 to-rose-500', description: 'Topper notes' },
+  { id: 'ebooks', name: 'E-books', icon: 'Tablet', color: 'from-violet-500 to-purple-600', description: 'Digital books' },
+  { id: 'notebooks', name: 'Used Notebooks', icon: 'Notebook', color: 'from-yellow-500 to-amber-500', description: 'Bind, ruled, plain' },
+  { id: 'pens', name: 'Pens & Writing', icon: 'Pen', color: 'from-slate-500 to-gray-600', description: 'Pens, markers, highlighters' },
+  { id: 'stationery', name: 'Stationery Items', icon: 'Pencil', color: 'from-green-500 to-emerald-500', description: 'All stationery' },
+  { id: 'calculators', name: 'Calculators', icon: 'Calculator', color: 'from-indigo-500 to-blue-600', description: 'Scientific & standard' },
+  { id: 'drawing', name: 'Drawing Materials', icon: 'Palette', color: 'from-fuchsia-500 to-pink-500', description: 'Art & drafting' },
+  { id: 'bags', name: 'School Bags', icon: 'Backpack', color: 'from-amber-500 to-yellow-500', description: 'Bags & backpacks' },
+  { id: 'lab-coats', name: 'Lab Coats', icon: 'FlaskConical', color: 'from-sky-500 to-blue-500', description: 'Lab & aprons' },
+  { id: 'instruments', name: 'Instruments', icon: 'Ruler', color: 'from-teal-500 to-emerald-500', description: 'Compass, stethoscope' },
+  { id: 'study-lamps', name: 'Study Lamps', icon: 'Lamp', color: 'from-yellow-400 to-orange-500', description: 'LED desk lamps' },
+  { id: 'hostel', name: 'Hostel Essentials', icon: 'Bed', color: 'from-pink-500 to-fuchsia-500', description: 'All hostel needs' },
+  { id: 'projects', name: 'Project Files', icon: 'FolderOpen', color: 'from-orange-500 to-red-500', description: 'Projects & charts' },
+  { id: 'art-craft', name: 'Art & Craft', icon: 'Paintbrush', color: 'from-purple-500 to-fuchsia-500', description: 'Creative materials' },
+  { id: 'study-kits', name: 'Study Kits', icon: 'Package', color: 'from-brand to-purple', description: 'Bundled essentials' },
 ] as const
 
 export const INDIAN_CITIES = [
@@ -113,6 +169,16 @@ export const INDIAN_CITIES = [
 export const CONDITIONS = ['Like New', 'Good', 'Fair', 'Poor'] as const
 
 export const SEMESTERS = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th'] as const
+
+export const BOARDS = ['CBSE', 'GSEB', 'ICSE', 'ISC', 'State Board', 'Other'] as const
+
+export const STANDARDS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] as const
+
+export const LISTING_TYPES = [
+  { value: 'sell', label: 'Sell', icon: 'IndianRupee' },
+  { value: 'exchange', label: 'Exchange', icon: 'ArrowLeftRight' },
+  { value: 'giveaway', label: 'Give Away', icon: 'Gift' },
+] as const
 
 export function formatINR(amount: number): string {
   const numStr = amount.toString()

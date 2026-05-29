@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Heart, MessageCircle, MapPin, Star, Shield, BadgeCheck, Eye, Flag, BookOpen, Share2, Clock } from 'lucide-react'
+import { ArrowLeft, Heart, MessageCircle, MapPin, Star, Shield, BadgeCheck, Eye, Flag, BookOpen, Share2, Clock, Bookmark, BookOpenCheck } from 'lucide-react'
 import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -48,7 +48,7 @@ interface ListingDetail {
 }
 
 export default function ProductDetailPage() {
-  const { selectedProductId, setCurrentPage, wishlist, toggleWishlist, currentUser } = useAppStore()
+  const { selectedProductId, setCurrentPage, wishlist, toggleWishlist, currentUser, savedMaterials, toggleSavedMaterial, addRecentlyViewed } = useAppStore()
   const [listing, setListing] = useState<ListingDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [reportReason, setReportReason] = useState('')
@@ -64,6 +64,7 @@ export default function ProductDetailPage() {
         const res = await fetch(`/api/listings?id=${selectedProductId}`)
         const data = await res.json()
         setListing(data.listing)
+        if (data.listing) addRecentlyViewed(data.listing.id)
       } catch (err) {
         console.error('Fetch error:', err)
       } finally {
@@ -74,6 +75,9 @@ export default function ProductDetailPage() {
   }, [selectedProductId])
 
   const isWishlisted = listing ? wishlist.includes(listing.id) : false
+  const isSaved = listing ? savedMaterials.includes(listing.id) : false
+  const isDigital = listing ? (listing as ListingDetail & { isDigital?: boolean; listingType?: string }).isDigital : false
+  const listingType = listing ? (listing as ListingDetail & { listingType?: string }).listingType : 'sell'
   const savings = listing && listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
   const cat = listing ? CATEGORIES.find(c => c.id === listing.category) : null
   const conditionColor: Record<string, string> = {
@@ -266,27 +270,60 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-2">
-                <a
-                  href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1"
-                >
-                  <Button className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white border-0 rounded-xl text-base font-semibold gap-2 hover:shadow-lg hover:shadow-emerald-500/20 transition-all">
-                    <MessageCircle className="w-5 h-5" /> WhatsApp Connect
+              <div className="space-y-3 pt-2">
+                {/* Read Now for Digital Products */}
+                {isDigital && (
+                  <Button
+                    onClick={() => setCurrentPage('reader')}
+                    className="w-full h-12 btn-cyan text-white border-0 rounded-xl text-base font-semibold gap-2"
+                  >
+                    <BookOpenCheck className="w-5 h-5" /> Read Now
                   </Button>
-                </a>
-                <Button
-                  variant="outline"
-                  onClick={() => toggleWishlist(listing.id)}
-                  className={`h-12 px-4 rounded-xl transition-all ${isWishlisted ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' : ''}`}
-                >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
-                </Button>
-                <Button variant="outline" className="h-12 px-4 rounded-xl">
-                  <Share2 className="w-5 h-5" />
-                </Button>
+                )}
+
+                {/* Giveaway badge */}
+                {listingType === 'giveaway' && (
+                  <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-center">
+                    <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">This item is being given away for free!</p>
+                  </div>
+                )}
+
+                {/* Exchange badge */}
+                {listingType === 'exchange' && (
+                  <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 text-center">
+                    <p className="text-sm font-semibold text-brand">This item is available for exchange</p>
+                  </div>
+                )}
+
+                <div className="flex gap-3">
+                  <a
+                    href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1"
+                  >
+                    <Button className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white border-0 rounded-xl text-base font-semibold gap-2 hover:shadow-lg hover:shadow-emerald-500/20 transition-all">
+                      <MessageCircle className="w-5 h-5" /> WhatsApp
+                    </Button>
+                  </a>
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleWishlist(listing.id)}
+                    className={`h-12 px-4 rounded-xl transition-all ${isWishlisted ? 'bg-red-50 border-red-200 text-red-500 dark:bg-red-950/30 dark:border-red-800' : ''}`}
+                  >
+                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-red-500' : ''}`} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleSavedMaterial(listing.id)}
+                    className={`h-12 px-4 rounded-xl transition-all ${isSaved ? 'bg-amber-50 border-amber-200 text-amber-500 dark:bg-amber-950/30 dark:border-amber-800' : ''}`}
+                  >
+                    <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-amber-500' : ''}`} />
+                  </Button>
+                  <Button variant="outline" className="h-12 px-4 rounded-xl">
+                    <Share2 className="w-5 h-5" />
+                  </Button>
+                </div>
               </div>
 
               {/* Trust & Safety */}

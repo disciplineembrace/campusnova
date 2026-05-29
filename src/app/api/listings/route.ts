@@ -28,6 +28,10 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
     const featured = searchParams.get('featured')
+    const listingType = searchParams.get('listingType')
+    const board = searchParams.get('board')
+    const standard = searchParams.get('standard')
+    const isDigital = searchParams.get('isDigital')
 
     const where: Record<string, unknown> = { isSold: false }
 
@@ -37,12 +41,17 @@ export async function GET(request: Request) {
     if (semester && semester !== 'all') where.semester = semester
     if (condition) where.condition = condition
     if (featured === 'true') where.isFeatured = true
+    if (listingType && listingType !== 'all') where.listingType = listingType
+    if (board && board !== 'all') where.board = board
+    if (standard && standard !== 'all') where.standard = standard
+    if (isDigital === 'true') where.isDigital = true
     if (search) {
       where.OR = [
         { title: { contains: search } },
         { description: { contains: search } },
         { course: { contains: search } },
         { college: { contains: search } },
+        { subcategory: { contains: search } },
       ]
     }
 
@@ -72,9 +81,9 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { title, description, originalPrice, sellingPrice, category, course, semester, college, city, condition, whatsappNumber, sellerId } = body
+    const { title, description, originalPrice, sellingPrice, category, subcategory, listingType, course, semester, standard, board, college, city, condition, whatsappNumber, sellerId, isDigital, fileUrl } = body
 
-    if (!title || !description || !sellingPrice || !category || !city || !condition || !whatsappNumber || !sellerId) {
+    if (!title || !description || !category || !city || !condition || !whatsappNumber || !sellerId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
@@ -83,15 +92,21 @@ export async function POST(request: Request) {
         title,
         description,
         originalPrice: originalPrice || 0,
-        sellingPrice,
+        sellingPrice: sellingPrice || 0,
         category,
+        subcategory: subcategory || null,
+        listingType: listingType || 'sell',
         course: course || null,
         semester: semester || null,
+        standard: standard || null,
+        board: board || null,
         college: college || null,
         city,
         condition,
         whatsappNumber,
         sellerId,
+        isDigital: isDigital || false,
+        fileUrl: fileUrl || null,
       },
       include: { seller: true }
     })

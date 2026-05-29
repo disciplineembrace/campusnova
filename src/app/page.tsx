@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Home, Search, PlusCircle, Heart, User, Sparkles } from 'lucide-react'
+import { Home, LayoutGrid, PlusCircle, BookOpen, Brain } from 'lucide-react'
 import { useAppStore, type PageType } from '@/lib/store'
 import Navbar from '@/components/campus/Navbar'
 import Footer from '@/components/campus/Footer'
@@ -21,6 +21,10 @@ import WishlistPage from '@/components/campus/WishlistPage'
 import AdminDashboard from '@/components/campus/AdminDashboard'
 import TermsPage from '@/components/campus/TermsPage'
 import PrivacyPage from '@/components/campus/PrivacyPage'
+import BookReaderPage from '@/components/campus/BookReaderPage'
+import LearningDashboard from '@/components/campus/LearningDashboard'
+import SavedMaterialsPage from '@/components/campus/SavedMaterialsPage'
+import CategoryExplorerPage from '@/components/campus/CategoryExplorerPage'
 
 function HomePage() {
   return (
@@ -46,23 +50,27 @@ const PAGE_COMPONENTS: Record<PageType, React.ComponentType> = {
   admin: AdminDashboard,
   terms: TermsPage,
   privacy: PrivacyPage,
+  reader: BookReaderPage,
+  dashboard: LearningDashboard,
+  saved: SavedMaterialsPage,
+  categories: CategoryExplorerPage,
 }
 
 const MOBILE_NAV_ITEMS = [
   { icon: Home, label: 'Home', page: 'home' as PageType },
-  { icon: Search, label: 'Explore', page: 'explore' as PageType },
+  { icon: LayoutGrid, label: 'Categories', page: 'categories' as PageType },
   { icon: PlusCircle, label: 'Sell', page: 'sell' as PageType, isCenter: true },
-  { icon: Heart, label: 'Wishlist', page: 'wishlist' as PageType },
-  { icon: User, label: 'Profile', page: 'profile' as PageType },
+  { icon: BookOpen, label: 'Reader', page: 'reader' as PageType },
+  { icon: Brain, label: 'Dashboard', page: 'dashboard' as PageType },
 ]
 
 function MobileBottomNav() {
   const { currentPage, setCurrentPage, currentUser } = useAppStore()
 
-  if (currentPage === 'admin') return null
+  if (currentPage === 'admin' || currentPage === 'reader') return null
 
   const handleNavClick = (page: PageType) => {
-    if (page === 'profile' && !currentUser) {
+    if (page === 'dashboard' && !currentUser) {
       setCurrentPage('login')
     } else {
       setCurrentPage(page)
@@ -70,7 +78,10 @@ function MobileBottomNav() {
   }
 
   const getActivePage = (page: PageType) => {
-    if (page === 'profile') return currentPage === 'profile' || currentPage === 'login'
+    if (page === 'home') return currentPage === 'home'
+    if (page === 'categories') return currentPage === 'categories' || currentPage === 'explore'
+    if (page === 'reader') return currentPage === 'reader'
+    if (page === 'dashboard') return currentPage === 'dashboard' || currentPage === 'profile' || currentPage === 'saved' || currentPage === 'wishlist'
     return currentPage === page
   }
 
@@ -151,9 +162,12 @@ export default function CampusNova() {
 
   const PageComponent = PAGE_COMPONENTS[currentPage] || HomePage
 
+  // Hide navbar and footer in reader mode for immersive reading
+  const isReaderMode = currentPage === 'reader'
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      {!isReaderMode && <Navbar />}
       <main className="flex-1 pb-20 md:pb-0">
         <AnimatePresence mode="wait">
           <motion.div
@@ -167,7 +181,7 @@ export default function CampusNova() {
           </motion.div>
         </AnimatePresence>
       </main>
-      {currentPage !== 'admin' && <Footer />}
+      {!isReaderMode && currentPage !== 'admin' && <Footer />}
       <MobileBottomNav />
     </div>
   )

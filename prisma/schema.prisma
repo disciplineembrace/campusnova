@@ -35,8 +35,12 @@ model Listing {
   originalPrice  Float
   sellingPrice   Float
   category       String
+  subcategory    String?
+  listingType    String     @default("sell")
   course         String?
   semester       String?
+  standard       String?
+  board          String?
   college        String?
   city           String
   condition      String
@@ -46,7 +50,10 @@ model Listing {
   isUrgent       Boolean    @default(false)
   isVerified     Boolean    @default(false)
   isSold         Boolean    @default(false)
+  isDigital      Boolean    @default(false)
+  fileUrl        String?
   views          Int        @default(0)
+  saves          Int        @default(0)
   sellerId       String
   seller         User       @relation(fields: [sellerId], references: [id])
   wishlistBy     Wishlist[]

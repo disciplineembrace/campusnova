@@ -360,6 +360,61 @@ html {
 .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-slide-up { animation: slide-up 0.5s ease-out; }
 
+/* Reader styles */
+.reader-page {
+  transition: background 0.3s ease;
+}
+.reader-dark {
+  background: #1a1a2e;
+  color: #e0e0e0;
+}
+.reader-sepia {
+  background: #f4ecd8;
+  color: #5c4b37;
+}
+
+/* AI badge glow */
+.ai-badge {
+  background: linear-gradient(135deg, #2563EB, #7C3AED, #06B6D4);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Digital product badge pulse */
+.digital-pulse {
+  animation: digital-pulse 2s ease-in-out infinite;
+}
+@keyframes digital-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(6, 182, 212, 0); }
+}
+
+/* Horizontal scroll snap */
+.scroll-snap {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll-snap > * {
+  scroll-snap-align: start;
+}
+
+/* Category card hover */
+.category-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.category-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(37, 99, 235, 0.15);
+}
+.dark .category-card:hover {
+  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.2);
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
