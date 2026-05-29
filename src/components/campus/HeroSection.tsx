@@ -1,18 +1,41 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Sparkles, ArrowRight, Rocket, BookOpen, Users, Library, GraduationCap } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 
-const STATS = [
-  { icon: Users, label: 'Students', value: '10,000+' },
-  { icon: Library, label: 'Books Listed', value: '5,000+' },
-  { icon: GraduationCap, label: 'Colleges', value: '100+' },
-]
+interface PlatformStats {
+  userCount: number
+  listingCount: number
+  collegeCount: number
+}
 
 export default function HeroSection() {
   const { setCurrentPage } = useAppStore()
+  const [stats, setStats] = useState<PlatformStats | null>(null)
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch('/api/stats')
+        if (res.ok) {
+          const data = await res.json()
+          setStats(data)
+        }
+      } catch {
+        // Stats not available
+      }
+    }
+    fetchStats()
+  }, [])
+
+  const STATS = [
+    { icon: Users, label: 'Students', value: stats?.userCount ? `${stats.userCount.toLocaleString()}+` : 'Join Now' },
+    { icon: Library, label: 'Books Listed', value: stats?.listingCount ? `${stats.listingCount.toLocaleString()}+` : 'Start Listing' },
+    { icon: GraduationCap, label: 'Colleges', value: stats?.collegeCount ? `${stats.collegeCount}+` : 'All India' },
+  ]
 
   return (
     <section className="relative overflow-hidden pt-16">

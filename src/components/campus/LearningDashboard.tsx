@@ -49,17 +49,14 @@ export default function LearningDashboardPage() {
   }, [])
 
   const stats = [
-    { icon: BookOpen, label: 'Books Reading', value: Object.keys(readingProgress).length, color: 'from-brand to-purple', change: '+2 this week' },
+    { icon: BookOpen, label: 'Books Reading', value: Object.keys(readingProgress).length, color: 'from-brand to-purple', change: 'Active' },
     { icon: Bookmark, label: 'Saved Materials', value: savedMaterials.length, color: 'from-amber-500 to-orange-500', change: 'Active' },
-    { icon: Download, label: 'Downloads', value: 12, color: 'from-emerald-500 to-green-600', change: '+5 this month' },
-    { icon: Flame, label: 'Study Streak', value: 7, color: 'from-rose-500 to-pink-500', change: 'days' },
+    { icon: BookMarked, label: 'Bookmarks', value: bookmarks.length, color: 'from-emerald-500 to-green-600', change: 'Saved' },
+    { icon: Clock, label: 'Recently Viewed', value: recentlyViewed.length, color: 'from-rose-500 to-pink-500', change: 'Items' },
   ]
 
   const studyProgress = [
-    { subject: 'Physics', progress: 65, color: 'bg-brand' },
-    { subject: 'Chemistry', progress: 45, color: 'bg-purple' },
-    { subject: 'Mathematics', progress: 80, color: 'bg-cyan' },
-    { subject: 'Biology', progress: 30, color: 'bg-emerald' },
+    { subject: 'Keep exploring', progress: savedMaterials.length > 0 ? 30 : 10, color: 'bg-brand' },
   ]
 
   const quickActions = [

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, Mail, ArrowRight, GraduationCap, Shield, Users, BookOpen } from 'lucide-react'
+import { Sparkles, Mail, ArrowRight } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -42,35 +42,6 @@ export default function LoginPage() {
     }
   }
 
-  const quickLogin = async (quickEmail: string) => {
-    setError('')
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: quickEmail })
-      })
-      const data = await res.json()
-      if (!res.ok) {
-        setError(data.error || 'Login failed')
-        return
-      }
-      setCurrentUser(data.user)
-      setCurrentPage('home')
-    } catch {
-      setError('Something went wrong')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const demoAccounts = [
-    { email: 'arjun@iitd.ac.in', name: 'Arjun', college: 'IIT Delhi', badge: 'Admin', color: 'from-brand to-purple' },
-    { email: 'priya@aiims.ac.in', name: 'Priya', college: 'AIIMS Delhi', badge: 'Verified', color: 'from-emerald to-cyan' },
-    { email: 'rahul@iisc.ac.in', name: 'Rahul', college: 'IISc Bangalore', badge: 'Top', color: 'from-purple to-brand' },
-  ]
-
   return (
     <div className="pt-16 min-h-screen flex">
       {/* Left side - Gradient branding (hidden on mobile) */}
@@ -102,18 +73,18 @@ export default function LoginPage() {
             {/* Floating stats */}
             <div className="flex items-center justify-center gap-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">10K+</p>
-                <p className="text-xs text-white/60">Students</p>
+                <p className="text-2xl font-bold text-white font-heading">0%</p>
+                <p className="text-xs text-white/60">Commission</p>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">5K+</p>
-                <p className="text-xs text-white/60">Books</p>
+                <p className="text-2xl font-bold text-white font-heading">Direct</p>
+                <p className="text-xs text-white/60">Student to Student</p>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">100+</p>
-                <p className="text-xs text-white/60">Colleges</p>
+                <p className="text-2xl font-bold text-white font-heading">100%</p>
+                <p className="text-xs text-white/60">Safe & Verified</p>
               </div>
             </div>
           </motion.div>
@@ -205,31 +176,6 @@ export default function LoginPage() {
               </svg>
               Continue with Google
             </Button>
-          </div>
-
-          {/* Demo Quick Login */}
-          <div className="mt-6">
-            <p className="text-xs text-muted-foreground mb-3 flex items-center gap-1.5">
-              <Sparkles className="w-3 h-3" /> Quick Demo Login:
-            </p>
-            <div className="space-y-2">
-              {demoAccounts.map(account => (
-                <button
-                  key={account.email}
-                  onClick={() => quickLogin(account.email)}
-                  className="w-full text-left px-4 py-3 rounded-xl card-premium glow-hover flex items-center gap-3 group"
-                >
-                  <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${account.color} flex items-center justify-center text-white text-sm font-bold shrink-0`}>
-                    {account.name.charAt(0)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">{account.name} · {account.college}</p>
-                    <p className="text-xs text-muted-foreground truncate">{account.email}</p>
-                  </div>
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-brand/10 text-brand shrink-0">{account.badge}</span>
-                </button>
-              ))}
-            </div>
           </div>
         </motion.div>
       </div>

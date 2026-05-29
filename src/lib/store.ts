@@ -36,8 +36,6 @@ interface AppState {
   toggleWishlist: (id: string) => void
   setWishlist: (ids: string[]) => void
   notifications: number
-  isSeeded: boolean
-  setIsSeeded: (val: boolean) => void
   mobileMenuOpen: boolean
   setMobileMenuOpen: (val: boolean) => void
   recentlyViewed: string[]
@@ -81,9 +79,7 @@ export const useAppStore = create<AppState>()(
         }
       },
       setWishlist: (ids: string[]) => set({ wishlist: ids }),
-      notifications: 3,
-      isSeeded: false,
-      setIsSeeded: (val: boolean) => set({ isSeeded: val }),
+      notifications: 0,
       mobileMenuOpen: false,
       setMobileMenuOpen: (val: boolean) => set({ mobileMenuOpen: val }),
       recentlyViewed: [],
@@ -121,7 +117,6 @@ export const useAppStore = create<AppState>()(
         currentUser: state.currentUser,
         darkMode: state.darkMode,
         wishlist: state.wishlist,
-        isSeeded: state.isSeeded,
         recentlyViewed: state.recentlyViewed,
         savedMaterials: state.savedMaterials,
         bookmarks: state.bookmarks,

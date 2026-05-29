@@ -58,7 +58,17 @@ export async function GET() {
     }
 
     // Non-admin: return limited public stats only
+    const totalUsers = await db.user.count()
+    const uniqueColleges = await db.user.findMany({
+      where: { college: { not: null } },
+      select: { college: true },
+      distinct: ['college'],
+    })
+
     return NextResponse.json({
+      userCount: totalUsers,
+      listingCount: activeListings,
+      collegeCount: uniqueColleges.length,
       activeListings,
       categoryStats: categoryStats.map(c => ({ category: c.category, count: c._count.category })),
     })

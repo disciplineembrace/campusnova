@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Home, LayoutGrid, PlusCircle, BookOpen, Brain } from 'lucide-react'
 import { useAppStore, type PageType } from '@/lib/store'
@@ -126,37 +126,11 @@ function MobileBottomNav() {
 }
 
 export default function CampusNova() {
-  const { currentPage, darkMode, isSeeded, setIsSeeded } = useAppStore()
-  const [seeding, setSeeding] = useState(false)
+  const { currentPage, darkMode } = useAppStore()
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
   }, [darkMode])
-
-  useEffect(() => {
-    if (isSeeded) return
-    const checkAndSeed = async () => {
-      setSeeding(true)
-      try {
-        const checkRes = await fetch('/api/seed')
-        const checkData = await checkRes.json()
-        if (checkData.isSeeded) {
-          setIsSeeded(true)
-          return
-        }
-        const seedRes = await fetch('/api/seed', { method: 'POST' })
-        const seedData = await seedRes.json()
-        if (seedData.seeded) {
-          setIsSeeded(true)
-        }
-      } catch (err) {
-        console.error('Seed error:', err)
-      } finally {
-        setSeeding(false)
-      }
-    }
-    checkAndSeed()
-  }, [isSeeded, setIsSeeded])
 
   const PageComponent = PAGE_COMPONENTS[currentPage] || HomePage
 

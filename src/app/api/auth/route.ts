@@ -16,7 +16,6 @@ export async function POST(request: Request) {
         data: {
           email,
           name: email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-          city: 'Delhi',
         }
       })
     }

@@ -10,217 +10,6 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Input } from '@/components/ui/input'
 
-const SAMPLE_BOOK = {
-  title: 'Concepts of Physics - Chapter 1: Atomic Structure',
-  totalPages: 24,
-  chapters: [
-    { title: 'Chapter 1: Atomic Structure', startPage: 1, endPage: 8 },
-    { title: 'Chapter 2: Chemical Bonding', startPage: 9, endPage: 14 },
-    { title: 'Chapter 3: Thermodynamics', startPage: 15, endPage: 20 },
-    { title: 'Chapter 4: Electrochemistry', startPage: 21, endPage: 24 },
-  ],
-  pages: [
-    `Chapter 1: Atomic Structure
-
-1.1 Introduction
-
-The atom is the basic unit of matter. It consists of a dense central nucleus surrounded by a cloud of negatively charged electrons. The atomic nucleus contains a mix of positively charged protons and electrically neutral neutrons.
-
-The concept of the atom was first proposed by ancient Indian and Greek philosophers. However, it was John Dalton who, in 1803, proposed the atomic theory based on scientific evidence.
-
-Key Points:
-• Atoms are the building blocks of all matter
-• Atoms are extremely small — typical sizes are around 100 picometers
-• Every atom is composed of a nucleus and one or more electrons
-
-1.2 Dalton's Atomic Theory
-
-Dalton's atomic theory states that:
-1. All matter is made of atoms. Atoms are indivisible and indestructible.
-2. All atoms of a given element are identical in mass and properties.
-3. Compounds are formed by a combination of two or more different kinds of atoms.
-4. A chemical reaction is a rearrangement of atoms.
-
-Modern modifications to Dalton's theory:
-• Atoms are divisible into sub-atomic particles
-• Atoms of the same element can have different masses (isotopes)
-• Atoms can be created or destroyed in nuclear reactions`,
-
-    `1.3 Discovery of Sub-atomic Particles
-
-Discovery of Electron — J.J. Thomson (1897)
-
-Thomson discovered the electron through his cathode ray tube experiments. He observed that:
-• Cathode rays travel in straight lines
-• They are deflected by electric and magnetic fields
-• They carry negative charge
-• The e/m ratio (charge to mass) was constant regardless of the gas used
-
-Charge-to-mass ratio of electron: e/m = 1.758820 × 10¹¹ C kg⁻¹
-
-Discovery of Proton — Goldstein (1886)
-
-Eugen Goldstein discovered anode rays (canal rays) which were positively charged particles. The proton was later identified as the fundamental positive particle.
-
-Charge of proton: +1.602 × 10⁻¹⁹ C
-Mass of proton: 1.672 × 10⁻²⁷ kg
-
-Discovery of Neutron — Chadwick (1932)
-
-James Chadwick bombarded beryllium with alpha particles and discovered the neutron:
-• Mass of neutron: 1.675 × 10⁻²⁷ kg (slightly more than proton)
-• Charge of neutron: 0 (electrically neutral)`,
-
-    `1.4 Thomson's Model of Atom (Plum Pudding Model)
-
-J.J. Thomson proposed the first model of atomic structure in 1898:
-
-• The atom is a sphere of positive charge
-• Electrons are embedded in this sphere like plums in a pudding
-• The total positive charge equals the total negative charge, making the atom neutral
-
-Limitations of Thomson's Model:
-✗ Could not explain the results of Rutherford's α-scattering experiment
-✗ Could not explain the stability of the atom
-✗ Could not explain the origin of spectral lines
-
-1.5 Rutherford's Nuclear Model (1911)
-
-Rutherford conducted the famous gold foil experiment by bombarding thin gold foil with α-particles. Key observations:
-
-1. Most α-particles passed straight through → Atom is mostly empty space
-2. Some α-particles were deflected at small angles → Positive charge in the center
-3. Very few α-particles bounced back → Nucleus is very dense
-
-Rutherford's conclusions:
-• All positive charge and most mass is concentrated in the nucleus
-• Electrons revolve around the nucleus in circular paths
-• The size of the nucleus is very small compared to the size of the atom
-
-Distance of closest approach: r₀ = 1/(4πε₀) × 2Ze²/(½mv²)`,
-
-    `1.6 Bohr's Model of Atom (1913)
-
-Niels Bohr proposed his model based on quantum theory:
-
-Postulates of Bohr's Model:
-
-1. Electrons revolve in certain fixed circular orbits (stationary orbits) without radiating energy
-2. Only those orbits are permitted where angular momentum = nh/2π (Quantization condition)
-3. Energy is emitted or absorbed when electrons jump between orbits
-
-Key Equations:
-• Radius of nth orbit: rₙ = 0.529 × n²/Z Å
-• Energy of electron in nth orbit: Eₙ = -13.6 × Z²/n² eV
-• Velocity of electron: vₙ = 2.188 × 10⁶ × Z/n m/s
-
-Limitations of Bohr's Model:
-✗ Could not explain spectra of multi-electron atoms
-✗ Could not explain Zeeman and Stark effects
-✗ Could not explain the shape of molecules
-✗ Violates Heisenberg's uncertainty principle`,
-
-    `1.7 Quantum Mechanical Model
-
-The quantum mechanical model is based on the Schrödinger wave equation:
-
-Ĥψ = Eψ
-
-Where:
-• Ĥ = Hamiltonian operator
-• ψ = Wave function
-• E = Energy of the system
-
-Heisenberg's Uncertainty Principle:
-
-It is impossible to simultaneously determine the exact position and momentum of an electron.
-
-Δx × Δp ≥ h/4π
-
-Quantum Numbers — Complete set of 4 quantum numbers describes an electron:
-
-1. Principal Quantum Number (n): Shell number (1, 2, 3...)
-   • Determines size and energy of orbital
-   • n = 1, 2, 3, 4 → K, L, M, N shells
-
-2. Azimuthal Quantum Number (l): Sub-shell (0 to n-1)
-   • Determines shape of orbital
-   • l = 0 (s), 1 (p), 2 (d), 3 (f)
-
-3. Magnetic Quantum Number (mₗ): Orientation (-l to +l)
-   • Determines orientation of orbital in space
-
-4. Spin Quantum Number (mₛ): Electron spin
-   • Values: +½ (↑) or -½ (↓)`,
-
-    `1.8 Electronic Configuration
-
-Rules for filling electrons:
-
-1. Aufbau Principle: Electrons fill orbitals in order of increasing energy
-   Order: 1s → 2s → 2p → 3s → 3p → 4s → 3d → 4p → 5s → 4d → 5p → 6s
-
-2. Pauli's Exclusion Principle: No two electrons can have the same set of 4 quantum numbers
-   → Maximum 2 electrons per orbital (↑↓)
-
-3. Hund's Rule of Maximum Multiplicity:
-   → Electrons occupy degenerate orbitals singly first, then pair up
-   → Example: N (7): 1s² 2s² 2p³ → 2p has ↑ ↑ ↑ (not ↑↓ ↑)
-
-Stability of Half-filled and Fully-filled Orbitals:
-• Half-filled (d⁵, f⁷) and fully-filled (d¹⁰, f¹⁴) configurations are extra stable
-• Due to symmetrical distribution and exchange energy
-• Example: Cr = [Ar] 3d⁵ 4s¹ (not 3d⁴ 4s²)
-• Example: Cu = [Ar] 3d¹⁰ 4s¹ (not 3d⁹ 4s²)
-
-Summary:
-Atomic structure is fundamental to understanding chemistry. From Dalton's simple model to the quantum mechanical model, our understanding has evolved significantly. The quantum mechanical model provides the most accurate description of electron behavior in atoms.`,
-
-    `Practice Problems — Chapter 1
-
-Q1. Calculate the radius of the 3rd orbit of hydrogen atom.
-Solution: rₙ = 0.529 × n²/Z Å
-r₃ = 0.529 × 9/1 = 4.761 Å
-
-Q2. Calculate the energy of an electron in the 2nd orbit of He⁺ ion.
-Solution: Eₙ = -13.6 × Z²/n² eV
-E₂ = -13.6 × 4/4 = -13.6 eV
-
-Q3. Write the electronic configuration of Fe (Z=26).
-Solution: 1s² 2s² 2p⁶ 3s² 3p⁶ 3d⁶ 4s²
-Or [Ar] 3d⁶ 4s²
-
-Q4. How many electrons can be accommodated in the L shell?
-Solution: L shell = n = 2
-Maximum electrons = 2n² = 2(4) = 8
-
-Q5. Which quantum number determines the shape of an orbital?
-Solution: Azimuthal quantum number (l) determines the shape.
-l = 0 → spherical (s)
-l = 1 → dumbbell (p)
-l = 2 → clover (d)`,
-
-    `Important Formulas — Chapter 1
-
-1. Radius of nth orbit: rₙ = 0.529 × n²/Z Å
-2. Energy of nth orbit: Eₙ = -13.6 × Z²/n² eV
-3. Velocity in nth orbit: vₙ = 2.188 × 10⁶ × Z/n m/s
-4. Angular momentum: L = nh/2π
-5. Heisenberg's uncertainty: Δx × Δp ≥ h/4π
-6. de Broglie wavelength: λ = h/mv
-7. Energy of photon: E = hf = hc/λ
-8. Rydberg formula: 1/λ = R(1/n₁² - 1/n₂²)
-   where R = 1.097 × 10⁷ m⁻¹
-
-Key Constants:
-• h (Planck's constant) = 6.626 × 10⁻³⁴ J·s
-• c (Speed of light) = 3 × 10⁸ m/s
-• e (Electron charge) = 1.602 × 10⁻¹⁹ C
-• mₑ (Electron mass) = 9.109 × 10⁻³¹ kg
-• Nₐ (Avogadro's number) = 6.022 × 10²³ mol⁻¹`,
-  ] as string[],
-}
-
 type ReadingMode = 'light' | 'dark' | 'sepia'
 
 interface PageBookmark {
@@ -228,9 +17,16 @@ interface PageBookmark {
   note: string
 }
 
+interface BookData {
+  title: string
+  description?: string
+  pages: string[]
+  chapters: { title: string; startPage: number; endPage: number }[]
+}
+
 export default function BookReaderPage() {
   const { setCurrentPage: navigateToPage, selectedProductId, bookmarks, toggleBookmark, readingProgress, setReadingProgress } = useAppStore()
-  const bookId = selectedProductId || 'sample-book'
+  const bookId = selectedProductId || ''
   const savedProgress = readingProgress[bookId]
   const [currentPage, setPage] = useState(savedProgress && savedProgress > 1 ? savedProgress : 1)
   const [fontSize, setFontSize] = useState(16)
@@ -238,11 +34,12 @@ export default function BookReaderPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [controlsVisible, setControlsVisible] = useState(true)
   const [zoom, setZoom] = useState(100)
+  const [bookData, setBookData] = useState<BookData | null>(null)
+  const [loading, setLoading] = useState(true)
   const [pageBookmarks, setPageBookmarks] = useState<PageBookmark[]>(() => {
     if (typeof window === 'undefined') return []
     try {
-      const bid = selectedProductId || 'sample-book'
-      const stored = localStorage.getItem(`campusnova-bookmarks-${bid}`)
+      const stored = localStorage.getItem(`campusnova-bookmarks-${bookId}`)
       return stored ? JSON.parse(stored) : []
     } catch {
       return []
@@ -252,20 +49,48 @@ export default function BookReaderPage() {
   const [showBookmarkInput, setShowBookmarkInput] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
 
-  const totalPages = SAMPLE_BOOK.totalPages
-  const isBookmarked = bookmarks.includes(bookId)
-  const progressPercent = Math.round((currentPage / totalPages) * 100)
+  // Fetch listing data for the book
+  useEffect(() => {
+    const fetchBook = async () => {
+      if (!selectedProductId) {
+        setLoading(false)
+        return
+      }
+      try {
+        const res = await fetch(`/api/listings?id=${selectedProductId}`)
+        const data = await res.json()
+        if (data.listing) {
+          const listing = data.listing
+          setBookData({
+            title: listing.title,
+            description: listing.description,
+            pages: listing.description ? [listing.description] : [],
+            chapters: listing.description
+              ? [{ title: listing.title, startPage: 1, endPage: 1 }]
+              : [],
+          })
+        }
+      } catch (err) {
+        console.error('Failed to fetch book:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchBook()
+  }, [selectedProductId])
 
-  // Current chapter info
-  const currentChapter = SAMPLE_BOOK.chapters.find(
+  const totalPages = bookData?.pages.length || 0
+  const isBookmarked = bookmarks.includes(bookId)
+  const progressPercent = totalPages > 0 ? Math.round((currentPage / totalPages) * 100) : 0
+
+  const currentChapter = bookData?.chapters.find(
     ch => currentPage >= ch.startPage && currentPage <= ch.endPage
   )
 
   useEffect(() => {
-    setReadingProgress(bookId, currentPage)
+    if (bookId) setReadingProgress(bookId, currentPage)
   }, [currentPage, bookId, setReadingProgress])
 
-  // Save page bookmarks to localStorage
   const savePageBookmarks = useCallback((newBookmarks: PageBookmark[]) => {
     setPageBookmarks(newBookmarks)
     try {
@@ -284,13 +109,12 @@ export default function BookReaderPage() {
 
   const addPageBookmark = () => {
     const existing = pageBookmarks.find(b => b.page === currentPage)
-    if (existing) return // already bookmarked this page
+    if (existing) return
     const newBookmark: PageBookmark = { page: currentPage, note: bookmarkInput.trim() || `Page ${currentPage}` }
     const updated = [...pageBookmarks, newBookmark].sort((a, b) => a.page - b.page)
     savePageBookmarks(updated)
     setBookmarkInput('')
     setShowBookmarkInput(false)
-    // Also toggle the book-level bookmark
     if (!isBookmarked) {
       toggleBookmark(bookId)
     }
@@ -321,7 +145,6 @@ export default function BookReaderPage() {
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
   }, [])
 
-  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement) return
@@ -337,7 +160,7 @@ export default function BookReaderPage() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentPage, bookId, isBookmarked, toggleBookmark])
+  }, [currentPage, bookId, isBookmarked, toggleBookmark, totalPages])
 
   const modeClasses: Record<ReadingMode, string> = {
     light: 'bg-white text-gray-900',
@@ -357,8 +180,94 @@ export default function BookReaderPage() {
     sepia: 'bg-[#f4ecd8]/90 border-t border-amber-200',
   }
 
-  const contentPageIndex = Math.min(Math.floor((currentPage - 1) / 3), SAMPLE_BOOK.pages.length - 1)
-  const pageContent = SAMPLE_BOOK.pages[contentPageIndex] || ''
+  const pageContent = bookData?.pages[currentPage - 1] || ''
+
+  // Empty state - no book selected
+  if (!loading && !bookData) {
+    return (
+      <div className={`min-h-screen ${modeClasses[readingMode]} reader-page transition-colors duration-300 flex flex-col`}>
+        <div className={`sticky top-0 z-40 ${headerBgClasses[readingMode]} backdrop-blur-md`}>
+          <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigateToPage('home')} className="rounded-xl">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-sm font-semibold">Book Reader</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-md"
+          >
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center mx-auto mb-6">
+              <BookOpen className="w-10 h-10 text-brand" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground mb-2 font-heading">No Book Selected</h2>
+            <p className="text-muted-foreground mb-6">
+              Browse e-books and digital materials from the marketplace to start reading here.
+            </p>
+            <Button
+              onClick={() => navigateToPage('explore')}
+              className="btn-gradient text-white border-0 rounded-xl"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Browse E-books
+            </Button>
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
+  // Empty book - no pages
+  if (!loading && bookData && totalPages === 0) {
+    return (
+      <div className={`min-h-screen ${modeClasses[readingMode]} reader-page transition-colors duration-300 flex flex-col`}>
+        <div className={`sticky top-0 z-40 ${headerBgClasses[readingMode]} backdrop-blur-md`}>
+          <div className="max-w-4xl mx-auto px-4 h-14 flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => navigateToPage('home')} className="rounded-xl">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <h1 className="text-sm font-semibold truncate">{bookData.title}</h1>
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center max-w-md"
+          >
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center mx-auto mb-6">
+              <BookOpen className="w-10 h-10 text-brand" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground mb-2 font-heading">{bookData.title}</h2>
+            <p className="text-muted-foreground mb-6">
+              This listing does not have readable content yet. The seller may add digital pages in the future.
+            </p>
+            <Button
+              onClick={() => navigateToPage('explore')}
+              className="btn-gradient text-white border-0 rounded-xl"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Browse More
+            </Button>
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <BookOpen className="w-12 h-12 text-brand" />
+          <p className="text-muted-foreground text-sm">Loading book...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={`min-h-screen ${modeClasses[readingMode]} reader-page transition-colors duration-300`}>
@@ -375,14 +284,13 @@ export default function BookReaderPage() {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="min-w-0">
-              <h1 className="text-sm font-semibold truncate max-w-[200px] sm:max-w-[400px]">{SAMPLE_BOOK.title}</h1>
+              <h1 className="text-sm font-semibold truncate max-w-[200px] sm:max-w-[400px]">{bookData?.title}</h1>
               <p className="text-xs opacity-60">
-                Page {currentPage} of {totalPages} · {currentChapter?.title || ''}
+                Page {currentPage} of {totalPages} {currentChapter ? `· ${currentChapter.title}` : ''}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-1">
-            {/* Bookmark this page */}
             <Button
               variant="ghost"
               size="icon"
@@ -398,7 +306,6 @@ export default function BookReaderPage() {
             >
               <Bookmark className={`w-5 h-5 ${isCurrentPageBookmarked ? 'fill-yellow-500 text-yellow-500' : ''}`} />
             </Button>
-            {/* Bookmark the book */}
             <Button variant="ghost" size="icon" onClick={() => toggleBookmark(bookId)} className="rounded-xl" title="Save to library">
               <BookOpen className={`w-5 h-5 ${isBookmarked ? 'text-brand fill-brand/20' : ''}`} />
             </Button>
@@ -486,25 +393,27 @@ export default function BookReaderPage() {
                 </div>
 
                 {/* Table of Contents */}
-                <div className="mb-6">
-                  <h4 className="text-xs font-semibold uppercase tracking-wider opacity-50 mb-2">Table of Contents</h4>
-                  <div className="space-y-1">
-                    {SAMPLE_BOOK.chapters.map(ch => (
-                      <button
-                        key={ch.title}
-                        onClick={() => { handlePageChange(ch.startPage); setSidebarOpen(false) }}
-                        className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-colors ${
-                          currentPage >= ch.startPage && currentPage <= ch.endPage
-                            ? 'bg-brand/10 text-brand font-medium'
-                            : 'opacity-70 hover:opacity-100 hover:bg-black/5'
-                        }`}
-                      >
-                        {ch.title}
-                        <span className="text-xs opacity-50 ml-1">({ch.startPage}-{ch.endPage})</span>
-                      </button>
-                    ))}
+                {bookData && bookData.chapters.length > 0 && (
+                  <div className="mb-6">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider opacity-50 mb-2">Table of Contents</h4>
+                    <div className="space-y-1">
+                      {bookData.chapters.map(ch => (
+                        <button
+                          key={ch.title}
+                          onClick={() => { handlePageChange(ch.startPage); setSidebarOpen(false) }}
+                          className={`w-full text-left px-3 py-2.5 rounded-xl text-sm transition-colors ${
+                            currentPage >= ch.startPage && currentPage <= ch.endPage
+                              ? 'bg-brand/10 text-brand font-medium'
+                              : 'opacity-70 hover:opacity-100 hover:bg-black/5'
+                          }`}
+                        >
+                          {ch.title}
+                          <span className="text-xs opacity-50 ml-1">({ch.startPage}-{ch.endPage})</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Page Bookmarks */}
                 <div className="pt-4 border-t border-border">
@@ -587,7 +496,6 @@ export default function BookReaderPage() {
         className="max-w-3xl mx-auto px-6 py-8 cursor-pointer select-none"
         onClick={() => setControlsVisible(v => !v)}
       >
-        {/* Document Preview Area */}
         <motion.div
           key={currentPage}
           initial={{ opacity: 0, x: 20 }}
@@ -596,28 +504,23 @@ export default function BookReaderPage() {
           transition={{ duration: 0.3 }}
           className="relative"
         >
-          {/* Page frame for document-like feel */}
           <div
             className={`rounded-lg shadow-lg p-8 sm:p-12 ${readingMode === 'light' ? 'bg-white' : readingMode === 'dark' ? 'bg-[#1e1e3a]' : 'bg-[#faf6eb]'} border border-border/30`}
             style={{ fontSize: `${fontSize}px`, lineHeight: 1.8, transform: `scale(${zoom / 100})`, transformOrigin: 'top center' }}
           >
-            {/* Page bookmark indicator */}
             {isCurrentPageBookmarked && (
               <div className="absolute -top-1 right-6 w-5 h-8 bg-yellow-400 rounded-b-sm opacity-80 shadow-sm" />
             )}
-
             <div className="whitespace-pre-wrap">
               {pageContent}
             </div>
           </div>
 
-          {/* Page number footer */}
           <div className="text-center mt-4 text-xs opacity-40">
             — {currentPage} —
           </div>
         </motion.div>
 
-        {/* Page Bookmarks on this page */}
         {pageBookmarks.filter(b => b.page === currentPage).map(bm => (
           <div key={bm.page} className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
             <Bookmark className="w-4 h-4 text-yellow-500 fill-yellow-500 shrink-0" />
@@ -629,7 +532,6 @@ export default function BookReaderPage() {
       {/* Bottom Navigation Bar */}
       <div className={`sticky bottom-0 z-40 ${controlsVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 ${footerBgClasses[readingMode]} backdrop-blur-md`}>
         <div className="max-w-4xl mx-auto px-4 py-3">
-          {/* Progress slider */}
           <div className="flex items-center gap-4 mb-2">
             <span className="text-xs opacity-60 w-8 text-right">{currentPage}</span>
             <Slider
@@ -642,8 +544,6 @@ export default function BookReaderPage() {
             />
             <span className="text-xs opacity-60 w-8">{totalPages}</span>
           </div>
-
-          {/* Controls */}
           <div className="flex items-center justify-between">
             <Button
               variant="ghost"
@@ -654,52 +554,28 @@ export default function BookReaderPage() {
             >
               <ChevronLeft className="w-4 h-4" /> Previous
             </Button>
-
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="text-xs">
                 {progressPercent}% read
               </Badge>
-              {currentChapter && (
+              {currentChapter && bookData && (
                 <Badge variant="outline" className="text-[10px] hidden sm:flex">
-                  Ch. {SAMPLE_BOOK.chapters.indexOf(currentChapter) + 1}
+                  Ch. {bookData.chapters.indexOf(currentChapter) + 1}
                 </Badge>
               )}
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setZoom(z => Math.min(z + 10, 150))}
-                className="h-8 w-8 rounded-lg hidden sm:flex"
-              >
+              <Button variant="ghost" size="icon" onClick={() => setZoom(z => Math.min(z + 10, 150))} className="h-8 w-8 rounded-lg hidden sm:flex">
                 <ZoomIn className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setZoom(z => Math.max(z - 10, 70))}
-                className="h-8 w-8 rounded-lg hidden sm:flex"
-              >
+              <Button variant="ghost" size="icon" onClick={() => setZoom(z => Math.max(z - 10, 70))} className="h-8 w-8 rounded-lg hidden sm:flex">
                 <ZoomOut className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setZoom(100)}
-                className="h-8 w-8 rounded-lg hidden sm:flex"
-                title="Reset zoom"
-              >
+              <Button variant="ghost" size="icon" onClick={() => setZoom(100)} className="h-8 w-8 rounded-lg hidden sm:flex" title="Reset zoom">
                 <Maximize2 className="w-3.5 h-3.5" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleFullscreen}
-                className="h-8 w-8 rounded-lg hidden sm:flex"
-                title="Fullscreen"
-              >
+              <Button variant="ghost" size="icon" onClick={toggleFullscreen} className="h-8 w-8 rounded-lg hidden sm:flex" title="Fullscreen">
                 <Check className="w-3.5 h-3.5" />
               </Button>
             </div>
-
             <Button
               variant="ghost"
               size="sm"
