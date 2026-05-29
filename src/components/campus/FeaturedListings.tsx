@@ -23,6 +23,7 @@ interface Listing {
   isUrgent: boolean
   isVerified: boolean
   views: number
+  images: string
   seller: { id: string; name: string; college: string | null; isVerified: boolean; rating: number }
 }
 

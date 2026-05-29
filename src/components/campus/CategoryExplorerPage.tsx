@@ -26,6 +26,7 @@ interface Listing {
   isDigital: boolean
   listingType: string
   views: number
+  images: string
   seller: { name: string; college: string | null; isVerified: boolean; rating: number }
 }
 
