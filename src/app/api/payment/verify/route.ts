@@ -2,6 +2,7 @@ import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
 // POST: Submit payment proof (UTR number or screenshot)
+// Sets payment to 'pending_verification' - admin must manually approve
 export async function POST(request: Request) {
   try {
     const { paymentId, userId, utrNumber, screenshotUrl } = await request.json()
@@ -43,7 +44,7 @@ export async function POST(request: Request) {
       const existingUtr = await db.payment.findFirst({
         where: {
           utrNumber,
-          status: { in: ['pending', 'verified'] },
+          status: { in: ['pending', 'pending_verification', 'verified'] },
           id: { not: paymentId },
         }
       })
@@ -52,35 +53,28 @@ export async function POST(request: Request) {
       }
     }
 
-    // Update payment with proof - auto-verify since it's UPI manual payment
+    // Update payment with proof - set to pending_verification for admin review
+    // Credits are NOT granted here - admin must approve from the admin panel
     const updatedPayment = await db.payment.update({
       where: { id: paymentId },
       data: {
         utrNumber: utrNumber || null,
         screenshotUrl: screenshotUrl || null,
-        status: 'verified',
-        verifiedAt: new Date(),
+        status: 'pending_verification',
       }
     })
 
-    // Grant upload credit to user
-    await db.user.update({
-      where: { id: userId },
-      data: {
-        paidUploadCredits: { increment: 1 },
-      }
-    })
-
-    // Create audit log
+    // Create audit log for proof submission
     await db.auditLog.create({
       data: {
         actorId: userId,
-        action: 'payment_verified',
+        action: 'payment_proof_submitted',
         targetType: 'payment',
         targetId: paymentId,
         details: JSON.stringify({
           amount: payment.amount,
           utrNumber: utrNumber || null,
+          hasScreenshot: !!screenshotUrl,
           method: 'upi_qr',
         }),
       }
@@ -88,16 +82,15 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Payment verified! 1 upload credit added to your account.',
+      message: 'Payment proof submitted! Admin will verify within 24 hours. You will be notified once verified.',
       payment: {
         id: updatedPayment.id,
         status: updatedPayment.status,
         amount: updatedPayment.amount,
-        verifiedAt: updatedPayment.verifiedAt,
       }
     })
   } catch (error) {
     console.error('Payment verification error:', error)
-    return NextResponse.json({ error: 'Failed to verify payment' }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to submit payment proof' }, { status: 500 })
   }
 }

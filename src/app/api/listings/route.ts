@@ -149,49 +149,54 @@ export async function POST(request: Request) {
       }, { status: 403 })
     }
 
-    const listing = await db.listing.create({
-      data: {
-        title: title.trim(),
-        description: description.trim(),
-        originalPrice: originalPrice || 0,
-        sellingPrice: sellingPrice || 0,
-        category,
-        subcategory: subcategory || null,
-        listingType: listingType || 'sell',
-        course: course || null,
-        semester: semester || null,
-        standard: standard || null,
-        board: board || null,
-        college: college || null,
-        city,
-        condition,
-        whatsappNumber: whatsappNumber.replace(/\s/g, ''),
-        sellerId,
-        images: imagesJson,
-        isDigital: isDigital || false,
-        fileUrl: fileUrl || null,
-      },
-      include: { seller: true }
-    })
+    // Use a transaction to create listing and decrement credits atomically
+    const listing = await db.$transaction(async (tx) => {
+      const newListing = await tx.listing.create({
+        data: {
+          title: title.trim(),
+          description: description.trim(),
+          originalPrice: originalPrice || 0,
+          sellingPrice: sellingPrice || 0,
+          category,
+          subcategory: subcategory || null,
+          listingType: listingType || 'sell',
+          course: course || null,
+          semester: semester || null,
+          standard: standard || null,
+          board: board || null,
+          college: college || null,
+          city,
+          condition,
+          whatsappNumber: whatsappNumber.replace(/\s/g, ''),
+          sellerId,
+          images: imagesJson,
+          isDigital: isDigital || false,
+          fileUrl: fileUrl || null,
+        },
+        include: { seller: true }
+      })
 
-    // Deduct upload credit and update counters
-    if (user.freeUploadUsed < FREE_UPLOAD_LIMIT) {
-      await db.user.update({ 
-        where: { id: sellerId }, 
-        data: { 
-          freeUploadUsed: { increment: 1 },
-          totalBooksUploaded: { increment: 1 },
-        } 
-      })
-    } else {
-      await db.user.update({ 
-        where: { id: sellerId }, 
-        data: { 
-          paidUploadCredits: { decrement: 1 },
-          totalBooksUploaded: { increment: 1 },
-        } 
-      })
-    }
+      // Deduct upload credit and update counters atomically
+      if (user.freeUploadUsed < FREE_UPLOAD_LIMIT) {
+        await tx.user.update({ 
+          where: { id: sellerId }, 
+          data: { 
+            freeUploadUsed: { increment: 1 },
+            totalBooksUploaded: { increment: 1 },
+          } 
+        })
+      } else {
+        await tx.user.update({ 
+          where: { id: sellerId }, 
+          data: { 
+            paidUploadCredits: { decrement: 1 },
+            totalBooksUploaded: { increment: 1 },
+          } 
+        })
+      }
+
+      return newListing
+    })
 
     return NextResponse.json({ listing }, { status: 201 })
   } catch (error) {

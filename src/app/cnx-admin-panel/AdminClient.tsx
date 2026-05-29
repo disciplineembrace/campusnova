@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard, Users, BookOpen, AlertTriangle, FileText, LogOut,
   RefreshCw, Trash2, Ban, BadgeCheck, Star, Eye, TrendingUp,
-  Shield, ChevronRight, Clock, MoreVertical, CheckCircle2, XCircle,
-  Crown, UserCog, HeadphonesIcon, Search
+  Shield, ChevronRight, Clock, MoreVertical, CheckCircle2, XCircle, X,
+  Crown, UserCog, HeadphonesIcon, Search, CreditCard, IndianRupee, Image as ImageIcon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,7 +28,7 @@ import AdminLogin from './AdminLogin'
 
 // ─── Types ────────────────────────────────────────────────────────
 
-type AdminTab = 'overview' | 'users' | 'listings' | 'reports' | 'audit'
+type AdminTab = 'overview' | 'users' | 'listings' | 'reports' | 'audit' | 'payments'
 
 interface AdminInfo {
   id: string
@@ -103,6 +103,22 @@ interface AuditLogItem {
   actor: { name: string; email: string }
 }
 
+interface PaymentItem {
+  id: string
+  userId: string
+  amount: number
+  paymentMethod: string
+  utrNumber: string | null
+  screenshotUrl: string | null
+  upiId: string | null
+  status: string
+  uploadCredit: number
+  expiresAt: string
+  verifiedAt: string | null
+  createdAt: string
+  user: { id: string; name: string; email: string; college: string | null }
+}
+
 // ─── Role Badge ───────────────────────────────────────────────────
 
 function RoleBadge({ role }: { role: string }) {
@@ -164,6 +180,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
   const [listings, setListings] = useState<ListingItem[]>([])
   const [reports, setReports] = useState<ReportItem[]>([])
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([])
+  const [payments, setPayments] = useState<PaymentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -198,6 +215,15 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
     }
   }, [])
 
+  const fetchPayments = useCallback(async () => {
+    try {
+      const res = await fetch('/api/cnx-admin?type=payments')
+      if (res.ok) { const d = await res.json(); setPayments(d.payments || []) }
+    } catch (err) {
+      console.error('Payments fetch error:', err)
+    }
+  }, [])
+
   useEffect(() => {
     if (admin) fetchData()
   }, [admin, fetchData])
@@ -205,6 +231,10 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
   useEffect(() => {
     if (admin && activeTab === 'audit') fetchAuditLogs()
   }, [admin, activeTab, fetchAuditLogs])
+
+  useEffect(() => {
+    if (admin && activeTab === 'payments') fetchPayments()
+  }, [admin, activeTab, fetchPayments])
 
   // Admin actions
   const adminAction = async (action: string, targetId: string, details?: string) => {
@@ -219,6 +249,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
         toast.success(`Action completed: ${action.replace(/_/g, ' ')}`)
         fetchData()
         if (activeTab === 'audit') fetchAuditLogs()
+        if (activeTab === 'payments') fetchPayments()
       } else {
         toast.error(data.error || 'Action failed')
       }
@@ -255,6 +286,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
     { id: 'listings', label: 'Listings', icon: BookOpen, count: stats?.totalListings },
     { id: 'reports', label: 'Reports', icon: AlertTriangle, count: stats?.unresolvedReports },
     { id: 'audit', label: 'Audit Logs', icon: FileText },
+    { id: 'payments', label: 'Payments', icon: CreditCard, count: payments.filter(p => p.status === 'pending' || p.status === 'pending_verification').length },
   ]
 
   // Filter helpers
@@ -269,6 +301,11 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
   const filteredReports = reports.filter(r =>
     r.listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     r.reason.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  const filteredPayments = payments.filter(p =>
+    p.user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.utrNumber && p.utrNumber.includes(searchTerm))
   )
 
   // ─── Render ──────────────────────────────────────────────────────
@@ -357,7 +394,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
           </Button>
 
           <h2 className="text-sm font-semibold text-slate-200 capitalize">
-            {activeTab === 'audit' ? 'Audit Logs' : activeTab}
+            {activeTab === 'audit' ? 'Audit Logs' : activeTab === 'payments' ? 'Payments' : activeTab}
           </h2>
 
           <div className="flex-1" />
@@ -408,6 +445,9 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
               )}
               {activeTab === 'audit' && (
                 <AuditTab logs={auditLogs} loading={loading} />
+              )}
+              {activeTab === 'payments' && (
+                <PaymentsTab payments={filteredPayments} loading={loading} onAction={adminAction} />
               )}
             </motion.div>
           </AnimatePresence>
@@ -907,6 +947,255 @@ function AuditTab({ logs, loading }: { logs: AuditLogItem[]; loading: boolean })
           </Card>
         )
       })}
+    </div>
+  )
+}
+
+// ─── Payments Tab ─────────────────────────────────────────────────
+
+function PaymentsTab({ payments, loading, onAction }: { payments: PaymentItem[]; loading: boolean; onAction: (a: string, t: string, d?: string) => void }) {
+  const [selectedPayment, setSelectedPayment] = useState<PaymentItem | null>(null)
+
+  if (loading) return <LoadingSkeleton />
+
+  const pending = payments.filter(p => p.status === 'pending' || p.status === 'pending_verification')
+  const verified = payments.filter(p => p.status === 'verified')
+  const rejected = payments.filter(p => p.status === 'rejected')
+  const expired = payments.filter(p => p.status === 'expired')
+
+  const statusConfig: Record<string, { label: string; className: string }> = {
+    pending: { label: 'Pending', className: 'bg-amber-500/15 text-amber-400 border-amber-500/30' },
+    pending_verification: { label: 'Awaiting Review', className: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30' },
+    verified: { label: 'Verified', className: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' },
+    rejected: { label: 'Rejected', className: 'bg-red-500/15 text-red-400 border-red-500/30' },
+    expired: { label: 'Expired', className: 'bg-slate-700/50 text-slate-400 border-slate-700' },
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="p-4 bg-amber-500/5 border-amber-500/20">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-amber-400" />
+            <span className="text-sm text-amber-400 font-medium">Pending</span>
+          </div>
+          <p className="text-2xl font-bold text-amber-300 mt-1">{pending.length}</p>
+        </Card>
+        <Card className="p-4 bg-emerald-500/5 border-emerald-500/20">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm text-emerald-400 font-medium">Verified</span>
+          </div>
+          <p className="text-2xl font-bold text-emerald-300 mt-1">{verified.length}</p>
+        </Card>
+        <Card className="p-4 bg-red-500/5 border-red-500/20">
+          <div className="flex items-center gap-2">
+            <XCircle className="w-4 h-4 text-red-400" />
+            <span className="text-sm text-red-400 font-medium">Rejected</span>
+          </div>
+          <p className="text-2xl font-bold text-red-300 mt-1">{rejected.length}</p>
+        </Card>
+        <Card className="p-4 bg-slate-500/5 border-slate-500/20">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 text-slate-400" />
+            <span className="text-sm text-slate-400 font-medium">Expired</span>
+          </div>
+          <p className="text-2xl font-bold text-slate-300 mt-1">{expired.length}</p>
+        </Card>
+      </div>
+
+      {/* Payment Detail Dialog */}
+      {selectedPayment && (
+        <Card className="p-5 bg-slate-900/50 border-slate-800">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-semibold text-slate-200">Payment Details</h3>
+            <Button size="sm" variant="ghost" onClick={() => setSelectedPayment(null)} className="h-7 text-slate-400 hover:text-slate-200">
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <p className="text-slate-500 text-xs mb-1">User</p>
+              <p className="text-slate-200 font-medium">{selectedPayment.user.name}</p>
+              <p className="text-slate-400 text-xs">{selectedPayment.user.email}</p>
+              {selectedPayment.user.college && <p className="text-slate-500 text-xs">{selectedPayment.user.college}</p>}
+            </div>
+            <div>
+              <p className="text-slate-500 text-xs mb-1">Amount</p>
+              <p className="text-slate-200 font-bold text-lg flex items-center gap-1">
+                <IndianRupee className="w-4 h-4" />{selectedPayment.amount}
+              </p>
+              <p className="text-slate-500 text-xs">Credits: {selectedPayment.uploadCredit}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 text-xs mb-1">UTR Number</p>
+              <p className="text-slate-200 font-mono">{selectedPayment.utrNumber || 'Not provided'}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 text-xs mb-1">Payment Method</p>
+              <p className="text-slate-200">{selectedPayment.paymentMethod === 'upi_qr' ? 'UPI QR' : selectedPayment.paymentMethod}</p>
+            </div>
+            <div>
+              <p className="text-slate-500 text-xs mb-1">Status</p>
+              <Badge className={`${statusConfig[selectedPayment.status]?.className || ''} border text-xs rounded-full`}>
+                {statusConfig[selectedPayment.status]?.label || selectedPayment.status}
+              </Badge>
+            </div>
+            <div>
+              <p className="text-slate-500 text-xs mb-1">Created</p>
+              <p className="text-slate-300">{new Date(selectedPayment.createdAt).toLocaleString()}</p>
+            </div>
+            {selectedPayment.screenshotUrl && (
+              <div className="sm:col-span-2">
+                <p className="text-slate-500 text-xs mb-2">Payment Screenshot</p>
+                <div className="inline-block p-2 bg-white rounded-lg border border-slate-700">
+                  <img
+                    src={selectedPayment.screenshotUrl}
+                    alt="Payment proof"
+                    className="max-w-[300px] max-h-[300px] object-contain rounded"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+          {(selectedPayment.status === 'pending' || selectedPayment.status === 'pending_verification') && (
+            <div className="flex gap-3 mt-5 pt-4 border-t border-slate-800">
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5 rounded-xl">
+                    <CheckCircle2 className="w-4 h-4" /> Approve & Grant Credits
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-slate-900 border-slate-700">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-slate-100">Approve Payment</AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-400">
+                      Approve this payment from {selectedPayment.user.name}? {selectedPayment.uploadCredit} upload credit(s) will be granted.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="bg-slate-800 text-slate-200 border-slate-700">Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => { onAction('approve_payment', selectedPayment.id); setSelectedPayment(null) }} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                      Approve
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button size="sm" variant="outline" className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300 gap-1.5 rounded-xl">
+                    <XCircle className="w-4 h-4" /> Reject
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-slate-900 border-slate-700">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-slate-100">Reject Payment</AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-400">
+                      Reject this payment from {selectedPayment.user.name}? They will need to submit a new payment.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="bg-slate-800 text-slate-200 border-slate-700">Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => { onAction('reject_payment', selectedPayment.id); setSelectedPayment(null) }} className="bg-red-600 hover:bg-red-700 text-white">
+                      Reject
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Payments List */}
+      <div className="space-y-2">
+        <p className="text-sm text-slate-400 mb-3">{payments.length} payments</p>
+        {payments.map(payment => {
+          const sc = statusConfig[payment.status] || statusConfig.expired
+          return (
+            <Card
+              key={payment.id}
+              className={`p-4 bg-slate-900/50 border-slate-800 hover:border-slate-700 transition-colors cursor-pointer ${
+                (payment.status === 'pending' || payment.status === 'pending_verification') ? 'border-l-2 border-l-amber-500' : ''
+              }`}
+              onClick={() => setSelectedPayment(payment)}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-medium text-slate-200 truncate">{payment.user.name}</span>
+                    <Badge className={`${sc.className} border text-[10px] rounded-full shrink-0`}>{sc.label}</Badge>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-slate-400">
+                    <span className="flex items-center gap-1">
+                      <IndianRupee className="w-3 h-3" />{payment.amount}
+                    </span>
+                    {payment.utrNumber && (
+                      <span className="font-mono">UTR: {payment.utrNumber}</span>
+                    )}
+                    {payment.screenshotUrl && (
+                      <span className="flex items-center gap-1 text-cyan-400">
+                        <ImageIcon className="w-3 h-3" /> Screenshot
+                      </span>
+                    )}
+                    <span>{new Date(payment.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">{payment.user.email}</p>
+                </div>
+                {(payment.status === 'pending' || payment.status === 'pending_verification') ? (
+                  <div className="flex gap-2 shrink-0" onClick={e => e.stopPropagation()}>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" className="h-8 text-xs bg-emerald-600 hover:bg-emerald-700 text-white gap-1 rounded-lg">
+                          <CheckCircle2 className="w-3 h-3" /> Approve
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-slate-900 border-slate-700">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-slate-100">Approve Payment</AlertDialogTitle>
+                          <AlertDialogDescription className="text-slate-400">
+                            Approve payment from {payment.user.name}? {payment.uploadCredit} credit(s) will be granted.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="bg-slate-800 text-slate-200 border-slate-700">Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => onAction('approve_payment', payment.id)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                            Approve
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="outline" className="h-8 text-xs border-red-500/30 text-red-400 hover:bg-red-500/10 gap-1 rounded-lg">
+                          <XCircle className="w-3 h-3" /> Reject
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="bg-slate-900 border-slate-700">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-slate-100">Reject Payment</AlertDialogTitle>
+                          <AlertDialogDescription className="text-slate-400">
+                            Reject payment from {payment.user.name}?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className="bg-slate-800 text-slate-200 border-slate-700">Cancel</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => onAction('reject_payment', payment.id)} className="bg-red-600 hover:bg-red-700 text-white">
+                            Reject
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-slate-600 shrink-0" />
+                )}
+              </div>
+            </Card>
+          )
+        })}
+      </div>
     </div>
   )
 }

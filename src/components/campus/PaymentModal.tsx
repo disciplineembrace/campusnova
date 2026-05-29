@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Clock, Upload, CheckCircle, AlertCircle, QrCode, Copy, ArrowRight, Shield, CreditCard, Smartphone } from 'lucide-react'
+import { X, Clock, Upload, CheckCircle, AlertCircle, QrCode, Copy, ArrowRight, Shield, CreditCard, Smartphone, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -31,6 +31,10 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
   const [step, setStep] = useState<PaymentStep>('initiating')
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null)
   const [utrNumber, setUtrNumber] = useState('')
+  const [screenshotFile, setScreenshotFile] = useState<File | null>(null)
+  const [screenshotPreview, setScreenshotPreview] = useState<string | null>(null)
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
   const [timeLeft, setTimeLeft] = useState(300) // 5 minutes in seconds
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
@@ -101,6 +105,8 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
+  const UPI_ID = 'sagathiyapradip1137-3@oksbi'
+
   const copyUpiId = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(UPI_ID)
@@ -119,15 +125,28 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
     }
   }, [])
 
-  const UPI_ID = 'sagathiyapradip1137-3@oksbi'
-
-  const handleSubmitProof = async () => {
-    if (!utrNumber.trim()) {
-      setError('Please enter your UTR/Reference number')
+  const handleScreenshotUpload = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file')
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Screenshot must be less than 5MB')
       return
     }
 
-    if (utrNumber.trim().length < 6) {
+    setScreenshotFile(file)
+    setScreenshotPreview(URL.createObjectURL(file))
+    setError('')
+  }
+
+  const handleSubmitProof = async () => {
+    if (!utrNumber.trim() && !screenshotFile) {
+      setError('Please enter your UTR/Reference number or upload a screenshot')
+      return
+    }
+
+    if (utrNumber.trim() && utrNumber.trim().length < 6) {
       setError('UTR number must be at least 6 digits')
       return
     }
@@ -136,13 +155,29 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
     setError('')
 
     try {
+      // Upload screenshot if provided
+      let uploadedScreenshotUrl: string | null = null
+      if (screenshotFile) {
+        setUploading(true)
+        const formData = new FormData()
+        formData.append('files', screenshotFile)
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
+        const uploadData = await uploadRes.json()
+        if (uploadRes.ok && uploadData.urls?.length > 0) {
+          uploadedScreenshotUrl = uploadData.urls[0]
+          setScreenshotUrl(uploadedScreenshotUrl)
+        }
+        setUploading(false)
+      }
+
       const res = await fetch('/api/payment/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           paymentId: paymentSession?.paymentId,
           userId,
-          utrNumber: utrNumber.trim(),
+          utrNumber: utrNumber.trim() || undefined,
+          screenshotUrl: uploadedScreenshotUrl || undefined,
         })
       })
 
@@ -176,6 +211,10 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
     setStep('initiating')
     setPaymentSession(null)
     setUtrNumber('')
+    setScreenshotFile(null)
+    setScreenshotPreview(null)
+    setScreenshotUrl(null)
+    setUploading(false)
     setTimeLeft(300)
     setError('')
     setCopied(false)
@@ -344,6 +383,42 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
                     </p>
                   </div>
 
+                  {/* Screenshot Upload */}
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-1.5 block">
+                      Payment Screenshot (Optional)
+                    </label>
+                    {screenshotPreview ? (
+                      <div className="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <img src={screenshotPreview} alt="Payment screenshot" className="w-full max-h-48 object-contain bg-gray-50 dark:bg-gray-800" />
+                        <button
+                          onClick={() => { setScreenshotFile(null); setScreenshotPreview(null) }}
+                          className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="flex flex-col items-center justify-center h-28 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl cursor-pointer hover:border-brand hover:bg-brand/5 transition-colors">
+                        <ImageIcon className="w-8 h-8 text-muted-foreground mb-2" />
+                        <span className="text-sm text-muted-foreground">Click to upload screenshot</span>
+                        <span className="text-xs text-muted-foreground mt-1">JPG, PNG, WEBP (max 5MB)</span>
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          className="hidden"
+                          onChange={e => {
+                            const f = e.target.files?.[0]
+                            if (f) handleScreenshotUpload(f)
+                          }}
+                        />
+                      </label>
+                    )}
+                    <p className="text-xs text-muted-foreground mt-1.5">
+                      Upload a screenshot of your completed payment for faster verification
+                    </p>
+                  </div>
+
                   <div className="flex gap-3">
                     <Button
                       variant="outline"
@@ -354,11 +429,11 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
                     </Button>
                     <Button
                       onClick={handleSubmitProof}
-                      disabled={utrNumber.trim().length < 6}
+                      disabled={utrNumber.trim().length < 6 && !screenshotFile}
                       className="flex-1 h-11 btn-gradient text-white border-0 rounded-xl font-semibold gap-2"
                     >
-                      <Upload className="w-4 h-4" />
-                      Verify Payment
+                      {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                      Submit Proof
                     </Button>
                   </div>
                 </div>
@@ -375,8 +450,8 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
                       <Shield className="w-8 h-8 text-brand" />
                     </motion.div>
                   </div>
-                  <h3 className="text-lg font-bold text-foreground mb-1">Verifying Payment</h3>
-                  <p className="text-sm text-muted-foreground">Please wait while we verify your payment...</p>
+                  <h3 className="text-lg font-bold text-foreground mb-1">Submitting Proof</h3>
+                  <p className="text-sm text-muted-foreground">Please wait while we submit your payment proof...</p>
                 </div>
               )}
 
@@ -392,12 +467,12 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
                       <CheckCircle className="w-10 h-10 text-emerald-500" />
                     </div>
                   </motion.div>
-                  <h3 className="text-xl font-bold text-foreground mb-2 font-heading">Payment Verified!</h3>
+                  <h3 className="text-xl font-bold text-foreground mb-2 font-heading">Proof Submitted!</h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    1 upload credit has been added to your account. You can now list your book.
+                    Payment proof submitted! Admin will verify within 24 hours. You&apos;ll be notified once verified.
                   </p>
-                  <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border-0 text-sm px-4 py-1.5 rounded-full">
-                    <CheckCircle className="w-3.5 h-3.5 mr-1" /> Credit Added
+                  <Badge className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-0 text-sm px-4 py-1.5 rounded-full">
+                    <Clock className="w-3.5 h-3.5 mr-1" /> Pending Verification
                   </Badge>
                   <div className="mt-6">
                     <Button

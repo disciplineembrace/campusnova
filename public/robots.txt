@@ -1,8 +1,13 @@
+# CampusNova - https://campusnova.in
+# Sitemap: https://campusnova.in/sitemap.xml
+
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 2
 
 User-agent: Twitterbot
 Allow: /
@@ -15,3 +20,10 @@ Allow: /
 Disallow: /cnx-admin-panel
 Disallow: /api/cnx-admin
 Disallow: /api/cnx-admin-auth
+Disallow: /api/payment
+Disallow: /api/upload
+Disallow: /api/auth
+Disallow: /api/listings?*id=
+
+# Sitemap
+Sitemap: https://campusnova.in/sitemap.xml
