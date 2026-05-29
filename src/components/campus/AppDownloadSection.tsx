@@ -1,0 +1,100 @@
+'use client'
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Smartphone, Bell, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+
+export default function AppDownloadSection() {
+  const [email, setEmail] = useState('')
+  const [subscribed, setSubscribed] = useState(false)
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (email) {
+      setSubscribed(true)
+      setEmail('')
+    }
+  }
+
+  return (
+    <section className="py-16 sm:py-20 bg-gradient-to-br from-navy via-navy-light to-navy text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-pattern opacity-20" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+          <div className="flex-1 text-center lg:text-left">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium mb-6">
+                <Smartphone className="w-4 h-4" /> Coming Soon
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Get CampusBazaar on Your Phone
+              </h2>
+              <p className="text-blue-200/70 max-w-lg mb-8 leading-relaxed">
+                Browse, buy and sell on the go. Get notified instantly when someone lists a book you need. Be the first to grab the best deals!
+              </p>
+
+              {subscribed ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500/20 text-emerald-300"
+                >
+                  <Bell className="w-5 h-5" /> You&apos;re on the list! We&apos;ll notify you.
+                </motion.div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto lg:mx-0">
+                  <Input
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    type="email"
+                    required
+                    className="h-12 bg-white/10 border-white/20 text-white placeholder:text-white/40 focus-visible:ring-brand"
+                  />
+                  <Button type="submit" className="h-12 btn-gradient text-white border-0 px-6 font-semibold whitespace-nowrap">
+                    Notify Me <ArrowRight className="w-4 h-4 ml-1" />
+                  </Button>
+                </form>
+              )}
+            </motion.div>
+          </div>
+
+          {/* Phone mockup */}
+          <motion.div
+            className="flex-shrink-0"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="relative w-56 sm:w-64">
+              <div className="w-full aspect-[9/18] rounded-[2.5rem] border-4 border-white/20 bg-gradient-to-b from-brand/20 to-blue-900/40 backdrop-blur-sm overflow-hidden p-3">
+                <div className="w-full h-full rounded-[2rem] bg-navy/80 flex flex-col items-center justify-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-blue-600 flex items-center justify-center shadow-lg">
+                    <Smartphone className="w-7 h-7 text-white" />
+                  </div>
+                  <p className="text-sm font-bold text-white">CampusBazaar</p>
+                  <p className="text-[10px] text-blue-200/60">Coming to Play Store</p>
+                  <div className="flex gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <div className="w-2 h-2 rounded-full bg-brand animate-pulse" style={{ animationDelay: '0.5s' }} />
+                    <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay: '1s' }} />
+                  </div>
+                </div>
+              </div>
+              {/* Notch */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 bg-navy rounded-b-2xl" />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  )
+}

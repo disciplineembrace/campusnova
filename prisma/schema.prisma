@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  phone         String?
+  college       String?
+  city          String?
+  avatar        String?
+  isVerified    Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+  isBanned      Boolean   @default(false)
+  rating        Float     @default(0)
+  totalSales    Int       @default(0)
+  whatsapp      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  listings      Listing[]
+  wishlistItems Wishlist[]
+  reports       Report[]  @relation("Reporter")
+}
+
+model Listing {
+  id             String     @id @default(cuid())
+  title          String
+  description    String
+  originalPrice  Float
+  sellingPrice   Float
+  category       String
+  course         String?
+  semester       String?
+  college        String?
+  city           String
+  condition      String
+  images         String     @default("[]")
+  whatsappNumber String
+  isFeatured     Boolean    @default(false)
+  isUrgent       Boolean    @default(false)
+  isVerified     Boolean    @default(false)
+  isSold         Boolean    @default(false)
+  views          Int        @default(0)
+  sellerId       String
+  seller         User       @relation(fields: [sellerId], references: [id])
+  wishlistBy     Wishlist[]
+  reports        Report[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  user      User     @relation(fields: [userId], references: [id])
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, listingId])
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  listingId  String
+  reporterId String
+  reason     String
+  isResolved Boolean  @default(false)
+  listing    Listing  @relation(fields: [listingId], references: [id])
+  reporter   User     @relation("Reporter", fields: [reporterId], references: [id])
+  createdAt  DateTime @default(now())
+}
