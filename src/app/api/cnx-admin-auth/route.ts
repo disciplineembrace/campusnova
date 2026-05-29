@@ -25,17 +25,22 @@ export async function POST(request: Request) {
       loginAttempts.delete(ip)
     }
 
-    // Verify admin credentials
-    const user = await db.user.findUnique({ where: { email } })
+    // Step 1: Verify admin credentials
+    let user
+    try {
+      user = await db.user.findUnique({ where: { email } })
+    } catch (dbError) {
+      console.error('DB lookup error:', dbError)
+      return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 })
+    }
 
     if (!user || !user.isAdmin || user.isBanned) {
-      // Increment failed attempts
       const current = loginAttempts.get(ip) || { count: 0, lastAttempt: 0 }
       loginAttempts.set(ip, { count: current.count + 1, lastAttempt: now })
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Verify secret key (admin must provide this)
+    // Step 2: Verify secret key
     const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'campusnova-admin-2024'
     if (secretKey !== ADMIN_SECRET) {
       const current = loginAttempts.get(ip) || { count: 0, lastAttempt: 0 }
@@ -43,9 +48,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
     }
 
-    // Create session
-    const userAgent = request.headers.get('user-agent') || undefined
-    const token = await createAdminSession(user.id, user.email, (user.adminRole || 'support_admin') as AdminRole, ip, userAgent)
+    // Step 3: Create session token
+    const role = (user.adminRole || 'support_admin') as AdminRole
+    let token
+    try {
+      const userAgent = request.headers.get('user-agent') || undefined
+      token = await createAdminSession(user.id, user.email, role, ip, userAgent)
+    } catch (sessionError) {
+      console.error('Session creation error:', sessionError)
+      // Fallback: create token without DB session (stateless)
+      const { createHmac } = await import('crypto')
+      const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-jwt-secret-2024-secure'
+      const iat = Math.floor(Date.now() / 1000)
+      const exp = iat + (4 * 60 * 60)
+      const payload = { userId: user.id, email: user.email, role, iat, exp }
+      const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')
+      const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
+      const signature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url')
+      token = `${header}.${body}.${signature}`
+    }
 
     // Reset rate limit on success
     loginAttempts.delete(ip)
@@ -67,6 +88,6 @@ export async function POST(request: Request) {
     return response
   } catch (error) {
     console.error('Admin auth error:', error)
-    return NextResponse.json({ error: 'Authentication failed' }, { status: 500 })
+    return NextResponse.json({ error: 'Authentication failed', detail: String(error) }, { status: 500 })
   }
 }
