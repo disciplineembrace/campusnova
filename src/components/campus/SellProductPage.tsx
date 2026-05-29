@@ -161,7 +161,6 @@ export default function SellProductPage() {
         if (img.preview.startsWith('blob:')) URL.revokeObjectURL(img.preview)
       })
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // Update whatsapp when user changes
@@ -169,7 +168,6 @@ export default function SellProductPage() {
     if (currentUser?.whatsapp && !form.whatsappNumber) {
       setForm(prev => ({ ...prev, whatsappNumber: currentUser.whatsapp || '' }))
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser])
 
   const handleChange = useCallback((field: string, value: string) => {

@@ -22,3 +22,29 @@ Stage Summary:
 - The Post Listing system (SellProductPage) is already well-integrated with the API
 - Key fix: package.json dev script now unsets stale DATABASE_URL env var
 - TypeScript interfaces fixed to include `images: string` field
+
+---
+Task ID: 4
+Agent: Task Agent
+Task: Fix dev script, ensure Sell Product page works with Neon DB, add Wishlist API, fix BookReaderPage, fix ExplorePage and FeaturedListings API fetching
+
+Work Log:
+- Fixed package.json dev script: Changed from `unset DATABASE_URL DIRECT_URL; next dev -p 3000 2>&1 | tee dev.log` to `next dev -p 3000` — the previous script was unsetting DATABASE_URL which broke the Neon DB connection
+- Reviewed SellProductPage.tsx: Confirmed all 3 steps (Details → Photos → Review) already exist and work properly with step navigation, validation, and form data flowing between steps
+- Created /api/wishlist/route.ts with GET (fetch user wishlist with listing details) and POST (toggle add/remove wishlist item) methods using Prisma db client
+- Wishlist API includes: user/listing verification, saves count increment/decrement on listing, proper error handling
+- Enhanced BookReaderPage.tsx with: top progress bar, page-level bookmarks with notes, keyboard navigation (arrow keys, space, 'b'), reading stats panel, bookmark input UI, chapter indicators, document-style preview frame, zoom controls, fullscreen support
+- Verified ExplorePage.tsx already fetches from /api/listings API correctly with pagination, search, filters, and sorting
+- Verified FeaturedListings.tsx already fetches from /api/listings?featured=true&limit=8 API correctly
+- Fixed lint warnings: removed unused eslint-disable directives in SellProductPage.tsx, moved localStorage initialization from useEffect to useState lazy initializer in BookReaderPage.tsx
+- Fixed BookReaderPage: replaced undefined `clip-bookmark` CSS class with standard Tailwind classes
+- Final lint check: 0 errors, 0 warnings
+- Final build: successful, all routes including /api/wishlist detected
+
+Stage Summary:
+- Dev script fixed — DATABASE_URL is no longer unset, Neon DB works properly
+- Wishlist API route created with GET and POST methods, integrated with Prisma and listing saves count
+- BookReaderPage enhanced with page bookmarks, reading progress, keyboard navigation, and stats
+- ExplorePage and FeaturedListings already properly fetching from API — no changes needed
+- SellProductPage already has working 3-step form — no changes needed
+- All lint and build checks pass
