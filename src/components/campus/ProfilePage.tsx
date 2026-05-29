@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { User, Star, BookOpen, Heart, Settings, BadgeCheck, MapPin, GraduationCap, Mail, Phone, ArrowLeft } from 'lucide-react'
+import { User, Star, BookOpen, Heart, Settings, BadgeCheck, MapPin, GraduationCap, Mail, Phone, ArrowLeft, CreditCard, CheckCircle, Clock, XCircle } from 'lucide-react'
 import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -23,12 +23,14 @@ interface UserListing {
   condition: string
   isSold: boolean
   views: number
+  images: string
 }
 
 export default function ProfilePage() {
   const { currentUser, setCurrentPage, setCurrentUser, setSelectedProductId, wishlist } = useAppStore()
   const [myListings, setMyListings] = useState<UserListing[]>([])
   const [wishlistListings, setWishlistListings] = useState<UserListing[]>([])
+  const [payments, setPayments] = useState<{ id: string; amount: number; status: string; utrNumber: string | null; createdAt: string; verifiedAt: string | null }[]>([])
   const [loading, setLoading] = useState(true)
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState({ name: '', college: '', city: '', phone: '', whatsapp: '' })
@@ -47,11 +49,19 @@ export default function ProfilePage() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const res = await fetch('/api/listings?limit=50')
-        const data = await res.json()
-        const allListings = data.listings || []
+        const [listingsRes, paymentsRes] = await Promise.all([
+          fetch('/api/listings?limit=50'),
+          fetch(`/api/payment/history?userId=${currentUser.id}`),
+        ])
+        const listingsData = await listingsRes.json()
+        const allListings = listingsData.listings || []
         setMyListings(allListings.filter((l: UserListing & { seller: { id: string } }) => l.seller?.id === currentUser.id))
         setWishlistListings(allListings.filter((l: UserListing & { id: string }) => wishlist.includes(l.id)))
+        
+        if (paymentsRes.ok) {
+          const paymentsData = await paymentsRes.json()
+          setPayments(paymentsData.payments || [])
+        }
       } catch (err) {
         console.error('Fetch error:', err)
       } finally {
@@ -199,6 +209,7 @@ export default function ProfilePage() {
           <TabsList className="mb-6">
             <TabsTrigger value="listings" className="gap-2 rounded-xl"><BookOpen className="w-4 h-4" /> My Listings</TabsTrigger>
             <TabsTrigger value="wishlist" className="gap-2 rounded-xl"><Heart className="w-4 h-4" /> Wishlist</TabsTrigger>
+            <TabsTrigger value="payments" className="gap-2 rounded-xl"><CreditCard className="w-4 h-4" /> Payments</TabsTrigger>
           </TabsList>
 
           <TabsContent value="listings">
@@ -270,6 +281,50 @@ export default function ProfilePage() {
                       <div className="p-3">
                         <h4 className="text-sm font-medium line-clamp-1">{listing.title}</h4>
                         <p className="text-base font-bold text-brand mt-1">{formatINR(listing.sellingPrice)}</p>
+                      </div>
+                    </Card>
+                  )
+                })}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="payments">
+            {payments.length === 0 ? (
+              <div className="text-center py-12">
+                <CreditCard className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold mb-2">No Payments Yet</h3>
+                <p className="text-muted-foreground text-sm mb-4">Your payment history will appear here</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {payments.map(payment => {
+                  const statusConfig: Record<string, { icon: React.ElementType; color: string; label: string }> = {
+                    verified: { icon: CheckCircle, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-950/30', label: 'Verified' },
+                    pending: { icon: Clock, color: 'text-amber-500 bg-amber-50 dark:bg-amber-950/30', label: 'Pending' },
+                    rejected: { icon: XCircle, color: 'text-red-500 bg-red-50 dark:bg-red-950/30', label: 'Rejected' },
+                    expired: { icon: XCircle, color: 'text-gray-500 bg-gray-50 dark:bg-gray-950/30', label: 'Expired' },
+                  }
+                  const config = statusConfig[payment.status] || statusConfig.pending
+                  const StatusIcon = config.icon
+                  return (
+                    <Card key={payment.id} className="p-4 card-premium">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${config.color}`}>
+                            <StatusIcon className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">Upload Credit - {formatINR(payment.amount)}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(payment.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                              {payment.utrNumber && ` · UTR: ${payment.utrNumber}`}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge className={`${config.color} border-0 text-xs rounded-full`}>
+                          {config.label}
+                        </Badge>
                       </div>
                     </Card>
                   )

@@ -9,27 +9,31 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String
-  phone         String?
-  college       String?
-  city          String?
-  avatar        String?
-  isVerified    Boolean   @default(false)
-  isAdmin       Boolean   @default(false)
-  adminRole     String?   // "super_admin" | "moderator" | "support_admin"
-  isBanned      Boolean   @default(false)
-  rating        Float     @default(0)
-  totalSales    Int       @default(0)
-  whatsapp      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  listings      Listing[]
-  wishlistItems Wishlist[]
-  reports       Report[]  @relation("Reporter")
-  adminSessions AdminSession[]
-  auditLogs     AuditLog[] @relation("AuditActor")
+  id                  String          @id @default(cuid())
+  email               String          @unique
+  name                String
+  phone               String?
+  college             String?
+  city                String?
+  avatar              String?
+  isVerified          Boolean         @default(false)
+  isAdmin             Boolean         @default(false)
+  adminRole           String?         // "super_admin" | "moderator" | "support_admin"
+  isBanned            Boolean         @default(false)
+  rating              Float           @default(0)
+  totalSales          Int             @default(0)
+  whatsapp            String?
+  freeUploadUsed      Int             @default(0)
+  paidUploadCredits   Int             @default(0)
+  totalBooksUploaded  Int             @default(0)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  listings            Listing[]
+  wishlistItems       Wishlist[]
+  reports             Report[]        @relation("Reporter")
+  adminSessions       AdminSession[]
+  auditLogs           AuditLog[]      @relation("AuditActor")
+  payments            Payment[]
 }
 
 model Listing {
@@ -118,6 +122,28 @@ model AuditLog {
   @@index([actorId])
   @@index([action])
   @@index([createdAt])
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  amount          Float    @default(10)
+  paymentMethod   String   @default("upi_qr") // "upi_qr" | "razorpay"
+  utrNumber       String?  // UTR/reference number from user
+  screenshotUrl   String?  // uploaded screenshot URL
+  upiId           String?  // UPI ID used for payment
+  status          String   @default("pending") // "pending" | "verified" | "rejected" | "expired"
+  uploadCredit    Int      @default(1) // credits granted after verification
+  expiresAt       DateTime // 5 minute expiry for pending payments
+  verifiedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([utrNumber])
+  @@index([expiresAt])
 }
 
 model RateLimitEntry {

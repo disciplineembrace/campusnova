@@ -15,6 +15,9 @@ export interface User {
   rating: number
   totalSales: number
   whatsapp?: string | null
+  freeUploadUsed?: number
+  paidUploadCredits?: number
+  totalBooksUploaded?: number
 }
 
 export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'terms' | 'privacy' | 'reader' | 'dashboard' | 'saved' | 'categories'

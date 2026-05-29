@@ -129,6 +129,26 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Too many listings created recently. Please wait a few minutes.' }, { status: 429 })
     }
 
+    // Check upload credits
+    const FREE_UPLOAD_LIMIT = 5
+    const user = await db.user.findUnique({ where: { id: sellerId } })
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 })
+    }
+
+    const freeRemaining = Math.max(0, FREE_UPLOAD_LIMIT - user.freeUploadUsed)
+    const totalCredits = freeRemaining + user.paidUploadCredits
+
+    if (totalCredits <= 0) {
+      return NextResponse.json({ 
+        error: 'Upload limit reached. Please purchase upload credits to continue.', 
+        code: 'UPLOAD_LIMIT_REACHED',
+        freeUploadUsed: user.freeUploadUsed,
+        freeUploadLimit: FREE_UPLOAD_LIMIT,
+        paidUploadCredits: user.paidUploadCredits,
+      }, { status: 403 })
+    }
+
     const listing = await db.listing.create({
       data: {
         title: title.trim(),
@@ -154,7 +174,24 @@ export async function POST(request: Request) {
       include: { seller: true }
     })
 
-    await db.user.update({ where: { id: sellerId }, data: { totalSales: { increment: 1 } } })
+    // Deduct upload credit and update counters
+    if (user.freeUploadUsed < FREE_UPLOAD_LIMIT) {
+      await db.user.update({ 
+        where: { id: sellerId }, 
+        data: { 
+          freeUploadUsed: { increment: 1 },
+          totalBooksUploaded: { increment: 1 },
+        } 
+      })
+    } else {
+      await db.user.update({ 
+        where: { id: sellerId }, 
+        data: { 
+          paidUploadCredits: { decrement: 1 },
+          totalBooksUploaded: { increment: 1 },
+        } 
+      })
+    }
 
     return NextResponse.json({ listing }, { status: 201 })
   } catch (error) {

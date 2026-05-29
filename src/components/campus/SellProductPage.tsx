@@ -7,7 +7,7 @@ import {
   Loader2, AlertCircle, Camera, Sparkles, Trash2,
   Stethoscope, Wrench, GraduationCap, Target, Landmark,
   Scale, Calculator, Bed, FileText, ChevronRight, Shield,
-  ChevronLeft, RotateCcw, Info
+  ChevronLeft, RotateCcw, Info, CreditCard, Zap
 } from 'lucide-react'
 import { useAppStore, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, BOARDS, STANDARDS, LISTING_TYPES, formatINR } from '@/lib/store'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { toast } from 'sonner'
+import PaymentModal from '@/components/campus/PaymentModal'
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText,
@@ -111,6 +112,9 @@ function sanitizeInput(str: string): string {
 
 export default function SellProductPage() {
   const { currentUser, setCurrentPage, setSelectedProductId } = useAppStore()
+  const [uploadCredits, setUploadCredits] = useState<{ freeRemaining: number; paidCredits: number; totalCredits: number; canUpload: boolean; freeUploadLimit: number } | null>(null)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [creditsLoading, setCreditsLoading] = useState(true)
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -162,6 +166,39 @@ export default function SellProductPage() {
       })
     }
   }, [])
+
+  // Fetch upload credits on mount
+  useEffect(() => {
+    if (!currentUser) return
+    const fetchCredits = async () => {
+      setCreditsLoading(true)
+      try {
+        const res = await fetch(`/api/payment?userId=${currentUser.id}`)
+        if (res.ok) {
+          const data = await res.json()
+          setUploadCredits(data)
+        }
+      } catch {
+        // ignore
+      } finally {
+        setCreditsLoading(false)
+      }
+    }
+    fetchCredits()
+  }, [currentUser])
+
+  const refreshCredits = useCallback(async () => {
+    if (!currentUser) return
+    try {
+      const res = await fetch(`/api/payment?userId=${currentUser.id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setUploadCredits(data)
+      }
+    } catch {
+      // ignore
+    }
+  }, [currentUser])
 
   // Update whatsapp when user changes
   useEffect(() => {
@@ -523,6 +560,13 @@ export default function SellProductPage() {
 
         if (res.ok && data.listing?.id) {
           serverListingId = data.listing.id
+        } else if (data.code === 'UPLOAD_LIMIT_REACHED') {
+          // Upload limit reached - show payment modal
+          toast.error('Upload limit reached. Please buy more credits.', { id: 'listing-status' })
+          refreshCredits()
+          setShowPaymentModal(true)
+          setSubmitting(false)
+          return
         } else {
           // API failed - save locally as fallback
           saveListingLocally({ ...listingPayload, id: listingId })
@@ -667,6 +711,66 @@ export default function SellProductPage() {
             Sell on <span className="gradient-text">CampusNova</span>
           </h1>
           <p className="text-muted-foreground">List your product in under 2 minutes and reach thousands of students across India</p>
+
+          {/* Upload Credits Banner */}
+          {uploadCredits && !creditsLoading && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className={`mt-4 p-4 rounded-2xl border-2 ${
+                uploadCredits.canUpload 
+                  ? 'bg-brand/5 border-brand/20' 
+                  : 'bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                    uploadCredits.canUpload 
+                      ? 'bg-brand/10 text-brand' 
+                      : 'bg-red-100 dark:bg-red-900/30 text-red-500'
+                  }`}>
+                    {uploadCredits.canUpload ? <Zap className="w-5 h-5" /> : <CreditCard className="w-5 h-5" />}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">
+                      {uploadCredits.canUpload 
+                        ? `${uploadCredits.totalCredits} Upload Credit${uploadCredits.totalCredits > 1 ? 's' : ''} Available`
+                        : 'Upload Limit Reached'
+                      }
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {uploadCredits.freeRemaining > 0 
+                        ? `${uploadCredits.freeRemaining} free · ${uploadCredits.paidUploadCredits} paid`
+                        : uploadCredits.paidUploadCredits > 0 
+                          ? `${uploadCredits.paidUploadCredits} paid credit${uploadCredits.paidUploadCredits > 1 ? 's' : ''}`
+                          : 'Buy credits to upload more books'
+                      }
+                    </p>
+                  </div>
+                </div>
+                {!uploadCredits.canUpload && (
+                  <Button
+                    size="sm"
+                    onClick={() => setShowPaymentModal(true)}
+                    className="btn-gradient text-white border-0 rounded-xl gap-1.5"
+                  >
+                    <CreditCard className="w-3.5 h-3.5" />
+                    Buy ₹10
+                  </Button>
+                )}
+              </div>
+              {uploadCredits.canUpload && (
+                <div className="mt-2">
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">Free uploads used</span>
+                    <span className="font-medium">{uploadCredits.freeRemaining}/{uploadCredits.freeUploadLimit}</span>
+                  </div>
+                  <Progress value={(1 - uploadCredits.freeRemaining / uploadCredits.freeUploadLimit) * 100} className="h-1.5" />
+                </div>
+              )}
+            </motion.div>
+          )}
         </motion.div>
 
         {/* Progress Steps */}
@@ -1569,6 +1673,16 @@ export default function SellProductPage() {
           </motion.div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {currentUser && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          userId={currentUser.id}
+          onPaymentSuccess={refreshCredits}
+        />
+      )}
     </div>
   )
 }
