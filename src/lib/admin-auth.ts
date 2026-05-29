@@ -1,10 +1,12 @@
-import { createHmac, timingSafeEqual, randomBytes } from 'crypto'
+import { createHmac, timingSafeEqual } from 'crypto'
 import { db } from './db'
 import { cookies } from 'next/headers'
+import bcrypt from 'bcryptjs'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-jwt-secret-2024-secure'
 const ADMIN_COOKIE_NAME = 'cnx_admin_session'
 const SESSION_DURATION = 4 * 60 * 60 * 1000 // 4 hours
+const BCRYPT_ROUNDS = 12
 
 export type AdminRole = 'super_admin' | 'moderator' | 'support_admin'
 
@@ -16,7 +18,29 @@ export interface AdminPayload {
   exp: number
 }
 
-// Create a signed token using HMAC (no external dependency needed)
+// ─── Password Hashing (bcrypt) ───
+
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, BCRYPT_ROUNDS)
+}
+
+export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  return bcrypt.compare(password, hash)
+}
+
+export function validatePasswordStrength(password: string): { valid: boolean; errors: string[] } {
+  const errors: string[] = []
+  if (password.length < 8) errors.push('Password must be at least 8 characters')
+  if (password.length > 128) errors.push('Password must be less than 128 characters')
+  if (!/[A-Z]/.test(password)) errors.push('Password must contain at least one uppercase letter')
+  if (!/[a-z]/.test(password)) errors.push('Password must contain at least one lowercase letter')
+  if (!/[0-9]/.test(password)) errors.push('Password must contain at least one number')
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) errors.push('Password must contain at least one special character')
+  return { valid: errors.length === 0, errors }
+}
+
+// ─── JWT Token Creation / Verification ───
+
 function createSignedToken(payload: AdminPayload): string {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
@@ -24,7 +48,6 @@ function createSignedToken(payload: AdminPayload): string {
   return `${header}.${body}.${signature}`
 }
 
-// Verify a signed token
 function verifySignedToken(token: string): AdminPayload | null {
   try {
     const parts = token.split('.')
@@ -33,7 +56,6 @@ function verifySignedToken(token: string): AdminPayload | null {
     const [header, body, signature] = parts
     const expectedSignature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url')
 
-    // Timing-safe comparison to prevent timing attacks
     const sigBuffer = Buffer.from(signature)
     const expectedBuffer = Buffer.from(expectedSignature)
     if (sigBuffer.length !== expectedBuffer.length) return null
@@ -41,7 +63,6 @@ function verifySignedToken(token: string): AdminPayload | null {
 
     const payload = JSON.parse(Buffer.from(body, 'base64url').toString()) as AdminPayload
 
-    // Check expiration
     if (payload.exp && payload.exp * 1000 < Date.now()) return null
 
     return payload
@@ -50,7 +71,8 @@ function verifySignedToken(token: string): AdminPayload | null {
   }
 }
 
-// Generate JWT token for admin session
+// ─── Admin Session Management ───
+
 export async function createAdminSession(userId: string, email: string, role: AdminRole, ipAddress?: string, userAgent?: string) {
   try {
     const iat = Math.floor(Date.now() / 1000)
@@ -76,13 +98,11 @@ export async function createAdminSession(userId: string, email: string, role: Ad
   }
 }
 
-// Verify admin JWT token
 export async function verifyAdminToken(token: string): Promise<AdminPayload | null> {
   try {
     const payload = verifySignedToken(token)
     if (!payload) return null
 
-    // Check session in DB
     const session = await db.adminSession.findUnique({
       where: { token },
       include: { user: true }
@@ -98,7 +118,6 @@ export async function verifyAdminToken(token: string): Promise<AdminPayload | nu
   }
 }
 
-// Get admin from cookies (server-side only)
 export async function getAdminFromCookies(): Promise<AdminPayload | null> {
   try {
     const cookieStore = await cookies()
@@ -110,7 +129,6 @@ export async function getAdminFromCookies(): Promise<AdminPayload | null> {
   }
 }
 
-// Revoke admin session
 export async function revokeAdminSession(token: string) {
   try {
     await db.adminSession.update({
@@ -122,7 +140,6 @@ export async function revokeAdminSession(token: string) {
   }
 }
 
-// Clean expired sessions
 export async function cleanExpiredSessions() {
   try {
     await db.adminSession.deleteMany({
@@ -133,11 +150,12 @@ export async function cleanExpiredSessions() {
   }
 }
 
-// Role permissions
+// ─── Role Permissions ───
+
 export const ROLE_PERMISSIONS: Record<AdminRole, string[]> = {
   super_admin: ['all'],
-  moderator: ['delete_listing', 'ban_user', 'verify_seller', 'manage_reports', 'feature_listing'],
-  support_admin: ['manage_reports', 'verify_seller'],
+  moderator: ['delete_listing', 'ban_user', 'verify_seller', 'manage_reports', 'feature_listing', 'manage_payments', 'approve_uploads'],
+  support_admin: ['manage_reports', 'verify_seller', 'manage_payments', 'approve_uploads'],
 }
 
 export function hasPermission(role: AdminRole, permission: string): boolean {

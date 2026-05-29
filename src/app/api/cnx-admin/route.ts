@@ -60,6 +60,16 @@ export async function GET(request: Request) {
     return NextResponse.json({ logs })
   }
 
+  if (type === 'payments') {
+    if (!hasPermission(admin.role as AdminRole, 'manage_payments')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const payments = await db.payment.findMany({
+      include: { user: { select: { id: true, name: true, email: true, college: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 100,
+    })
+    return NextResponse.json({ payments })
+  }
+
   return NextResponse.json({ error: 'Invalid type' }, { status: 400 })
 }
 
@@ -122,6 +132,29 @@ export async function POST(request: Request) {
         if (!hasPermission(admin.role as AdminRole, 'manage_reports')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
         await db.report.update({ where: { id: targetId }, data: { isResolved: true } })
         await db.auditLog.create({ data: { actorId: admin.userId, action: 'resolve_report', targetType: 'report', targetId, ipAddress: ip } })
+        return NextResponse.json({ success: true })
+      }
+      case 'approve_payment': {
+        if (!hasPermission(admin.role as AdminRole, 'manage_payments')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        const payment = await db.payment.findUnique({ where: { id: targetId } })
+        if (!payment) return NextResponse.json({ error: 'Payment not found' }, { status: 404 })
+        if (payment.status === 'verified') return NextResponse.json({ error: 'Already verified' }, { status: 400 })
+        await db.payment.update({ where: { id: targetId }, data: { status: 'verified', verifiedAt: new Date() } })
+        await db.user.update({ where: { id: payment.userId }, data: { paidUploadCredits: { increment: payment.uploadCredit } } })
+        await db.auditLog.create({ data: { actorId: admin.userId, action: 'approve_payment', targetType: 'payment', targetId, ipAddress: ip, details: JSON.stringify({ amount: payment.amount, userId: payment.userId }) } })
+        return NextResponse.json({ success: true })
+      }
+      case 'reject_payment': {
+        if (!hasPermission(admin.role as AdminRole, 'manage_payments')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        await db.payment.update({ where: { id: targetId }, data: { status: 'rejected' } })
+        await db.auditLog.create({ data: { actorId: admin.userId, action: 'reject_payment', targetType: 'payment', targetId, ipAddress: ip, details: details || null } })
+        return NextResponse.json({ success: true })
+      }
+      case 'grant_credits': {
+        if (!hasPermission(admin.role as AdminRole, 'all')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+        const credits = Number(details?.credits) || 1
+        await db.user.update({ where: { id: targetId }, data: { paidUploadCredits: { increment: credits } } })
+        await db.auditLog.create({ data: { actorId: admin.userId, action: 'grant_credits', targetType: 'user', targetId, ipAddress: ip, details: JSON.stringify({ credits }) } })
         return NextResponse.json({ success: true })
       }
       default:

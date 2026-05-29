@@ -19,6 +19,8 @@ model User {
   isVerified          Boolean         @default(false)
   isAdmin             Boolean         @default(false)
   adminRole           String?         // "super_admin" | "moderator" | "support_admin"
+  passwordHash        String?         // bcrypt hashed password for admin accounts
+  mustChangePassword  Boolean         @default(false) // force password change on first login
   isBanned            Boolean         @default(false)
   rating              Float           @default(0)
   totalSales          Int             @default(0)

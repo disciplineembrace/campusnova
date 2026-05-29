@@ -1,15 +1,56 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { createAdminSession, type AdminRole } from '@/lib/admin-auth'
+import { createAdminSession, verifyPassword, hashPassword, validatePasswordStrength, type AdminRole } from '@/lib/admin-auth'
 
 // Rate limiting in-memory (production would use Redis)
 const loginAttempts = new Map<string, { count: number; lastAttempt: number }>()
 const MAX_ATTEMPTS = 5
 const LOCKOUT_DURATION = 15 * 60 * 1000 // 15 minutes
 
+// POST - Admin login with email + password
 export async function POST(request: Request) {
   try {
-    const { email, secretKey } = await request.json()
+    const { email, password, action } = await request.json()
+
+    // ─── Change Password Action ───
+    if (action === 'change_password') {
+      const { currentPassword, newPassword } = await request.json()
+
+      if (!email || !currentPassword || !newPassword) {
+        return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
+      }
+
+      const user = await db.user.findUnique({ where: { email } })
+      if (!user || !user.isAdmin || !user.passwordHash) {
+        return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+      }
+
+      const isValid = await verifyPassword(currentPassword, user.passwordHash)
+      if (!isValid) {
+        return NextResponse.json({ error: 'Current password is incorrect' }, { status: 401 })
+      }
+
+      const validation = validatePasswordStrength(newPassword)
+      if (!validation.valid) {
+        return NextResponse.json({ error: validation.errors.join('. ') }, { status: 400 })
+      }
+
+      const newHash = await hashPassword(newPassword)
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          passwordHash: newHash,
+          mustChangePassword: false,
+        }
+      })
+
+      return NextResponse.json({ success: true, message: 'Password changed successfully' })
+    }
+
+    // ─── Login Action ───
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })
+    }
 
     // Rate limiting by IP
     const forwarded = request.headers.get('x-forwarded-for')
@@ -18,14 +59,14 @@ export async function POST(request: Request) {
     const attempt = loginAttempts.get(ip)
 
     if (attempt && attempt.count >= MAX_ATTEMPTS && now - attempt.lastAttempt < LOCKOUT_DURATION) {
-      return NextResponse.json({ error: 'Too many attempts. Try again later.' }, { status: 429 })
+      return NextResponse.json({ error: 'Too many attempts. Try again in 15 minutes.' }, { status: 429 })
     }
 
     if (attempt && now - attempt.lastAttempt > LOCKOUT_DURATION) {
       loginAttempts.delete(ip)
     }
 
-    // Step 1: Verify admin credentials
+    // Step 1: Find admin user by email
     let user
     try {
       user = await db.user.findUnique({ where: { email } })
@@ -37,15 +78,20 @@ export async function POST(request: Request) {
     if (!user || !user.isAdmin || user.isBanned) {
       const current = loginAttempts.get(ip) || { count: 0, lastAttempt: 0 }
       loginAttempts.set(ip, { count: current.count + 1, lastAttempt: now })
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
-    // Step 2: Verify secret key
-    const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'campusnova-admin-2024'
-    if (secretKey !== ADMIN_SECRET) {
+    // Step 2: Verify password with bcrypt
+    if (!user.passwordHash) {
+      // Admin has no password set yet - shouldn't happen but handle gracefully
+      return NextResponse.json({ error: 'Account not configured. Contact super admin.' }, { status: 403 })
+    }
+
+    const passwordValid = await verifyPassword(password, user.passwordHash)
+    if (!passwordValid) {
       const current = loginAttempts.get(ip) || { count: 0, lastAttempt: 0 }
       loginAttempts.set(ip, { count: current.count + 1, lastAttempt: now })
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 })
+      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
     // Step 3: Create session token
@@ -74,7 +120,13 @@ export async function POST(request: Request) {
     // Set secure HTTP-only cookie
     const response = NextResponse.json({
       success: true,
-      admin: { id: user.id, name: user.name, email: user.email, role: user.adminRole || 'support_admin' }
+      admin: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.adminRole || 'support_admin',
+        mustChangePassword: user.mustChangePassword,
+      }
     })
 
     response.cookies.set('cnx_admin_session', token, {
@@ -88,6 +140,6 @@ export async function POST(request: Request) {
     return response
   } catch (error) {
     console.error('Admin auth error:', error)
-    return NextResponse.json({ error: 'Authentication failed', detail: String(error) }, { status: 500 })
+    return NextResponse.json({ error: 'Authentication failed' }, { status: 500 })
   }
 }

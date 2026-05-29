@@ -18,6 +18,8 @@ export interface User {
   freeUploadUsed?: number
   paidUploadCredits?: number
   totalBooksUploaded?: number
+  mustChangePassword?: boolean
+  adminRole?: string | null
 }
 
 export type PageType = 'home' | 'explore' | 'product' | 'sell' | 'login' | 'profile' | 'wishlist' | 'terms' | 'privacy' | 'reader' | 'dashboard' | 'saved' | 'categories'
