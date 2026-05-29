@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Search, Sun, Moon, Menu, X, Heart, User, LogOut, ChevronDown, Home, Compass, PlusCircle, UserCircle } from 'lucide-react'
+import { Sparkles, Search, Sun, Moon, Menu, X, Heart, User, LogOut, ChevronDown, Home, Compass, PlusCircle, LayoutGrid, BookOpen, Brain } from 'lucide-react'
 import { useAppStore, type PageType } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,6 +11,9 @@ import { Badge } from '@/components/ui/badge'
 const NAV_ITEMS: { label: string; page: PageType; icon: React.ElementType }[] = [
   { label: 'Home', page: 'home', icon: Home },
   { label: 'Explore', page: 'explore', icon: Compass },
+  { label: 'Categories', page: 'categories', icon: LayoutGrid },
+  { label: 'Reader', page: 'reader', icon: BookOpen },
+  { label: 'Dashboard', page: 'dashboard', icon: Brain },
   { label: 'Sell', page: 'sell', icon: PlusCircle },
 ]
 

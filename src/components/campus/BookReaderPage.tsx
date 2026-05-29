@@ -222,8 +222,10 @@ Key Constants:
 type ReadingMode = 'light' | 'dark' | 'sepia'
 
 export default function BookReaderPage() {
-  const { setCurrentPage, selectedProductId, bookmarks, toggleBookmark, readingProgress, setReadingProgress } = useAppStore()
-  const [currentPage, setCurrentPage] = useState(1)
+  const { setCurrentPage: navigateToPage, selectedProductId, bookmarks, toggleBookmark, readingProgress, setReadingProgress } = useAppStore()
+  const bookId = selectedProductId || 'sample-book'
+  const savedProgress = readingProgress[bookId]
+  const [currentPage, setPage] = useState(savedProgress && savedProgress > 1 ? savedProgress : 1)
   const [fontSize, setFontSize] = useState(16)
   const [readingMode, setReadingMode] = useState<ReadingMode>('light')
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -231,15 +233,7 @@ export default function BookReaderPage() {
   const [zoom, setZoom] = useState(100)
 
   const totalPages = SAMPLE_BOOK.totalPages
-  const bookId = selectedProductId || 'sample-book'
   const isBookmarked = bookmarks.includes(bookId)
-
-  useEffect(() => {
-    const saved = readingProgress[bookId]
-    if (saved && saved > 1) {
-      setCurrentPage(saved)
-    }
-  }, [bookId, readingProgress])
 
   useEffect(() => {
     setReadingProgress(bookId, currentPage)
@@ -247,7 +241,7 @@ export default function BookReaderPage() {
 
   const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page)
+      setPage(page)
     }
   }
 
@@ -266,7 +260,7 @@ export default function BookReaderPage() {
       <div className={`sticky top-0 z-40 ${controlsVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-300 ${readingMode === 'light' ? 'bg-white/90 border-b border-gray-200' : readingMode === 'dark' ? 'bg-[#1a1a2e]/90 border-b border-gray-700' : 'bg-[#f4ecd8]/90 border-b border-amber-200'} backdrop-blur-md`}>
         <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => setCurrentPage('home')} className="rounded-xl">
+            <Button variant="ghost" size="icon" onClick={() => navigateToPage('home')} className="rounded-xl">
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <div className="min-w-0">
