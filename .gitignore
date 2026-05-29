@@ -52,3 +52,17 @@ prompt
 server.log
 # Skills directory
 /skills/
+
+# Database (SQLite)
+db/*.db
+db/*.db-journal
+
+# User uploaded files
+public/uploads/*
+!public/uploads/.gitkeep
+
+# Prisma client (generated)
+src/generated/
+
+# Worklog
+worklog.md
