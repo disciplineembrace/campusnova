@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, BookOpen, X, MapPin, MessageCircle } from 'lucide-react'
-import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
+import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
@@ -89,6 +89,7 @@ export default function WishlistPage() {
             <AnimatePresence>
               {listings.map((listing, i) => {
                 const lcat = CATEGORIES.find(c => c.id === listing.category)
+                const listingImgs = parseListingImages(listing.images)
                 const savings = listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
 
                 return (
@@ -102,8 +103,12 @@ export default function WishlistPage() {
                     className="group card-premium glow-hover overflow-hidden cursor-pointer"
                     onClick={() => { setSelectedProductId(listing.id); setCurrentPage('product') }}
                   >
-                    <div className={`relative aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
-                      <BookOpen className="w-10 h-10 text-white/50" />
+                    <div className={`relative aspect-[4/3] ${listingImgs.length > 0 ? '' : `bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}`}>
+                      {listingImgs.length > 0 ? (
+                        <img src={listingImgs[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <BookOpen className="w-10 h-10 text-white/50" />
+                      )}
                       {savings > 0 && (
                         <Badge className="absolute bottom-3 left-3 bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">Save {savings}%</Badge>
                       )}

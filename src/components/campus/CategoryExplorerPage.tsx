@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, BookOpen, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText, PenTool, Calculator, Palette, Bed, FlaskConical, Ruler, Lamp, FolderOpen, Paintbrush, Package, BookMarked, Backpack, Sparkles, ArrowRight } from 'lucide-react'
-import { useAppStore, CATEGORIES, formatINR } from '@/lib/store'
+import { useAppStore, CATEGORIES, formatINR, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -212,6 +212,7 @@ export default function CategoryExplorerPage() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {listings.map((listing, i) => {
                   const cat = CATEGORIES.find(c => c.id === listing.category)
+                  const listingImgs = parseListingImages(listing.images)
                   const savings = listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
                   return (
                     <motion.div
@@ -223,8 +224,12 @@ export default function CategoryExplorerPage() {
                       whileHover={{ y: -4 }}
                       onClick={() => handleListingClick(listing.id)}
                     >
-                      <div className={`relative aspect-[4/3] bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
-                        <BookOpen className="w-10 h-10 text-white/50" />
+                      <div className={`relative aspect-[4/3] ${listingImgs.length > 0 ? '' : `bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}`}>
+                        {listingImgs.length > 0 ? (
+                          <img src={listingImgs[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+                        ) : (
+                          <BookOpen className="w-10 h-10 text-white/50" />
+                        )}
                         {listing.isDigital && (
                           <Badge className="absolute top-2 right-2 digital-pulse bg-cyan text-white border-0 text-[9px] px-1.5 py-0.5 rounded-full">Digital</Badge>
                         )}

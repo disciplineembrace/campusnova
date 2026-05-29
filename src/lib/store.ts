@@ -190,3 +190,14 @@ export function formatINR(amount: number): string {
   const formatted = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree
   return '₹' + formatted
 }
+
+/** Parse the images JSON string from a listing. Returns string[] of image URLs. */
+export function parseListingImages(imagesJson: string | null | undefined): string[] {
+  if (!imagesJson) return []
+  try {
+    const parsed = JSON.parse(imagesJson)
+    return Array.isArray(parsed) ? parsed.filter((url: unknown) => typeof url === 'string') : []
+  } catch {
+    return []
+  }
+}

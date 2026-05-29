@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, SlidersHorizontal, X, ChevronDown, BookOpen, MapPin, ArrowUpDown, Heart, MessageCircle, BadgeCheck, Flame, Star, Eye } from 'lucide-react'
-import { useAppStore, formatINR, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS } from '@/lib/store'
+import { useAppStore, formatINR, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -291,6 +291,7 @@ export default function ExplorePage() {
                 const isWishlisted = wishlist.includes(listing.id)
                 const savings = listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
                 const lcat = CATEGORIES.find(c => c.id === listing.category)
+                const listingImages = parseListingImages(listing.images)
                 const conditionColor: Record<string, string> = {
                   'Like New': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
                   'Good': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -308,8 +309,12 @@ export default function ExplorePage() {
                     whileHover={{ y: -6 }}
                     onClick={() => handleCardClick(listing.id)}
                   >
-                    <div className={`relative aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
-                      <BookOpen className="w-12 h-12 text-white/60" />
+                    <div className={`relative aspect-[4/3] ${listingImages.length > 0 ? '' : `bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}`}>
+                      {listingImages.length > 0 ? (
+                        <img src={listingImages[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+                      ) : (
+                        <BookOpen className="w-12 h-12 text-white/60" />
+                      )}
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                         {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Star className="w-3 h-3 mr-0.5" />Featured</Badge>}
                         {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Flame className="w-3 h-3 mr-0.5" />Urgent</Badge>}

@@ -81,16 +81,57 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { title, description, originalPrice, sellingPrice, category, subcategory, listingType, course, semester, standard, board, college, city, condition, whatsappNumber, sellerId, isDigital, fileUrl } = body
+    const { title, description, originalPrice, sellingPrice, category, subcategory, listingType, course, semester, standard, board, college, city, condition, whatsappNumber, sellerId, isDigital, fileUrl, images } = body
 
+    // Validate required fields
     if (!title || !description || !category || !city || !condition || !whatsappNumber || !sellerId) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+      return NextResponse.json({ error: 'Missing required fields: title, description, category, city, condition, whatsappNumber, sellerId are required' }, { status: 400 })
+    }
+
+    // Validate selling price
+    if (!sellingPrice || sellingPrice <= 0) {
+      return NextResponse.json({ error: 'Selling price must be greater than 0' }, { status: 400 })
+    }
+
+    // Validate whatsapp number (Indian 10-digit)
+    if (!/^\d{10}$/.test(whatsappNumber.replace(/\s/g, ''))) {
+      return NextResponse.json({ error: 'Invalid WhatsApp number format' }, { status: 400 })
+    }
+
+    // Parse and validate images
+    let imagesJson = '[]'
+    if (images) {
+      try {
+        const parsed = typeof images === 'string' ? JSON.parse(images) : images
+        if (Array.isArray(parsed)) {
+          // Validate each URL is a safe path
+          const safeUrls = parsed.filter((url: string) => {
+            if (typeof url !== 'string') return false
+            // Only allow relative paths from our upload directory
+            return url.startsWith('/uploads/') && !url.includes('..')
+          })
+          imagesJson = JSON.stringify(safeUrls)
+        }
+      } catch {
+        imagesJson = '[]'
+      }
+    }
+
+    // Rate limiting: Check if seller has created too many listings recently
+    const recentListings = await db.listing.count({
+      where: {
+        sellerId,
+        createdAt: { gte: new Date(Date.now() - 5 * 60 * 1000) } // Last 5 minutes
+      }
+    })
+    if (recentListings >= 5) {
+      return NextResponse.json({ error: 'Too many listings created recently. Please wait a few minutes.' }, { status: 429 })
     }
 
     const listing = await db.listing.create({
       data: {
-        title,
-        description,
+        title: title.trim(),
+        description: description.trim(),
         originalPrice: originalPrice || 0,
         sellingPrice: sellingPrice || 0,
         category,
@@ -103,8 +144,9 @@ export async function POST(request: Request) {
         college: college || null,
         city,
         condition,
-        whatsappNumber,
+        whatsappNumber: whatsappNumber.replace(/\s/g, ''),
         sellerId,
+        images: imagesJson,
         isDigital: isDigital || false,
         fileUrl: fileUrl || null,
       },

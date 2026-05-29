@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Heart, MessageCircle, MapPin, Star, Shield, BadgeCheck, Eye, Flag, BookOpen, Share2, Clock, Bookmark, BookOpenCheck } from 'lucide-react'
-import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
+import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -29,9 +29,12 @@ interface ListingDetail {
   city: string
   condition: string
   whatsappNumber: string
+  images: string
   isFeatured: boolean
   isUrgent: boolean
   isVerified: boolean
+  isDigital: boolean
+  listingType: string
   views: number
   createdAt: string
   seller: {
@@ -76,9 +79,12 @@ export default function ProductDetailPage() {
 
   const isWishlisted = listing ? wishlist.includes(listing.id) : false
   const isSaved = listing ? savedMaterials.includes(listing.id) : false
-  const isDigital = listing ? (listing as ListingDetail & { isDigital?: boolean; listingType?: string }).isDigital : false
-  const listingType = listing ? (listing as ListingDetail & { listingType?: string }).listingType : 'sell'
+  const isDigital = listing?.isDigital || false
+  const listingType = listing?.listingType || 'sell'
   const savings = listing && listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
+
+  // Parse images from listing
+  const listingImages = parseListingImages(listing?.images)
   const cat = listing ? CATEGORIES.find(c => c.id === listing.category) : null
   const conditionColor: Record<string, string> = {
     'Like New': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
@@ -164,8 +170,16 @@ export default function ProductDetailPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className={`relative aspect-square rounded-2xl overflow-hidden bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
-              <BookOpen className="w-24 h-24 text-white/50" />
+            <div className={`relative aspect-square rounded-2xl overflow-hidden ${listingImages.length > 0 ? '' : `bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}`}>
+              {listingImages.length > 0 ? (
+                <img
+                  src={listingImages[currentImageIndex] || listingImages[0]}
+                  alt={listing.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <BookOpen className="w-24 h-24 text-white/50" />
+              )}
 
               {/* Badges */}
               <div className="absolute top-4 left-4 flex flex-wrap gap-2">
@@ -175,25 +189,45 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Image nav dots */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                <button className={`w-2 h-2 rounded-full ${currentImageIndex === 0 ? 'bg-white' : 'bg-white/40'}`} onClick={() => setCurrentImageIndex(0)} />
-                <button className={`w-2 h-2 rounded-full ${currentImageIndex === 1 ? 'bg-white' : 'bg-white/40'}`} onClick={() => setCurrentImageIndex(1)} />
-                <button className={`w-2 h-2 rounded-full ${currentImageIndex === 2 ? 'bg-white' : 'bg-white/40'}`} onClick={() => setCurrentImageIndex(2)} />
-              </div>
+              {listingImages.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                  {listingImages.map((_, idx) => (
+                    <button
+                      key={idx}
+                      className={`w-2 h-2 rounded-full ${currentImageIndex === idx ? 'bg-white' : 'bg-white/40'}`}
+                      onClick={() => setCurrentImageIndex(idx)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Thumbnail row */}
-            <div className="flex gap-2 mt-3">
-              {[0, 1, 2].map(i => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentImageIndex(i)}
-                  className={`flex-1 aspect-[4/3] rounded-xl bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity ${currentImageIndex === i ? 'ring-2 ring-brand opacity-100' : ''}`}
-                >
-                  <BookOpen className="w-6 h-6 text-white/50" />
-                </button>
-              ))}
-            </div>
+            {listingImages.length > 1 ? (
+              <div className="flex gap-2 mt-3 overflow-x-auto scrollbar-hide">
+                {listingImages.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={`shrink-0 w-20 aspect-[4/3] rounded-xl overflow-hidden transition-all ${currentImageIndex === idx ? 'ring-2 ring-brand opacity-100' : 'opacity-60 hover:opacity-100'}`}
+                  >
+                    <img src={imgUrl} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            ) : listingImages.length <= 1 ? (
+              <div className="flex gap-2 mt-3">
+                {[0, 1, 2].map(i => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImageIndex(i)}
+                    className={`flex-1 aspect-[4/3] rounded-xl bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity ${currentImageIndex === i ? 'ring-2 ring-brand opacity-100' : ''}`}
+                  >
+                    <BookOpen className="w-6 h-6 text-white/50" />
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </motion.div>
 
           {/* Details */}

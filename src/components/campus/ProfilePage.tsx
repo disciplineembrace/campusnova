@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { User, Star, BookOpen, Heart, Settings, BadgeCheck, MapPin, GraduationCap, Mail, Phone, ArrowLeft } from 'lucide-react'
-import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
+import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
@@ -215,14 +215,19 @@ export default function ProfilePage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {myListings.map(listing => {
                   const lcat = CATEGORIES.find(c => c.id === listing.category)
+                  const listingImgs = parseListingImages(listing.images)
                   return (
                     <Card
                       key={listing.id}
                       className="overflow-hidden cursor-pointer hover:shadow-md transition-all card-premium"
                       onClick={() => { setSelectedProductId(listing.id); setCurrentPage('product') }}
                     >
-                      <div className={`aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center relative`}>
-                        <BookOpen className="w-8 h-8 text-white/50" />
+                      <div className={`aspect-[4/3] ${listingImgs.length > 0 ? '' : `bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`} relative`}>
+                        {listingImgs.length > 0 ? (
+                          <img src={listingImgs[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+                        ) : (
+                          <BookOpen className="w-8 h-8 text-white/50" />
+                        )}
                         {listing.isSold && <Badge className="absolute bg-gray-500 text-white border-0 rounded-full">Sold</Badge>}
                       </div>
                       <div className="p-3">
@@ -248,14 +253,19 @@ export default function ProfilePage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {wishlistListings.map(listing => {
                   const lcat = CATEGORIES.find(c => c.id === listing.category)
+                  const listingImgs = parseListingImages(listing.images)
                   return (
                     <Card
                       key={listing.id}
                       className="overflow-hidden cursor-pointer hover:shadow-md transition-all card-premium"
                       onClick={() => { setSelectedProductId(listing.id); setCurrentPage('product') }}
                     >
-                      <div className={`aspect-[4/3] bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}>
-                        <BookOpen className="w-8 h-8 text-white/50" />
+                      <div className={`aspect-[4/3] ${listingImgs.length > 0 ? '' : `bg-gradient-to-br ${lcat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`}`}>
+                        {listingImgs.length > 0 ? (
+                          <img src={listingImgs[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+                        ) : (
+                          <BookOpen className="w-8 h-8 text-white/50" />
+                        )}
                       </div>
                       <div className="p-3">
                         <h4 className="text-sm font-medium line-clamp-1">{listing.title}</h4>

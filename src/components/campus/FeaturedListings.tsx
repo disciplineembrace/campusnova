@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, MapPin, Star, MessageCircle, BookOpen, BadgeCheck, Flame, Eye } from 'lucide-react'
-import { useAppStore, formatINR, CATEGORIES } from '@/lib/store'
+import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -31,6 +31,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
   const isWishlisted = wishlist.includes(listing.id)
   const savings = listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
   const cat = CATEGORIES.find(c => c.id === listing.category)
+  const listingImages = parseListingImages(listing.images)
   const conditionColor: Record<string, string> = {
     'Like New': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
     'Good': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -54,8 +55,12 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
       onClick={handleCardClick}
     >
       {/* Image placeholder */}
-      <div className={`relative aspect-[4/3] bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center overflow-hidden`}>
-        <BookOpen className="w-12 h-12 text-white/60" />
+      <div className={`relative aspect-[4/3] ${listingImages.length > 0 ? '' : `bg-gradient-to-br ${cat?.color || 'from-gray-400 to-gray-500'} flex items-center justify-center`} overflow-hidden`}>
+        {listingImages.length > 0 ? (
+          <img src={listingImages[0]} alt={listing.title} className="w-full h-full object-cover" loading="lazy" />
+        ) : (
+          <BookOpen className="w-12 h-12 text-white/60" />
+        )}
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
