@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import { createHmac, timingSafeEqual, randomBytes } from 'crypto'
 import { db } from './db'
 import { cookies } from 'next/headers'
 
@@ -16,10 +16,48 @@ export interface AdminPayload {
   exp: number
 }
 
+// Create a signed token using HMAC (no external dependency needed)
+function createSignedToken(payload: AdminPayload): string {
+  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url')
+  const signature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url')
+  return `${header}.${body}.${signature}`
+}
+
+// Verify a signed token
+function verifySignedToken(token: string): AdminPayload | null {
+  try {
+    const parts = token.split('.')
+    if (parts.length !== 3) return null
+
+    const [header, body, signature] = parts
+    const expectedSignature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url')
+
+    // Timing-safe comparison to prevent timing attacks
+    const sigBuffer = Buffer.from(signature)
+    const expectedBuffer = Buffer.from(expectedSignature)
+    if (sigBuffer.length !== expectedBuffer.length) return null
+    if (!timingSafeEqual(sigBuffer, expectedBuffer)) return null
+
+    const payload = JSON.parse(Buffer.from(body, 'base64url').toString()) as AdminPayload
+
+    // Check expiration
+    if (payload.exp && payload.exp * 1000 < Date.now()) return null
+
+    return payload
+  } catch {
+    return null
+  }
+}
+
 // Generate JWT token for admin session
 export async function createAdminSession(userId: string, email: string, role: AdminRole, ipAddress?: string, userAgent?: string) {
   try {
-    const token = jwt.sign({ userId, email, role }, JWT_SECRET, { expiresIn: '4h' })
+    const iat = Math.floor(Date.now() / 1000)
+    const exp = iat + (4 * 60 * 60) // 4 hours
+
+    const payload: AdminPayload = { userId, email, role, iat, exp }
+    const token = createSignedToken(payload)
 
     await db.adminSession.create({
       data: {
@@ -27,7 +65,7 @@ export async function createAdminSession(userId: string, email: string, role: Ad
         token,
         ipAddress: ipAddress || null,
         userAgent: userAgent || null,
-        expiresAt: new Date(Date.now() + SESSION_DURATION),
+        expiresAt: new Date(exp * 1000),
       }
     })
 
@@ -41,7 +79,8 @@ export async function createAdminSession(userId: string, email: string, role: Ad
 // Verify admin JWT token
 export async function verifyAdminToken(token: string): Promise<AdminPayload | null> {
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as AdminPayload
+    const payload = verifySignedToken(token)
+    if (!payload) return null
 
     // Check session in DB
     const session = await db.adminSession.findUnique({
