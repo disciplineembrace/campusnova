@@ -71,3 +71,25 @@ Stage Summary:
 - Public admin references removed from navbar, store, and main page routing
 - API routes protected: stats (limited for non-admins), users/reports (admin-only)
 - robots.txt blocks search engines from admin routes
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Fix admin auth on Vercel, deploy, and verify security
+
+Work Log:
+- Replaced jsonwebtoken with Node.js built-in crypto HMAC (no external deps for Vercel compatibility)
+- Added fallback stateless JWT token creation when DB session creation fails on serverless
+- Fixed db.ts to skip dotenv override in production (respects Vercel env vars)
+- Added ADMIN_SECRET_KEY and JWT_SECRET to Vercel production env vars
+- Deployed to Vercel and verified all 7 security checks pass
+- Synced both main and master branches on GitHub
+
+Stage Summary:
+- Admin login works on Vercel: POST /api/cnx-admin-auth with email+secretKey
+- Unauthenticated /cnx-admin-panel shows 404 (NOT access denied)
+- /api/users returns 401 for non-admins
+- /api/cnx-admin returns 401 for non-admins
+- Wrong credentials return 401
+- Public APIs (listings, seed) still work for everyone
+- Live at https://campusnova-beta.vercel.app
