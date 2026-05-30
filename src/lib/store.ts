@@ -132,21 +132,30 @@ export const useAppStore = create<AppState>()(
 )
 
 export const CATEGORIES = [
-  { id: 'school-books', name: 'School Books', icon: 'BookOpen', color: 'from-blue-500 to-blue-600', description: 'Std 1–12 textbooks' },
-  { id: 'cbse', name: 'CBSE Books', icon: 'BookMarked', color: 'from-blue-600 to-indigo-600', description: 'CBSE board textbooks' },
-  { id: 'gseb', name: 'GSEB Books', icon: 'BookMarked', color: 'from-orange-500 to-amber-500', description: 'Gujarat Board textbooks' },
-  { id: 'icse', name: 'ICSE Books', icon: 'BookMarked', color: 'from-teal-500 to-cyan-500', description: 'ICSE board textbooks' },
-  { id: 'college-books', name: 'College Books', icon: 'GraduationCap', color: 'from-purple-500 to-violet-600', description: 'All semester textbooks' },
-  { id: 'medical', name: 'Medical Books', icon: 'Stethoscope', color: 'from-rose-500 to-pink-500', description: 'MBBS, BDS, Pharmacy' },
-  { id: 'engineering', name: 'Engineering Books', icon: 'Wrench', color: 'from-brand to-cyan', description: 'All branches' },
-  { id: 'commerce-law', name: 'Commerce & Law', icon: 'Scale', color: 'from-emerald-500 to-green-600', description: 'BCom, CA, LLB' },
-  { id: 'competitive', name: 'UPSC / NEET / JEE', icon: 'Target', color: 'from-amber-500 to-orange-500', description: 'Competitive exam prep' },
-  { id: 'notes-pdfs', name: 'Notes & PDFs', icon: 'FileText', color: 'from-cyan to-brand', description: 'Study notes & guides' },
-  { id: 'handwritten', name: 'Handwritten Notes', icon: 'PenTool', color: 'from-pink-500 to-rose-500', description: 'Topper notes' },
-  { id: 'ebooks', name: 'E-books', icon: 'Tablet', color: 'from-violet-500 to-purple-600', description: 'Digital books' },
-  { id: 'notebooks', name: 'Used Notebooks', icon: 'Notebook', color: 'from-yellow-500 to-amber-500', description: 'Bind, ruled, plain' },
-  { id: 'study-kits', name: 'Study Kits', icon: 'Package', color: 'from-brand to-purple', description: 'Bundled essentials' },
+  { id: 'school-books', name: 'School Books', icon: 'BookOpen', color: 'from-blue-500 to-blue-600', description: 'Std 1–12 textbooks', translationKey: 'schoolBooks' },
+  { id: 'cbse', name: 'CBSE Books', icon: 'BookMarked', color: 'from-blue-600 to-indigo-600', description: 'CBSE board textbooks', translationKey: 'cbse' },
+  { id: 'gseb', name: 'GSEB Books', icon: 'BookMarked', color: 'from-orange-500 to-amber-500', description: 'Gujarat Board textbooks', translationKey: 'gseb' },
+  { id: 'icse', name: 'ICSE Books', icon: 'BookMarked', color: 'from-teal-500 to-cyan-500', description: 'ICSE board textbooks', translationKey: 'icse' },
+  { id: 'college-books', name: 'College Books', icon: 'GraduationCap', color: 'from-purple-500 to-violet-600', description: 'All semester textbooks', translationKey: 'collegeBooks' },
+  { id: 'medical', name: 'Medical Books', icon: 'Stethoscope', color: 'from-rose-500 to-pink-500', description: 'MBBS, BDS, Pharmacy', translationKey: 'medical' },
+  { id: 'engineering', name: 'Engineering Books', icon: 'Wrench', color: 'from-brand to-cyan', description: 'All branches', translationKey: 'engineering' },
+  { id: 'commerce-law', name: 'Commerce & Law', icon: 'Scale', color: 'from-emerald-500 to-green-600', description: 'BCom, CA, LLB', translationKey: 'commerceLaw' },
+  { id: 'competitive', name: 'UPSC / NEET / JEE', icon: 'Target', color: 'from-amber-500 to-orange-500', description: 'Competitive exam prep', translationKey: 'competitive' },
+  { id: 'notes-pdfs', name: 'Notes & PDFs', icon: 'FileText', color: 'from-cyan to-brand', description: 'Study notes & guides', translationKey: 'notesPdfs' },
+  { id: 'handwritten', name: 'Handwritten Notes', icon: 'PenTool', color: 'from-pink-500 to-rose-500', description: 'Topper notes', translationKey: 'handwritten' },
+  { id: 'ebooks', name: 'E-books', icon: 'Tablet', color: 'from-violet-500 to-purple-600', description: 'Digital books', translationKey: 'ebooks' },
+  { id: 'notebooks', name: 'Used Notebooks', icon: 'Notebook', color: 'from-yellow-500 to-amber-500', description: 'Bind, ruled, plain', translationKey: 'notebooks' },
+  { id: 'study-kits', name: 'Study Kits', icon: 'Package', color: 'from-brand to-purple', description: 'Bundled essentials', translationKey: 'studyKits' },
 ] as const
+
+/**
+ * Get the translation key for a category name.
+ * Usage: t(`categories.${getCategoryTranslationKey(catId)}.name`)
+ */
+export function getCategoryTranslationKey(categoryId: string): string {
+  const cat = CATEGORIES.find(c => c.id === categoryId)
+  return cat?.translationKey || categoryId
+}
 
 export const INDIAN_CITIES = [
   'Delhi', 'Mumbai', 'Bangalore', 'Chennai', 'Kolkata',

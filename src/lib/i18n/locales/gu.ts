@@ -1,0 +1,763 @@
+/**
+ * Gujarati (gu) translations for EduCampusHub
+ * ગુજરાતી ભાષાંતર
+ */
+
+export const translations: Record<string, unknown> = {
+  // ===================== NAVBAR =====================
+  nav: {
+    logo: {
+      brandPrefix: 'Edu',
+      brandName: 'CampusHub',
+    },
+    item: {
+      home: 'હોમ',
+      explore: 'શોધો',
+      categories: 'કેટેગરી',
+      reader: 'રીડર',
+      dashboard: 'ડેશબોર્ડ',
+      sell: 'વેચો',
+    },
+    search: {
+      placeholder: 'પુસ્તકો, નોંધ શોધો...',
+    },
+    profile: {
+      myProfile: 'મારી પ્રોફાઇલ',
+      wishlist: 'ઇચ્છાસૂચિ',
+      logout: 'લૉગ આઉટ',
+    },
+    loginButton: 'લૉગિન',
+    loginButtonMobile: 'લૉગિન / સાઇન અપ',
+    language: 'ભાષા',
+  },
+
+  // ===================== FOOTER =====================
+  footer: {
+    logo: {
+      brandPrefix: 'Edu',
+      brandName: 'CampusHub',
+    },
+    brand: {
+      tagline: 'ખરીદો • વેચો • અદલા-બદલી — ભારતનું વિદ્યાર્થીઓ માટે વિશ્વસનીય માર્કેટપ્લેસ પુસ્તકો, નોંધ અને અભ્યાસ સામગ્રી માટે.',
+    },
+    section: {
+      about: 'અમારા વિશે',
+      categories: 'કેટેગરી',
+      support: 'સહાય',
+      connect: 'સંપર્ક',
+    },
+    link: {
+      browseBooks: 'પુસ્તકો જુઓ',
+      sellYourBooks: 'તમારા પુસ્તકો વેચો',
+      wishlist: 'ઇચ્છાસૂચિ',
+      login: 'લૉગિન',
+      medical: 'મેડિકલ',
+      engineering: 'એન્જિનિયરિંગ',
+      neetJee: 'NEET / JEE',
+      upscGpsc: 'UPSC / GPSC',
+      privacyPolicy: 'ગોપનીયતા નીતિ',
+      termsConditions: 'નિયમો અને શરતો',
+    },
+    connect: {
+      email: 'support@educampushub.in',
+      location: 'મુંબઈ, ભારત',
+    },
+    copyright: '© 2025 EduCampusHub. સર્વાધિકાર સુરક્ષિત.',
+    madeWith: 'બનાવ્યું',
+    inIndia: 'ભારતમાં',
+  },
+
+  // ===================== CATEGORIES SECTION =====================
+  categoriesSection: {
+    heading: {
+      prefix: 'શોધો',
+      highlight: 'કેટેગરી દ્વારા',
+    },
+    subheading: 'પાઠ્યપુસ્તકોથી સ્ટડી કીટ સુધી તમને જોઈતી દરેક વસ્તુ શોધો',
+  },
+
+  // ===================== CATEGORY EXPLORER PAGE =====================
+  categoryExplorer: {
+    badgeText: 'દરેક વિદ્યાર્થી માટે 14 કેટેગરી',
+    heading: {
+      prefix: 'શોધો',
+      highlight: 'બધું',
+      suffix: 'વિદ્યાર્થીઓ માટે',
+    },
+    subheading: 'શાળાના પુસ્તકોથી હસ્તલિખિત નોંધ, સ્પર્ધાત્મક પરીક્ષા તૈયારીથી ઇ-બુક્સ સુધી — EduCampusHub પર બધું શોધો',
+    searchPlaceholder: 'પુસ્તકો, નોંધ, સ્ટડી કીટ શોધો...',
+    searchButton: 'શોધો',
+    featuredCollections: {
+      heading: 'ફીચર્ડ કલેક્શન',
+      backToSchool: { name: 'શાળામાં પાછા', description: 'નવા સત્ર માટે બધું' },
+      examPrepBundle: { name: 'પરીક્ષા તૈયારી બંડલ', description: 'NEET, JEE, UPSC સામગ્રી' },
+      collegeStarterKit: { name: 'કોલેજ સ્ટાર્ટર કીટ', description: 'નવા વિદ્યાર્થીઓ માટે જરૂરી' },
+    },
+    allCategories: {
+      heading: 'બધી કેટેગરી',
+    },
+    viewAll: 'બધું જુઓ',
+    emptyListings: 'આ કેટેગરીમાં હજુ સુધી કોઈ લિસ્ટિંગ નથી',
+    beFirstToList: 'પ્રથમ લિસ્ટ કરો',
+    badge: {
+      digital: 'ડિજિટલ',
+      free: 'મફત',
+      save: '{savings}% બચત',
+    },
+  },
+
+  // ===================== EXPLORE PAGE =====================
+  explore: {
+    heading: {
+      explore: 'શોધો',
+      books: 'પુસ્તકો',
+    },
+    listingsCount: '{total} લિસ્ટિંગ મળ્યા',
+    searchFallback: 'પુસ્તકો, નોંધ અને વધુ શોધો',
+    searchPlaceholder: 'પુસ્તકો, નોંધ, કોર્સ શોધો...',
+    filters: 'ફિલ્ટર',
+    sort: {
+      newest: 'નવીનતમ',
+      priceLow: 'કિંમત ↑',
+      priceHigh: 'કિંમત ↓',
+      popular: 'લોકપ્રિય',
+    },
+    clearAll: 'બધું સાફ કરો',
+    filter: {
+      category: 'કેટેગરી',
+      allCategories: 'બધી કેટેગરી',
+      city: 'શહેર',
+      allCities: 'બધા શહેર',
+      condition: 'સ્થિતિ',
+      anyCondition: 'કોઈપણ સ્થિતિ',
+      semester: 'સેમેસ્ટર',
+      anySemester: 'કોઈપણ સેમેસ્ટર',
+    },
+    semSuffix: 'સેમ',
+    noListings: {
+      heading: 'કોઈ લિસ્ટિંગ મળ્યા નહીં',
+      message: 'તમારી શોધ અથવા ફિલ્ટર બદલીને પ્રયાસ કરો',
+    },
+    clearFilters: 'ફિલ્ટર સાફ કરો',
+    badge: {
+      featured: 'ફીચર્ડ',
+      urgent: 'તાત્કાલિક',
+      verified: 'ચકાસાયેલ',
+      save: '{savings}% બચત',
+    },
+    chat: 'ચેટ',
+    loadMore: 'વધુ લોડ કરો',
+  },
+
+  // ===================== SELL PRODUCT PAGE =====================
+  sell: {
+    back: 'પાછા',
+    heading: {
+      prefix: 'વેચો',
+      highlight: 'EduCampusHub',
+    },
+    subheading: '2 મિનિટમાં તમારી પ્રોડક્ટ લિસ્ટ કરો અને ભારતભરના હજારો વિદ્યાર્થીઓ સુધી પહોંચો',
+    credits: {
+      available: '{n} અપલોડ ક્રેડિટ ઉપલબ્ધ',
+      limitReached: 'અપલોડ લિમિટ સમાપ્ત',
+      freePaid: '{free} મફત · {paid} પેઇડ',
+      paidOnly: '{n} પેઇડ ક્રેડિટ',
+      buyMore: 'વધુ પુસ્તકો અપલોડ કરવા ક્રેડિટ ખરીદો',
+      buyButton: '₹10 ખરીદો',
+      freeUploadsUsed: 'મફત અપલોડ વપરાયા',
+    },
+    step: {
+      details: 'વિગતો',
+      photos: 'ફોટો',
+      review: 'સમીક્ષા',
+    },
+    error: {
+      globalTitle: 'કંઈક ખોટું થયું',
+    },
+    label: {
+      listingType: 'લિસ્ટિંગ પ્રકાર',
+      productName: 'પ્રોડક્ટનું નામ *',
+      description: 'વર્ણન *',
+      originalPrice: 'મૂળ કિંમત',
+      sellingPrice: 'વેચાણ કિંમત *',
+      category: 'કેટેગરી *',
+      condition: 'સ્થિતિ *',
+      semester: 'સેમેસ્ટર',
+      standardClass: 'ધોરણ / ક્લાસ',
+      board: 'બોર્ડ',
+      course: 'કોર્સ',
+      collegeName: 'કોલેજનું નામ',
+      city: 'શહેર *',
+      whatsappNumber: 'વ્હોટ્સએપ નંબર *',
+      productPhotos: 'પ્રોડક્ટ ફોટો *',
+    },
+    placeholder: {
+      productName: 'દા.ત., HC Verma Concepts of Physics Vol 1',
+      description: 'પ્રોડક્ટની સ્થિતિ, આવૃત્તિ, કોઈપણ હાઇલાઇટ્સ, કવર સ્થિતિ, પેજ ગુણવત્તા વર્ણવો...',
+      originalPrice: 'દા.ત., 750',
+      sellingPrice: 'દા.ત., 350',
+      condition: 'સ્થિતિ પસંદ કરો',
+      semester: 'સેમેસ્ટર પસંદ કરો',
+      standardClass: 'ક્લાસ પસંદ કરો',
+      board: 'બોર્ડ પસંદ કરો',
+      course: 'દા.ત., Physics, CSE, MBBS, JEE',
+      collegeName: 'દા.ત., IIT Delhi, AIIMS, BITS Pilani',
+      city: 'શહેર પસંદ કરો',
+      whatsappNumber: '9876543210',
+    },
+    semesterSuffix: 'સેમેસ્ટર',
+    classPrefix: 'ધોરણ',
+    phonePrefix: '+91',
+    savingsMessage: 'વિદ્યાર્થીઓ {savings}% બચાવે છે!',
+    nextAddPhotos: 'આગળ: ફોટો ઉમેરો',
+    photosDescription: '{MAX_IMAGES} સુધીના ફોટો ઉમેરો. પ્રથમ ફોટો કવર છબી હશે. ઝડપી લોડિંગ માટે છબીઓ આપમેળે કમ્પ્રેસ થાય છે.',
+    dropImagesHere: 'છબીઓ અહીં ડ્રોપ કરો',
+    clickToUpload: 'અપલોડ કરવા ક્લિક કરો અથવા ડ્રેગ અને ડ્રોપ',
+    photoFormatInfo: 'JPG, PNG, WEBP દરેક 5MB સુધી',
+    photosCount: '{count}/{max} ફોટો',
+    autoCompressed: 'આપમેળે કમ્પ્રેસ',
+    uploadedPhotos: 'અપલોડ કરેલા ફોટો ({count}/{max})',
+    cover: 'કવર',
+    uploading: 'અપલોડ થઈ રહ્યું છે...',
+    addMore: 'વધુ ઉમેરો',
+    uploadingImages: 'છબીઓ અપલોડ થઈ રહી છે...',
+    nextReviewPost: 'આગળ: સમીક્ષા અને પોસ્ટ',
+    reviewHeading: 'તમારી લિસ્ટિંગની સમીક્ષા કરો',
+    review: {
+      product: 'પ્રોડક્ટ',
+      untitled: 'શીર્ષક વિના',
+      category: 'કેટેગરી',
+      sellingPrice: 'વેચાણ કિંમત',
+      originalPrice: 'મૂળ કિંમત',
+      condition: 'સ્થિતિ',
+      city: 'શહેર',
+      course: 'કોર્સ',
+      semester: 'સેમેસ્ટર',
+      college: 'કોલેજ',
+      whatsapp: 'વ્હોટ્સએપ',
+      listingType: 'લિસ્ટિંગ પ્રકાર',
+      description: 'વર્ણન',
+      savingsDeal: 'વિદ્યાર્થીઓ આ ડીલ પર {savings}% બચાવે છે!',
+    },
+    publishingListing: 'લિસ્ટિંગ પ્રકાશિત થઈ રહી છે...',
+    uploadingImagesStatus: 'છબીઓ અપલોડ થઈ રહી છે...',
+    postListing: 'લિસ્ટિંગ પોસ્ટ કરો',
+    termsAgreement: 'પોસ્ટ કરીને, તમે EduCampusHub ની સેવાની શરતો સ્વીકારો છો અને તમારી લિસ્ટિંગ અધિકૃત છે.',
+    livePreview: 'લાઇવ પ્રીવ્યુ',
+    morePhotos: '+{n} વધુ',
+    badge: {
+      exchange: 'અદલા-બદલી',
+      free: 'મફત',
+    },
+    productTitlePlaceholder: 'પ્રોડક્ટ શીર્ષક',
+    verified: 'ચકાસાયેલ',
+    quickTips: {
+      heading: 'ઝડપી ટિપ્સ',
+      tip1: 'સ્પષ્ટ ફોટો 3x ઝડપથી વેચાય છે',
+      tip2: 'સ્પર્ધાત્મક કિંમત ખરીદદારોને આકર્ષે છે',
+      tip3: 'પ્રોડક્ટની સ્થિતિ વિશે પ્રામાણિક રહો',
+      tip4: 'વર્ણનમાં આવૃત્તિ/વર્ષ જણાવો',
+    },
+    photoTips: {
+      heading: 'ફોટો ટિપ્સ',
+      tip1: 'સારો પ્રકાશ અને સ્વચ્છ બેકગ્રાઉન્ડ વાપરો',
+      tip2: 'પ્રોડક્ટને અલગ-અલગ ખૂણાઓથી બતાવો',
+      tip3: 'કોઈપણ ઘસારા અથવા નુકસાનના ક્લોઝ-અપ સમાવો',
+      tip4: 'પ્રથમ ફોટો કવર છબી બને છે',
+    },
+    success: {
+      heading: 'લિસ્ટિંગ બનાવી!',
+      message: 'તમારી પ્રોડક્ટ હવે EduCampusHub પર લાઇવ છે. ભારતભરના વિદ્યાર્થીઓ તમને WhatsApp પર શોધી શકે છે.',
+      whatNext: 'આગળ શું થશે?',
+      review24h: 'તમારી લિસ્ટિંગ 24 કલાકમાં સમીક્ષા થશે',
+      verifiedVisibility: 'ચકાસાયેલ વેચનારાઓને વધુ દૃશ્યતા મળે છે',
+      shareWhatsApp: 'ઝડપી વેચાણ માટે WhatsApp પર તમારી લિસ્ટિંગ શેર કરો',
+      viewListing: 'લિસ્ટિંગ જુઓ',
+      listAnother: 'બીજી લિસ્ટ કરો',
+    },
+    authRequired: {
+      heading: 'વેચવા માટે લૉગિન કરો',
+      message: 'તમારી પ્રોડક્ટ્સ લિસ્ટ કરવા માટે તમારે લૉગ ઇન હોવું આવશ્યક છે',
+      loginButton: 'હવે લૉગિન કરો',
+    },
+    validation: {
+      titleRequired: 'પ્રોડક્ટનું નામ જરૂરી છે',
+      titleMinLength: 'નામ ઓછામાં ઓછા 5 અક્ષરનું હોવું જોઈએ',
+      descriptionRequired: 'વર્ણન જરૂરી છે',
+      descriptionMinLength: 'વર્ણન ઓછામાં ઓછા 10 અક્ષરનું હોવું જોઈએ',
+      sellingPriceRequired: 'માન્ય વેચાણ કિંમત જરૂરી છે',
+      priceMax: 'કિંમત 1,00,000 થી વધુ ન હોઈ શકે',
+      sellingPriceExceedsOriginal: 'વેચાણ કિંમત મૂળ કિંમતથી વધુ ન હોઈ શકે',
+      categoryRequired: 'કેટેગરી જરૂરી છે',
+      conditionRequired: 'સ્થિતિ જરૂરી છે',
+      cityRequired: 'શહેર જરૂરી છે',
+      whatsappRequired: 'વ્હોટ્સએપ નંબર જરૂરી છે',
+      whatsappInvalid: 'માન્ય 10-અંકનો ભારતીય મોબાઇલ નંબર દાખલ કરો',
+      imageRequired: 'ઓછામાં ઓછી એક છબી જરૂરી છે',
+    },
+    toast: {
+      maxImages: 'મહત્તમ {n} છબીઓ માન્ય છે',
+      unsupportedFormat: 'ફાઇલ સમર્થિત નથી. JPG, PNG, અથવા WEBP વાપરો.',
+      exceedsSize: 'ફાઇલ 5MB લિમિટ ઓળંગે છે.',
+      processFailed: 'છબી પ્રક્રિયા કરવામાં નિષ્ફળ.',
+      imagesAdded: '{n} છબી(ઓ) ઉમેરાયેલ',
+      pleaseWait: 'ફરીથી સબમિટ કરતા પહેલા રાહ જુઓ',
+      pleaseLogin: 'લિસ્ટિંગ બનાવવા માટે લૉગિન કરો',
+      fixErrors: 'કૃપા કરીને નીચેની ભૂલો સુધારો',
+      uploadingImages: 'છબીઓ અપલોડ થઈ રહી છે...',
+      imagesUploaded: 'છબીઓ અપલોડ થયું!',
+      uploadFailed: 'સર્વર પર છબી અપલોડ નિષ્ફળ. સ્થાનિક પ્રીવ્યુ સાથે સેવ કરી રહ્યા છીએ.',
+      creatingListing: 'તમારી લિસ્ટિંગ બનાવી રહ્યા છીએ...',
+      uploadLimitReached: 'અપલોડ લિમિટ સમાપ્ત. કૃપા કરીને વધુ ક્રેડિટ ખરીદો.',
+      listingCreated: 'લિસ્ટિંગ સફળતાપૂર્વક બનાવી!',
+      wentWrong: 'કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો.',
+      fillRequired: 'કૃપા કરીને બધા જરૂરી ફીલ્ડ ભરો',
+      addPhoto: 'કૃપા કરીને ઓછામાં ઓછો એક ફોટો ઉમેરો',
+    },
+  },
+
+  // ===================== PRODUCT DETAIL PAGE =====================
+  product: {
+    notFound: {
+      heading: 'લિસ્ટિંગ મળી નહીં',
+      browseButton: 'લિસ્ટિંગ બ્રાઉઝ કરો',
+    },
+    backToListings: 'લિસ્ટિંગ પર પાછા',
+    badge: {
+      featured: 'ફીચર્ડ',
+      urgentSale: 'તાત્કાલિક વેચાણ',
+      verified: 'ચકાસાયેલ',
+      save: '{savings}% બચત',
+      digital: 'ડિજિટલ',
+    },
+    semesterSuffix: 'સેમેસ્ટર',
+    viewsLabel: 'દૃશ્યો',
+    description: {
+      heading: 'વર્ણન',
+    },
+    college: {
+      heading: 'કોલેજ',
+    },
+    sellerInfo: {
+      heading: 'વેચનારની માહિતી',
+      sales: '{totalSales} વેચાણ',
+    },
+    readNow: 'હમણાં વાંચો',
+    giveawayMessage: 'આ વસ્તુ મફતમાં આપવામાં આવી રહી છે!',
+    exchangeMessage: 'આ વસ્તુ અદલા-બદલી માટે ઉપલબ્ધ છે',
+    whatsapp: 'વ્હોટ્સએપ',
+    trustSafety: {
+      heading: 'વિશ્વાસ અને સુરક્ષા',
+      message: 'હંમેશા જાહેર સ્થળે મળો. ચુકવણી પહેલા પુસ્તક તપાસો. EduCampusHub ક્યારેય સીધું ચુકવણી માંગતું નથી.',
+    },
+    reportSubmitted: 'રિપોર્ટ સબમિટ થયો. અમે ટૂંક સમયમાં સમીક્ષા કરીશું.',
+    reportButton: 'આ લિસ્ટિંગ રિપોર્ટ કરો',
+    reportDialog: {
+      title: 'લિસ્ટિંગ રિપોર્ટ કરો',
+      placeholder: 'તમે આ લિસ્ટિંગ કેમ રિપોર્ટ કરી રહ્યા છો? (દા.ત., અયોગ્ય સામગ્રી, છેતરપિંડી, ખોટી માહિતી)',
+      submit: 'રિપોર્ટ સબમિટ કરો',
+      loginRequired: 'લિસ્ટિંગ રિપોર્ટ કરવા માટે લૉગિન કરો',
+    },
+    time: {
+      today: 'આજે',
+      yesterday: 'ગઈકાલે',
+      daysAgo: '{days} દિવસ પહેલા',
+      weeksAgo: '{weeks} અઠવાડિયા પહેલા',
+      monthsAgo: '{months} મહિના પહેલા',
+    },
+  },
+
+  // ===================== PROFILE PAGE =====================
+  profile: {
+    authRequired: {
+      heading: 'કૃપા કરીને લૉગિન કરો',
+      loginButton: 'લૉગિન',
+    },
+    back: 'પાછા',
+    badge: { admin: 'એડમિન', sold: 'વેચાયેલ' },
+    sales: '{totalSales} વેચાણ',
+    editProfile: 'પ્રોફાઇલ સંપાદિત કરો',
+    cancel: 'રદ કરો',
+    label: {
+      name: 'નામ',
+      college: 'કોલેજ',
+      city: 'શહેર',
+      phone: 'ફોન',
+      whatsappNumber: 'વ્હોટ્સએપ નંબર',
+    },
+    placeholder: { selectCity: 'શહેર પસંદ કરો' },
+    saveChanges: 'બદલાવો સેવ કરો',
+    saving: 'સેવ થઈ રહ્યું છે...',
+    stats: {
+      listings: 'લિસ્ટિંગ',
+      sales: 'વેચાણ',
+      rating: 'રેટિંગ',
+    },
+    tabs: {
+      myListings: 'મારી લિસ્ટિંગ',
+      wishlist: 'ઇચ્છાસૂચિ',
+      payments: 'ચુકવણીઓ',
+    },
+    noListings: {
+      heading: 'હજુ સુધી કોઈ લિસ્ટિંગ નથી',
+      message: 'તમારા પુસ્તકો વેચવાનું શરૂ કરો!',
+      button: 'હવે વેચો',
+    },
+    wishlistEmpty: {
+      heading: 'તમારી ઇચ્છાસૂચિ ખાલી છે',
+      message: 'તમને રસ હોય તે પુસ્તકો સેવ કરો',
+      button: 'પુસ્તકો જુઓ',
+    },
+    noPayments: {
+      heading: 'હજુ સુધી કોઈ ચુકવણી નથી',
+      message: 'તમારો ચુકવણી ઇતિહાસ અહીં દેખાશે',
+    },
+    paymentStatus: {
+      verified: 'ચકાસાયેલ',
+      pending: 'બાકી',
+      rejected: 'નકારાયેલ',
+      expired: 'સમાપ્ત',
+    },
+    paymentCreditLabel: 'અપલોડ ક્રેડિટ - {amount}',
+  },
+
+  // ===================== WISHLIST PAGE =====================
+  wishlist: {
+    heading: {
+      prefix: 'મારી',
+      highlight: 'ઇચ્છાસૂચિ',
+    },
+    savedCount: '{count} સેવ કરેલી વસ્તુઓ',
+    empty: {
+      heading: 'તમારી ઇચ્છાસૂચિ ખાલી છે',
+      message: 'કોઈપણ લિસ્ટિંગ પર હૃદય આઇકન ક્લિક કરીને પુસ્તકો સેવ કરવાનું શરૂ કરો',
+      button: 'પુસ્તકો જુઓ',
+    },
+    badge: { save: '{savings}% બચત' },
+  },
+
+  // ===================== SAVED MATERIALS PAGE =====================
+  saved: {
+    heading: {
+      prefix: 'મારો',
+      highlight: 'સંગ્રહ',
+    },
+    itemCount: 'તમારા સંગ્રહમાં {count} વસ્તુઓ',
+    tab: {
+      saved: 'સેવ કરેલ',
+      wishlist: 'ઇચ્છાસૂચિ',
+      bookmarks: 'બુકમાર્ક',
+    },
+    empty: {
+      saved: { title: 'કોઈ સેવ કરેલ સામગ્રી નથી', desc: 'ઝડપી ઍક્સેસ માટે પુસ્તકો અને નોંધ સેવ કરો' },
+      wishlist: { title: 'ઇચ્છાસૂચિ ખાલી છે', desc: 'ખરીદવા માંગો છો તે વસ્તુઓ ઉમેરો' },
+      bookmarks: { title: 'કોઈ બુકમાર્ક નથી', desc: 'પછીથી ચાલુ રાખવા માટે વાંચન સામગ્રી બુકમાર્ક કરો' },
+    },
+    exploreListings: 'લિસ્ટિંગ શોધો',
+    badge: { digital: 'ડિજિટલ', free: 'મફત', save: '{savings}% બચત' },
+  },
+
+  // ===================== LEARNING DASHBOARD =====================
+  dashboard: {
+    heading: {
+      prefix: 'શીખવાનું',
+      highlight: 'ડેશબોર્ડ',
+    },
+    welcomeBack: 'પાછા સ્વાગત છે, {name}!',
+    trackJourney: 'તમારી શીખવાની સફર ટ્રેક કરો',
+    stats: {
+      booksReading: 'પુસ્તકો વાંચી રહ્યા છે',
+      active: 'સક્રિય',
+      savedMaterials: 'સેવ કરેલ સામગ્રી',
+      bookmarks: 'બુકમાર્ક',
+      saved: 'સેવ કરેલ',
+      recentlyViewed: 'તાજેતરમાં જોયેલ',
+      items: 'વસ્તુઓ',
+    },
+    quickActions: {
+      heading: 'ઝડપી ક્રિયાઓ',
+      browseNotes: 'નોંધ બ્રાઉઝ કરો',
+      readEbooks: 'ઇ-બુક્સ વાંચો',
+      handwrittenNotes: 'હસ્તલિખિત નોંધ',
+      sellOldBooks: 'જૂના પુસ્તકો વેચો',
+    },
+    studyProgress: {
+      heading: 'અભ્યાસ પ્રગતિ',
+      thisWeek: 'આ અઠવાડિયે',
+      keepExploring: 'શોધતા રહો',
+    },
+    continueReading: { heading: 'વાંચન ચાલુ રાખો' },
+    studyMaterial: 'અભ્યાસ સામગ્રી #{id}',
+    pageLabel: 'પૃષ્ઠ {page}',
+    noReadingProgress: 'કોઈ વાંચન ચાલુ નથી',
+    browseEbooks: 'ઇ-બુક્સ બ્રાઉઝ કરો',
+    savedMaterials: { heading: 'સેવ કરેલ સામગ્રી' },
+    viewAll: 'બધું જુઓ',
+    savedItem: 'સેવ કરેલ વસ્તુ #{id}',
+    tapToView: 'વિગતો જોવા ટેપ કરો',
+    noSavedMaterials: 'હજુ સુધી કોઈ સેવ કરેલ સામગ્રી નથી',
+    exploreAndSave: 'શોધો અને સેવ કરો',
+    recommended: { heading: 'તમારા માટે ભલામણ કરેલ' },
+    seeAll: 'બધું જુઓ',
+    trending: { heading: 'હવે ટ્રેન્ડિંગ' },
+    badge: { digital: 'ડિજિટલ', free: 'મફત' },
+    viewsLabel: 'દૃશ્યો',
+  },
+
+  // ===================== FEATURED LISTINGS =====================
+  featured: {
+    heading: {
+      prefix: 'ફીચર્ડ',
+      highlight: 'લિસ્ટિંગ',
+    },
+    subheading: 'ભારતભરના ચકાસાયેલ વેચનારાઓ પાસેથી ચૂંટેલા ડીલ',
+    badge: {
+      featured: 'ફીચર્ડ',
+      urgent: 'તાત્કાલિક',
+      verified: 'ચકાસાયેલ',
+      save: '{savings}% બચત',
+    },
+    chat: 'ચેટ',
+  },
+
+  // ===================== WHY CHOOSE SECTION =====================
+  whyChoose: {
+    heading: {
+      prefix: 'વિદ્યાર્થીઓ કેમ',
+      highlight: 'EduCampusHub ને પસંદ કરે છે',
+    },
+    subheading: 'વિદ્યાર્થીઓ દ્વારા, વિદ્યાર્થીઓ માટે બનાવેલ. દરેક સુવિધા તમારું જીવન સરળ બનાવવા માટે ડિઝાઇન કરેલ.',
+    feature: {
+      noMiddleman: {
+        title: 'કોઈ મધ્યસ્થ નહીં',
+        desc: 'સીધા વિદ્યાર્થીઓ સાથે જોડાઓ. કોઈ કમિશન નહીં, કોઈ છુપાયેલ ફી નહીં.',
+      },
+      save70: {
+        title: '70%+ બચત',
+        desc: 'પાઠ્યપુસ્તકો પર 70% સુધીની બચત. નવું ખરીદવાને બદલે ઓછામાં ઓછામાં સમાન જ્ઞાન કેમ ન મેળવો?',
+      },
+      directContact: {
+        title: 'સીધો સંપર્ક',
+        desc: 'WhatsApp પર સીધા વેચનારાઓ સાથે ચેટ કરો. તાત્કાલિક સંચાર, શૂન્ય વિલંબ.',
+      },
+      trustedCommunity: {
+        title: 'વિશ્વસનીય સમુદાય',
+        desc: 'અસલી કોલેજોના ચકાસાયેલ વિદ્યાર્થીઓ. દરેક લિસ્ટિંગ અસલી વિદ્યાર્થીની છે.',
+      },
+      easySelling: {
+        title: 'સરળ વેચાણ',
+        desc: '2 મિનિટમાં તમારા પુસ્તકો લિસ્ટ કરો. માત્ર વિગતો ભરો અને તમે લાઇવ છો!',
+      },
+      smartSearch: {
+        title: 'સ્માર્ટ શોધ',
+        desc: 'કેટેગરી, કોલેજ, કોર્સ અથવા શહેર દ્વારા તમને જોઈતી બધી વસ્તુ શોધો.',
+      },
+    },
+  },
+
+  // ===================== ADMIN DASHBOARD =====================
+  admin: {
+    accessDenied: {
+      heading: 'ઍક્સેસ નિષેધ',
+      message: 'આ પેજ ઍક્સેસ કરવા માટે એડમિન વિશેષાધિકાર જરૂરી છે',
+      goHome: 'હોમ જાઓ',
+    },
+    back: 'પાછા',
+    refresh: 'રિફ્રેશ',
+    heading: { prefix: 'એડમિન', highlight: 'ડેશબોર્ડ' },
+    subheading: 'લિસ્ટિંગ, વપરાશકર્તાઓ અને રિપોર્ટ મેનેજ કરો',
+    stats: {
+      totalUsers: 'કુલ વપરાશકર્તાઓ',
+      totalListings: 'કુલ લિસ્ટિંગ',
+      activeReports: 'સક્રિય રિપોર્ટ',
+      totalViews: 'કુલ દૃશ્યો',
+    },
+    chart: {
+      listingsByCity: 'શહેર દ્વારા લિસ્ટિંગ',
+      listingsByCategory: 'કેટેગરી દ્વારા લિસ્ટિંગ',
+    },
+    tabs: { reports: 'રિપોર્ટ', users: 'વપરાશકર્તાઓ', recent: 'તાજેતરના' },
+    noReports: 'કોઈ રિપોર્ટ મળ્યા નહીં',
+    report: {
+      resolved: 'ઉકેલાયેલ',
+      open: 'ખુલ્લું',
+      reportedBy: '{name} ({email}) દ્વારા રિપોર્ટ',
+    },
+    markResolved: 'ઉકેલાયેલ તરીકે ચિહ્નિત કરો',
+    badge: { admin: 'એડમિન', banned: 'પ્રતિબંધિત' },
+    noCollege: 'કોઈ કોલેજ નહીં',
+    listingsCount: '{count} લિસ્ટિંગ',
+    unban: 'પ્રતિબંધ હટાવો',
+    ban: 'પ્રતિબંધ',
+    by: 'દ્વારા',
+    verify: 'ચકાસો',
+    delete: 'ડિલીટ',
+    confirmDelete: 'આ લિસ્ટિંગ ડિલીટ કરો?',
+  },
+
+  // ===================== PAYMENT MODAL =====================
+  payment: {
+    header: { title: 'અપલોડ ક્રેડિટ', subtitle: '₹10 માટે 1 પુસ્તક અપલોડ' },
+    timer: { remaining: 'બાકી સમય: {time}', hurry: 'જલ્દી કરો!' },
+    creatingSession: 'ચુકવણી સત્ર બનાવી રહ્યા છીએ...',
+    scanQR: 'કોઈપણ UPI એપ વડે સ્કેન કરો (GPay, PhonePe, Paytm, વગેરે)',
+    orPayToUpi: 'અથવા UPI ID પર ચુકવો:',
+    copy: 'કૉપિ',
+    copied: 'કૉપિ થયું!',
+    amountToPay: 'ચુકવવાની રકમ',
+    iveMadePayment: 'મેં ચુકવણી કરી છે',
+    afterPayClick: 'ચુકવણી પછી, તમારી ચુકવણી પ્રમાણ સબમિટ કરવા ઉપર ક્લિક કરો',
+    proofRequired: {
+      title: 'ચુકવણી પ્રમાણ જરૂરી',
+      description: 'તમારી UPI ચુકવણીમાંથી UTR/સંદર્ભ નંબર દાખલ કરો. આ તમારી ચુકવણી રસીદમાં મળતો 12-અંકનો નંબર છે.',
+    },
+    utrLabel: 'UTR / સંદર્ભ નંબર',
+    utrPlaceholder: '12-અંકનો UTR નંબર દાખલ કરો',
+    utrHint: 'આ તમારી UPI એપ ચુકવણી રસીદમાં શોધો',
+    screenshotLabel: 'ચુકવણી સ્ક્રીનશોટ (વૈકલ્પિક)',
+    clickToUpload: 'સ્ક્રીનશોટ અપલોડ કરવા ક્લિક કરો',
+    screenshotFormat: 'JPG, PNG, WEBP (મહત્તમ 5MB)',
+    screenshotHint: 'ઝડપી ચકાસણી માટે તમારી પૂર્ણ થયેલ ચુકવણીનો સ્ક્રીનશોટ અપલોડ કરો',
+    backToQR: 'QR પર પાછા',
+    submitProof: 'પ્રમાણ સબમિટ કરો',
+    submittingProof: 'પ્રમાણ સબમિટ થઈ રહ્યું છે',
+    submittingMessage: 'કૃપા કરીને રાહ જુઓ જ્યાં સુધી અમે તમારી ચુકવણી પ્રમાણ સબમિટ કરીએ...',
+    proofSubmitted: 'પ્રમાણ સબમિટ થયું!',
+    successMessage: 'ચુકવણી પ્રમાણ સબમિટ થયું! એડમિન 24 કલાકમાં ચકાસશે. ચકાસાયા પછી તમને જાણ કરવામાં આવશે.',
+    pendingVerification: 'ચકાસણી બાકી',
+    continueToUpload: 'અપલોડ કરવા ચાલુ રાખો',
+    sessionExpired: 'સત્ર સમાપ્ત',
+    expiredMessage: 'તમારું ચુકવણી સત્ર 5 મિનિટ પછી સમાપ્ત થયું છે. કૃપા કરીને ફરી પ્રયાસ કરો.',
+    tryAgain: 'ફરી પ્રયાસ કરો',
+    somethingWentWrong: 'કંઈક ખોટું થયું',
+    unexpectedError: 'અનપેક્ષિત ભૂલ આવી.',
+    close: 'બંધ કરો',
+    securePayment: 'UPI દ્વારા સુરક્ષિત ચુકવણી',
+    error: {
+      network: 'નેટવર્ક ભૂલ. કૃપા કરીને ફરી પ્રયાસ કરો.',
+      createSession: 'ચુકવણી સત્ર બનાવવામાં નિષ્ફળ',
+      verificationFailed: 'ચુકવણી ચકાસણી નિષ્ફળ',
+      uploadImage: 'કૃપા કરીને છબી ફાઇલ અપલોડ કરો',
+      screenshotSize: 'સ્ક્રીનશોટ 5MB થી ઓછો હોવો જોઈએ',
+      utrOrScreenshot: 'કૃપા કરીને તમારો UTR/સંદર્ભ નંબર દાખલ કરો અથવા સ્ક્રીનશોટ અપલોડ કરો',
+      utrMinLength: 'UTR નંબર ઓછામાં ઓછા 6 અંકનો હોવો જોઈએ',
+    },
+    alt: { qrCode: 'UPI QR કોડ', screenshot: 'ચુકવણી સ્ક્રીનશોટ' },
+  },
+
+  // ===================== LOGIN PAGE =====================
+  login: {
+    brand: {
+      welcome: 'EduCampusHub માં સ્વાગત છે',
+      tagline: 'ખરીદો • વેચો • અદલા-બદલી — ભારતનું વિશ્વસનીય વિદ્યાર્થી માર્કેટપ્લેસ.',
+      '0percent': '0%',
+      commission: 'કમિશન',
+      direct: 'સીધું',
+      studentToStudent: 'વિદ્યાર્થીથી વિદ્યાર્થી',
+      '100percent': '100%',
+      safeVerified: 'સુરક્ષિત અને ચકાસાયેલ',
+    },
+    mobileBrand: { tagline: 'ખરીદો • વેચો • અદલા-બદલી' },
+    heading: { prefix: 'સ્વાગત છે', highlight: 'EduCampusHub' },
+    subheading: 'ખરીદવા અને વેચવાનું શરૂ કરવા તમારા કોલેજ ઇમેઇલ વડે લૉગિન કરો',
+    label: { collegeEmail: 'કોલેજ ઇમેઇલ' },
+    placeholder: { email: 'you@college.ac.in' },
+    continueButton: 'ચાલુ રાખો',
+    loggingIn: 'લૉગ ઇન થઈ રહ્યા છે...',
+    or: 'અથવા',
+    continueWithGoogle: 'Google વડે ચાલુ રાખો',
+    error: {
+      loginFailed: 'લૉગિન નિષ્ફળ',
+      wentWrong: 'કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો.',
+    },
+  },
+
+  // ===================== MOBILE NAV =====================
+  mobileNav: {
+    home: 'હોમ',
+    categories: 'કેટેગરી',
+    sell: 'વેચો',
+    reader: 'રીડર',
+    dashboard: 'ડેશબોર્ડ',
+  },
+
+  // ===================== META / SEO =====================
+  meta: {
+    title: 'EduCampusHub — ખરીદો • વેચો • અદલા-બદલી',
+    titleTemplate: '%s | EduCampusHub',
+    description: 'ખરીદો • વેચો • અદલા-બદલી — ભારતનું વિશ્વસનીય વિદ્યાર્થી માર્કેટપ્લેસ. NEET, JEE, UPSC માટે પાઠ્યપુસ્તકો પર 70% સુધી બચત કરો.',
+    ogTitle: 'EduCampusHub — ખરીદો • વેચો • અદલા-બદલી',
+    ogDescription: 'વિદ્યાર્થીઓ સાથે સીધા જૂના પુસ્તકો ખરીદો અને વેચો. NEET, JEE, UPSC માટે પાઠ્યપુસ્તકો પર 70% સુધી બચત કરો.',
+    ogImageAlt: 'EduCampusHub - વિદ્યાર્થી માર્કેટપ્લેસ',
+  },
+
+  // ===================== CATEGORIES =====================
+  categories: {
+    schoolBooks: { name: 'શાળાના પુસ્તકો', description: 'ધોરણ 1–12 પાઠ્યપુસ્તકો' },
+    cbse: { name: 'CBSE પુસ્તકો', description: 'CBSE બોર્ડ પાઠ્યપુસ્તકો' },
+    gseb: { name: 'GSEB પુસ્તકો', description: 'ગુજરાત બોર્ડ પાઠ્યપુસ્તકો' },
+    icse: { name: 'ICSE પુસ્તકો', description: 'ICSE બોર્ડ પાઠ્યપુસ્તકો' },
+    collegeBooks: { name: 'કોલેજ પુસ્તકો', description: 'બધા સેમેસ્ટરના પાઠ્યપુસ્તકો' },
+    medical: { name: 'મેડિકલ પુસ્તકો', description: 'MBBS, BDS, ફાર્મસી' },
+    engineering: { name: 'એન્જિનિયરિંગ પુસ્તકો', description: 'બધી બ્રાન્ચ' },
+    commerceLaw: { name: 'કોમર્સ અને લૉ', description: 'BCom, CA, LLB' },
+    competitive: { name: 'UPSC / NEET / JEE', description: 'સ્પર્ધાત્મક પરીક્ષા તૈયારી' },
+    notesPdfs: { name: 'નોંધ અને PDF', description: 'અભ્યાસ નોંધ અને ગાઇડ' },
+    handwritten: { name: 'હસ્તલિખિત નોંધ', description: 'ટોપરની નોંધ' },
+    ebooks: { name: 'ઇ-બુક્સ', description: 'ડિજિટલ પુસ્તકો' },
+    notebooks: { name: 'વપરાયેલી નોટબુક', description: 'બાઇન્ડ, રૂલ્ડ, પ્લેન' },
+    studyKits: { name: 'સ્ટડી કીટ', description: 'બન્ડલ જરૂરી સામગ્રી' },
+  },
+
+  // ===================== CONDITIONS =====================
+  conditions: {
+    likeNew: 'નવા જેવું',
+    good: 'સારું',
+    fair: 'ઠીક',
+    poor: 'ખરાબ',
+  },
+
+  // ===================== BOARDS =====================
+  boards: {
+    cbse: 'CBSE',
+    gseb: 'GSEB',
+    icse: 'ICSE',
+    isc: 'ISC',
+    stateBoard: 'રાજ્ય બોર્ડ',
+    other: 'અન્ય',
+  },
+
+  // ===================== LISTING TYPES =====================
+  listingTypes: {
+    sell: 'વેચો',
+    exchange: 'અદલા-બદલી',
+    giveaway: 'મફત આપો',
+  },
+
+  // ===================== COMMON =====================
+  common: {
+    loading: 'લોડ થઈ રહ્યું છે...',
+    error: 'ભૂલ',
+    success: 'સફળતા',
+    cancel: 'રદ કરો',
+    save: 'સેવ કરો',
+    delete: 'ડિલીટ',
+    edit: 'સંપાદિત કરો',
+    close: 'બંધ કરો',
+    back: 'પાછા',
+    next: 'આગળ',
+    submit: 'સબમિટ',
+    search: 'શોધો',
+    noResults: 'કોઈ પરિણામ મળ્યા નહીં',
+    login: 'લૉગિન',
+    logout: 'લૉગ આઉટ',
+    verified: 'ચકાસાયેલ',
+    free: 'મફત',
+    digital: 'ડિજિટલ',
+    sold: 'વેચાયેલ',
+    featured: 'ફીચર્ડ',
+    savePercent: '{savings}% બચત',
+    classPrefix: 'ધોરણ',
+    semesterPrefix: 'સેમેસ્ટર',
+  },
+}

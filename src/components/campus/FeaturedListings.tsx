@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, MapPin, Star, MessageCircle, BookOpen, BadgeCheck, Flame, Eye } from 'lucide-react'
 import { useAppStore, formatINR, CATEGORIES, parseListingImages } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -29,6 +30,7 @@ interface Listing {
 
 function ListingCard({ listing, index }: { listing: Listing; index: number }) {
   const { setCurrentPage, setSelectedProductId, wishlist, toggleWishlist } = useAppStore()
+  const { t } = useTranslation()
   const isWishlisted = wishlist.includes(listing.id)
   const savings = listing.originalPrice > 0 ? Math.round(((listing.originalPrice - listing.sellingPrice) / listing.originalPrice) * 100) : 0
   const cat = CATEGORIES.find(c => c.id === listing.category)
@@ -67,17 +69,17 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
         <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
           {listing.isFeatured && (
             <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
-              <Star className="w-3 h-3 mr-0.5" /> Featured
+              <Star className="w-3 h-3 mr-0.5" /> {t('featured.badge.featured')}
             </Badge>
           )}
           {listing.isUrgent && (
             <Badge className="bg-red-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
-              <Flame className="w-3 h-3 mr-0.5" /> Urgent
+              <Flame className="w-3 h-3 mr-0.5" /> {t('featured.badge.urgent')}
             </Badge>
           )}
           {listing.isVerified && (
             <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2.5 py-0.5 rounded-full">
-              <BadgeCheck className="w-3 h-3 mr-0.5" /> Verified
+              <BadgeCheck className="w-3 h-3 mr-0.5" /> {t('featured.badge.verified')}
             </Badge>
           )}
         </div>
@@ -95,7 +97,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
         {savings > 0 && (
           <div className="absolute bottom-3 left-3">
             <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">
-              Save {savings}%
+              {t('featured.badge.save', { savings })}
             </Badge>
           </div>
         )}
@@ -147,7 +149,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
             onClick={(e) => e.stopPropagation()}
           >
             <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-3 gap-1 rounded-full">
-              <MessageCircle className="w-3 h-3" /> Chat
+              <MessageCircle className="w-3 h-3" /> {t('featured.chat')}
             </Button>
           </a>
         </div>
@@ -175,6 +177,7 @@ function ListingSkeleton() {
 export default function FeaturedListings() {
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
+  const { t } = useTranslation()
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -202,10 +205,10 @@ export default function FeaturedListings() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 font-heading">
-            Featured <span className="gradient-text">Listings</span>
+            {t('featured.heading.prefix')} <span className="gradient-text">{t('featured.heading.highlight')}</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Handpicked deals from verified sellers across India
+            {t('featured.subheading')}
           </p>
         </motion.div>
 

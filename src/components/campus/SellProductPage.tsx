@@ -10,7 +10,8 @@ import {
   ChevronLeft, RotateCcw, Info, CreditCard, Zap,
   PenTool, Tablet, Notebook, Package, BookMarked
 } from 'lucide-react'
-import { useAppStore, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, BOARDS, STANDARDS, LISTING_TYPES, formatINR } from '@/lib/store'
+import { useAppStore, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, BOARDS, STANDARDS, LISTING_TYPES, formatINR, getCategoryTranslationKey } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -113,6 +114,7 @@ function sanitizeInput(str: string): string {
 
 export default function SellProductPage() {
   const { currentUser, setCurrentPage, setSelectedProductId } = useAppStore()
+  const { t } = useTranslation()
   const [uploadCredits, setUploadCredits] = useState<{ freeRemaining: number; paidCredits: number; totalCredits: number; canUpload: boolean; freeUploadLimit: number; paidUploadCredits: number } | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [creditsLoading, setCreditsLoading] = useState(true)
@@ -992,7 +994,7 @@ export default function SellProductPage() {
                             <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${c.color} flex items-center justify-center`}>
                               <Icon className="w-3.5 h-3.5 text-white" />
                             </div>
-                            <span className="text-[9px] font-medium leading-tight">{c.name}</span>
+                            <span className="text-[9px] font-medium leading-tight">{t(`categories.${c.translationKey}.name`)}</span>
                           </button>
                         )
                       })}
@@ -1632,7 +1634,7 @@ export default function SellProductPage() {
                     )}
                     {cat && (
                       <Badge variant="secondary" className="text-[10px] rounded-full bg-brand/10 text-brand">
-                        {cat.name}
+                        {cat ? t(`categories.${cat.translationKey}.name`) : ''}
                       </Badge>
                     )}
                   </div>

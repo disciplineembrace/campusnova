@@ -4,24 +4,30 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Search, Sun, Moon, Menu, X, Heart, User, LogOut, ChevronDown, Home, Compass, PlusCircle, LayoutGrid, BookOpen, Brain } from 'lucide-react'
 import { useAppStore, type PageType } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import LanguageSwitcher from '@/components/campus/LanguageSwitcher'
 
-const NAV_ITEMS: { label: string; page: PageType; icon: React.ElementType }[] = [
-  { label: 'Home', page: 'home', icon: Home },
-  { label: 'Explore', page: 'explore', icon: Compass },
-  { label: 'Categories', page: 'categories', icon: LayoutGrid },
-  { label: 'Reader', page: 'reader', icon: BookOpen },
-  { label: 'Dashboard', page: 'dashboard', icon: Brain },
-  { label: 'Sell', page: 'sell', icon: PlusCircle },
-]
+// Nav items are now built dynamically using translations inside the component
 
 export default function Navbar() {
   const { currentPage, setCurrentPage, darkMode, toggleDarkMode, currentUser, setCurrentUser, wishlist, mobileMenuOpen, setMobileMenuOpen, searchQuery, setSearchQuery, setSelectedCategory } = useAppStore()
+  const { t } = useTranslation()
   const [scrolled, setScrolled] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+
+  // Build nav items with translated labels
+  const NAV_ITEMS: { label: string; page: PageType; icon: React.ElementType }[] = [
+    { label: t('nav.item.home'), page: 'home', icon: Home },
+    { label: t('nav.item.explore'), page: 'explore', icon: Compass },
+    { label: t('nav.item.categories'), page: 'categories', icon: LayoutGrid },
+    { label: t('nav.item.reader'), page: 'reader', icon: BookOpen },
+    { label: t('nav.item.dashboard'), page: 'dashboard', icon: Brain },
+    { label: t('nav.item.sell'), page: 'sell', icon: PlusCircle },
+  ]
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -72,7 +78,7 @@ export default function Navbar() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-foreground font-heading">
-                Edu<span className="gradient-text">CampusHub</span>
+                {t('nav.logo.brandPrefix')}<span className="gradient-text">{t('nav.logo.brandName')}</span>
               </span>
             </motion.div>
 
@@ -109,7 +115,7 @@ export default function Navbar() {
                     <Input
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="Search books, notes..."
+                      placeholder={t('nav.search.placeholder')}
                       className="h-9 pl-9 pr-8 text-sm border-0 bg-transparent focus-visible:ring-0"
                       autoFocus
                       onBlur={() => { if (!searchQuery) setSearchOpen(false) }}
@@ -130,6 +136,9 @@ export default function Navbar() {
                   </Button>
                 )}
               </form>
+
+              {/* Language Switcher */}
+              <LanguageSwitcher />
 
               {/* Dark Mode Toggle */}
               <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="h-9 w-9 rounded-full">
@@ -192,20 +201,20 @@ export default function Navbar() {
                             onClick={() => { setCurrentPage('profile'); setProfileOpen(false) }}
                             className="w-full text-left px-3 py-2.5 text-sm rounded-xl hover:bg-muted flex items-center gap-2.5 transition-colors"
                           >
-                            <User className="w-4 h-4" /> My Profile
+                            <User className="w-4 h-4" /> {t('nav.profile.myProfile')}
                           </button>
                           <button
                             onClick={() => { setCurrentPage('wishlist'); setProfileOpen(false) }}
                             className="w-full text-left px-3 py-2.5 text-sm rounded-xl hover:bg-muted flex items-center gap-2.5 transition-colors"
                           >
-                            <Heart className="w-4 h-4" /> Wishlist
+                            <Heart className="w-4 h-4" /> {t('nav.profile.wishlist')}
                           </button>
 
                           <button
                             onClick={handleLogout}
                             className="w-full text-left px-3 py-2.5 text-sm rounded-xl hover:bg-muted text-destructive flex items-center gap-2.5 transition-colors"
                           >
-                            <LogOut className="w-4 h-4" /> Logout
+                            <LogOut className="w-4 h-4" /> {t('nav.profile.logout')}
                           </button>
                         </div>
                       </motion.div>
@@ -218,13 +227,14 @@ export default function Navbar() {
                   className="h-9 btn-gradient text-white border-0 text-sm rounded-xl"
                   size="sm"
                 >
-                  <span>Login</span>
+                  <span>{t('nav.loginButton')}</span>
                 </Button>
               )}
             </div>
 
             {/* Mobile Right Section */}
             <div className="flex md:hidden items-center gap-1">
+              <LanguageSwitcher />
               <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="h-9 w-9">
                 {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
@@ -266,7 +276,7 @@ export default function Navbar() {
                     <Input
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="Search books, notes..."
+                      placeholder={t('nav.search.placeholder')}
                       className="h-10 border-0 bg-transparent focus-visible:ring-0"
                     />
                   </div>
@@ -308,13 +318,13 @@ export default function Navbar() {
                         onClick={() => setCurrentPage('profile')}
                         className="w-full text-left px-4 py-3 rounded-2xl text-sm hover:bg-muted flex items-center gap-3"
                       >
-                        <User className="w-4 h-4" /> My Profile
+                        <User className="w-4 h-4" /> {t('nav.profile.myProfile')}
                       </button>
                       <button
                         onClick={() => setCurrentPage('wishlist')}
                         className="w-full text-left px-4 py-3 rounded-2xl text-sm hover:bg-muted flex items-center gap-3"
                       >
-                        <Heart className="w-4 h-4" /> Wishlist
+                        <Heart className="w-4 h-4" /> {t('nav.profile.wishlist')}
                         {wishlist.length > 0 && <Badge className="bg-brand text-white border-0 text-[10px] ml-auto">{wishlist.length}</Badge>}
                       </button>
 
@@ -322,7 +332,7 @@ export default function Navbar() {
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-3 rounded-2xl text-sm text-destructive hover:bg-muted flex items-center gap-3"
                       >
-                        <LogOut className="w-4 h-4" /> Logout
+                        <LogOut className="w-4 h-4" /> {t('nav.profile.logout')}
                       </button>
                     </>
                   ) : (
@@ -330,7 +340,7 @@ export default function Navbar() {
                       onClick={() => setCurrentPage('login')}
                       className="w-full btn-gradient text-white border-0 rounded-xl"
                     >
-                      <span>Login / Sign Up</span>
+                      <span>{t('nav.loginButtonMobile')}</span>
                     </Button>
                   )}
                 </div>

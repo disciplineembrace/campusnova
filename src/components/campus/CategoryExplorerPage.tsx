@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Search, BookOpen, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText, PenTool, Tablet, Notebook, Package, BookMarked, Backpack, Sparkles, ArrowRight } from 'lucide-react'
-import { useAppStore, CATEGORIES, formatINR, parseListingImages } from '@/lib/store'
+import { useAppStore, CATEGORIES, formatINR, parseListingImages, getCategoryTranslationKey } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -30,13 +31,14 @@ interface Listing {
 }
 
 const FEATURED_COLLECTIONS = [
-  { name: 'Back to School', description: 'Everything for new session', icon: Backpack, color: 'from-brand to-purple' },
-  { name: 'Exam Prep Bundle', description: 'NEET, JEE, UPSC material', icon: Target, color: 'from-amber-500 to-orange-500' },
-  { name: 'College Starter Kit', description: 'Essentials for freshers', icon: Package, color: 'from-emerald-500 to-green-600' },
+  { key: 'backToSchool', icon: Backpack, color: 'from-brand to-purple' },
+  { key: 'examPrepBundle', icon: Target, color: 'from-amber-500 to-orange-500' },
+  { key: 'collegeStarterKit', icon: Package, color: 'from-emerald-500 to-green-600' },
 ]
 
 export default function CategoryExplorerPage() {
   const { setCurrentPage, setSelectedCategory, setSelectedProductId, searchQuery, setSearchQuery } = useAppStore()
+  const { t } = useTranslation()
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(false)
@@ -94,13 +96,13 @@ export default function CategoryExplorerPage() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/10 text-brand text-sm font-medium mb-4 border border-brand/20">
             <Sparkles className="w-4 h-4" />
-            14 Categories for Every Student
+            {t('categoryExplorer.badgeText')}
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 font-heading">
-            Explore <span className="gradient-text">Everything</span> for Students
+            {t('categoryExplorer.heading.prefix')} <span className="gradient-text">{t('categoryExplorer.heading.highlight')}</span> {t('categoryExplorer.heading.suffix')}
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-            From school books to handwritten notes, competitive exam prep to e-books — find it all on EduCampusHub
+            {t('categoryExplorer.subheading')}
           </p>
 
           {/* Search */}
@@ -110,11 +112,11 @@ export default function CategoryExplorerPage() {
               <Input
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search books, notes, study kits..."
+                placeholder={t('categoryExplorer.searchPlaceholder')}
                 className="h-12 border-0 bg-transparent focus-visible:ring-0 text-base"
               />
               <Button type="submit" size="sm" className="btn-gradient text-white border-0 rounded-xl shrink-0">
-                <span>Search</span>
+                <span>{t('categoryExplorer.searchButton')}</span>
               </Button>
             </div>
           </form>
@@ -127,19 +129,19 @@ export default function CategoryExplorerPage() {
           transition={{ delay: 0.1 }}
           className="mb-10"
         >
-          <h2 className="text-lg font-semibold text-foreground mb-4 font-heading">Featured Collections</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4 font-heading">{t('categoryExplorer.featuredCollections.heading')}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {FEATURED_COLLECTIONS.map(collection => (
               <button
-                key={collection.name}
+                key={collection.key}
                 onClick={() => setCurrentPage('explore')}
                 className="p-4 rounded-2xl card-premium glow-hover text-center group"
               >
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${collection.color} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}>
                   <collection.icon className="w-6 h-6 text-white" />
                 </div>
-                <p className="text-sm font-semibold text-foreground">{collection.name}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{collection.description}</p>
+                <p className="text-sm font-semibold text-foreground">{t(`categoryExplorer.featuredCollections.${collection.key}.name`)}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t(`categoryExplorer.featuredCollections.${collection.key}.description`)}</p>
               </button>
             ))}
           </div>
@@ -152,7 +154,7 @@ export default function CategoryExplorerPage() {
           transition={{ delay: 0.2 }}
           className="mb-10"
         >
-          <h2 className="text-lg font-semibold text-foreground mb-4 font-heading">All Categories</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4 font-heading">{t('categoryExplorer.allCategories.heading')}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-5 gap-3">
             {CATEGORIES.map((cat, i) => {
               const IconComp = ICON_MAP[cat.icon] || BookOpen
@@ -169,8 +171,8 @@ export default function CategoryExplorerPage() {
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform`}>
                     <IconComp className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">{cat.name}</p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 hidden sm:block">{cat.description}</p>
+                  <p className="text-xs sm:text-sm font-semibold text-foreground leading-tight">{t(`categories.${cat.translationKey}.name`)}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 hidden sm:block">{t(`categories.${cat.translationKey}.description`)}</p>
                 </motion.button>
               )
             })}
@@ -186,10 +188,10 @@ export default function CategoryExplorerPage() {
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-foreground font-heading">
-                {CATEGORIES.find(c => c.id === selectedCat)?.name || 'Listings'}
+                {CATEGORIES.find(c => c.id === selectedCat) ? t(`categories.${CATEGORIES.find(c => c.id === selectedCat)?.translationKey}.name`) : 'Listings'}
               </h2>
               <Button variant="ghost" size="sm" onClick={() => handleExploreAll(selectedCat)} className="text-brand rounded-xl gap-1">
-                View All <ArrowRight className="w-3 h-3" />
+                {t('categoryExplorer.viewAll')} <ArrowRight className="w-3 h-3" />
               </Button>
             </div>
 
@@ -202,9 +204,9 @@ export default function CategoryExplorerPage() {
             ) : listings.length === 0 ? (
               <div className="text-center py-12">
                 <BookOpen className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-                <p className="text-muted-foreground">No listings in this category yet</p>
+                <p className="text-muted-foreground">{t('categoryExplorer.emptyListings')}</p>
                 <Button variant="outline" size="sm" onClick={() => setCurrentPage('sell')} className="mt-3 rounded-xl">
-                  Be the first to list
+                  {t('categoryExplorer.beFirstToList')}
                 </Button>
               </div>
             ) : (
@@ -230,14 +232,14 @@ export default function CategoryExplorerPage() {
                           <BookOpen className="w-10 h-10 text-white/50" />
                         )}
                         {listing.isDigital && (
-                          <Badge className="absolute top-2 right-2 digital-pulse bg-cyan text-white border-0 text-[9px] px-1.5 py-0.5 rounded-full">Digital</Badge>
+                          <Badge className="absolute top-2 right-2 digital-pulse bg-cyan text-white border-0 text-[9px] px-1.5 py-0.5 rounded-full">{t('categoryExplorer.badge.digital')}</Badge>
                         )}
                         {listing.listingType === 'giveaway' && (
-                          <Badge className="absolute top-2 left-2 bg-emerald-500 text-white border-0 text-[9px] px-1.5 py-0.5 rounded-full">FREE</Badge>
+                          <Badge className="absolute top-2 left-2 bg-emerald-500 text-white border-0 text-[9px] px-1.5 py-0.5 rounded-full">{t('categoryExplorer.badge.free')}</Badge>
                         )}
                         {savings > 0 && (
                           <Badge className="absolute bottom-2 left-2 bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2">
-                            Save {savings}%
+                            {t('categoryExplorer.badge.save', { savings })}
                           </Badge>
                         )}
                       </div>

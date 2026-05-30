@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { TranslationProvider } from "@/lib/i18n/TranslationContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -125,7 +126,9 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} antialiased bg-background text-foreground font-sans`}
         style={{ fontFamily: 'var(--font-inter)' }}
       >
-        {children}
+        <TranslationProvider>
+          {children}
+        </TranslationProvider>
       </body>
     </html>
   );

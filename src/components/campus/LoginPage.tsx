@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Sparkles, Mail, ArrowRight } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export default function LoginPage() {
   const { setCurrentPage, setCurrentUser } = useAppStore()
+  const { t } = useTranslation()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -29,14 +31,14 @@ export default function LoginPage() {
       const data = await res.json()
 
       if (!res.ok) {
-        setError(data.error || 'Login failed')
+        setError(data.error || t('login.error.loginFailed'))
         return
       }
 
       setCurrentUser(data.user)
       setCurrentPage('home')
     } catch {
-      setError('Something went wrong. Please try again.')
+      setError(t('login.error.wentWrong'))
     } finally {
       setLoading(false)
     }
@@ -65,26 +67,26 @@ export default function LoginPage() {
                 <Sparkles className="w-12 h-12 text-white" />
               </div>
             </motion.div>
-            <h2 className="text-3xl font-bold text-white mb-4 font-heading">Welcome to EduCampusHub</h2>
+            <h2 className="text-3xl font-bold text-white mb-4 font-heading">{t('login.brand.welcome')}</h2>
             <p className="text-white/70 max-w-sm mx-auto mb-8 leading-relaxed">
-              Buy • Sell • Exchange — India&apos;s trusted student marketplace.
+              {t('login.brand.tagline')}
             </p>
 
             {/* Floating stats */}
             <div className="flex items-center justify-center gap-6">
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">0%</p>
-                <p className="text-xs text-white/60">Commission</p>
+                <p className="text-2xl font-bold text-white font-heading">{t('login.brand.0percent')}</p>
+                <p className="text-xs text-white/60">{t('login.brand.commission')}</p>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">Direct</p>
-                <p className="text-xs text-white/60">Student to Student</p>
+                <p className="text-2xl font-bold text-white font-heading">{t('login.brand.direct')}</p>
+                <p className="text-xs text-white/60">{t('login.brand.studentToStudent')}</p>
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="text-center">
-                <p className="text-2xl font-bold text-white font-heading">100%</p>
-                <p className="text-xs text-white/60">Safe & Verified</p>
+                <p className="text-2xl font-bold text-white font-heading">{t('login.brand.100percent')}</p>
+                <p className="text-xs text-white/60">{t('login.brand.safeVerified')}</p>
               </div>
             </div>
           </motion.div>
@@ -108,15 +110,15 @@ export default function LoginPage() {
                 Edu<span className="gradient-text">CampusHub</span>
               </span>
             </div>
-            <p className="text-muted-foreground text-sm">Buy • Sell • Exchange</p>
+            <p className="text-muted-foreground text-sm">{t('login.mobileBrand.tagline')}</p>
           </div>
 
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
-              Welcome to <span className="gradient-text">EduCampusHub</span>
+              {t('login.heading.prefix')} <span className="gradient-text">{t('login.heading.highlight')}</span>
             </h1>
             <p className="text-muted-foreground">
-              Login with your college email to start buying and selling
+              {t('login.subheading')}
             </p>
           </div>
 
@@ -128,14 +130,14 @@ export default function LoginPage() {
             )}
 
             <div>
-              <Label className="mb-1.5 block">College Email</Label>
+              <Label className="mb-1.5 block">{t('login.label.collegeEmail')}</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="you@college.ac.in"
+                  placeholder={t('login.placeholder.email')}
                   required
                   className="h-12 pl-10 rounded-xl"
                 />
@@ -148,7 +150,7 @@ export default function LoginPage() {
               className="w-full h-12 btn-gradient text-white border-0 rounded-xl text-base font-semibold gap-2"
             >
               <span className="flex items-center gap-2">
-                {loading ? 'Logging in...' : <>Continue <ArrowRight className="w-4 h-4" /></>}
+                {loading ? t('login.loggingIn') : <>{t('login.continueButton')} <ArrowRight className="w-4 h-4" /></>}
               </span>
             </Button>
           </form>
@@ -160,7 +162,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">or</span>
+                <span className="bg-background px-2 text-muted-foreground">{t('login.or')}</span>
               </div>
             </div>
             <Button
@@ -174,7 +176,7 @@ export default function LoginPage() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Continue with Google
+              {t('login.continueWithGoogle')}
             </Button>
           </div>
         </motion.div>

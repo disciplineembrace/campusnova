@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { Stethoscope, Wrench, GraduationCap, Target, Scale, FileText, PenTool, Tablet, Notebook, Package, BookOpen, BookMarked } from 'lucide-react'
-import { useAppStore, CATEGORIES } from '@/lib/store'
+import { useAppStore, CATEGORIES, getCategoryTranslationKey } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 
 const ICON_MAP: Record<string, React.ElementType> = {
   BookOpen, BookMarked, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText,
@@ -11,6 +12,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 export default function CategoriesSection() {
   const { setCurrentPage, setSelectedCategory } = useAppStore()
+  const { t } = useTranslation()
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId)
@@ -28,10 +30,10 @@ export default function CategoriesSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 font-heading">
-            Browse by <span className="gradient-text">Category</span>
+            {t('categoriesSection.heading.prefix')} <span className="gradient-text">{t('categoriesSection.heading.highlight')}</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Find exactly what you need from textbooks to study kits
+            {t('categoriesSection.subheading')}
           </p>
         </motion.div>
 
@@ -54,7 +56,7 @@ export default function CategoriesSection() {
                 <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow`}>
                   <Icon className="w-7 h-7 text-white" />
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-foreground text-center leading-tight">{cat.name}</span>
+                <span className="text-xs sm:text-sm font-medium text-foreground text-center leading-tight">{t(`categories.${cat.translationKey}.name`)}</span>
               </motion.button>
             )
           })}

@@ -2,29 +2,38 @@
 
 import { Sparkles, Instagram, Linkedin, Twitter, Mail, Heart } from 'lucide-react'
 import { useAppStore, type PageType } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 
 const FOOTER_LINKS = {
-  'About': [
-    { label: 'Browse Books', page: 'explore' as PageType },
-    { label: 'Sell Your Books', page: 'sell' as PageType },
-    { label: 'Wishlist', page: 'wishlist' as PageType },
-    { label: 'Login', page: 'login' as PageType },
+  about: [
+    { labelKey: 'footer.link.browseBooks', page: 'explore' as PageType },
+    { labelKey: 'footer.link.sellYourBooks', page: 'sell' as PageType },
+    { labelKey: 'footer.link.wishlist', page: 'wishlist' as PageType },
+    { labelKey: 'footer.link.login', page: 'login' as PageType },
   ],
-  'Categories': [
-    { label: 'Medical', page: 'explore' as PageType, category: 'medical' },
-    { label: 'Engineering', page: 'explore' as PageType, category: 'engineering' },
-    { label: 'NEET / JEE', page: 'explore' as PageType, category: 'neet-jee' },
-    { label: 'UPSC / GPSC', page: 'explore' as PageType, category: 'upsc' },
+  categories: [
+    { labelKey: 'footer.link.medical', page: 'explore' as PageType, category: 'medical' },
+    { labelKey: 'footer.link.engineering', page: 'explore' as PageType, category: 'engineering' },
+    { labelKey: 'footer.link.neetJee', page: 'explore' as PageType, category: 'neet-jee' },
+    { labelKey: 'footer.link.upscGpsc', page: 'explore' as PageType, category: 'upsc' },
   ],
-  'Support': [
-    { label: 'Privacy Policy', page: 'privacy' as PageType },
-    { label: 'Terms & Conditions', page: 'terms' as PageType },
+  support: [
+    { labelKey: 'footer.link.privacyPolicy', page: 'privacy' as PageType },
+    { labelKey: 'footer.link.termsConditions', page: 'terms' as PageType },
   ],
-  'Connect': [],
+  connect: [],
 } as const
+
+const SECTION_TITLE_KEYS: Record<string, string> = {
+  about: 'footer.section.about',
+  categories: 'footer.section.categories',
+  support: 'footer.section.support',
+  connect: 'footer.section.connect',
+}
 
 export default function Footer() {
   const { setCurrentPage, setSelectedCategory } = useAppStore()
+  const { t } = useTranslation()
 
   const handleLinkClick = (page: PageType, category?: string) => {
     if (category) setSelectedCategory(category)
@@ -46,11 +55,11 @@ export default function Footer() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold font-heading">
-                Edu<span className="gradient-text">CampusHub</span>
+                {t('footer.logo.brandPrefix')}<span className="gradient-text">{t('footer.logo.brandName')}</span>
               </span>
             </div>
             <p className="text-sm text-blue-200/70 leading-relaxed mb-6 max-w-sm">
-              Buy • Sell • Exchange — India&apos;s trusted student marketplace for books, notes, and study essentials.
+              {t('footer.brand.tagline')}
             </p>
             <div className="flex items-center gap-3">
               <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-brand/30 transition-all hover:shadow-lg hover:shadow-brand/10">
@@ -69,23 +78,23 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider font-heading">{title}</h3>
-              {title === 'Connect' ? (
+          {Object.entries(FOOTER_LINKS).map(([sectionKey, links]) => (
+            <div key={sectionKey}>
+              <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider font-heading">{t(SECTION_TITLE_KEYS[sectionKey])}</h3>
+              {sectionKey === 'connect' ? (
                 <div className="space-y-2.5">
-                  <p className="text-sm text-blue-200/70">support@campusnova.in</p>
-                  <p className="text-sm text-blue-200/70">Mumbai, India</p>
+                  <p className="text-sm text-blue-200/70">{t('footer.connect.email')}</p>
+                  <p className="text-sm text-blue-200/70">{t('footer.connect.location')}</p>
                 </div>
               ) : (
                 <ul className="space-y-2.5">
                   {links.map(link => (
-                    <li key={link.label}>
+                    <li key={link.labelKey}>
                       <button
                         onClick={() => handleLinkClick(link.page, 'category' in link ? link.category : undefined)}
                         className="text-sm text-blue-200/70 hover:text-white transition-colors hover:translate-x-1 inline-block"
                       >
-                        {link.label}
+                        {t(link.labelKey)}
                       </button>
                     </li>
                   ))}
@@ -97,10 +106,10 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-blue-200/50">
-            © 2025 EduCampusHub. All rights reserved.
+            {t('footer.copyright')}
           </p>
           <p className="text-xs text-blue-200/50 flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> in India
+            {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-400 fill-red-400" /> {t('footer.inIndia')}
           </p>
         </div>
       </div>

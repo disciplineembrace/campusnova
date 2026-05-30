@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, SlidersHorizontal, X, ChevronDown, BookOpen, MapPin, ArrowUpDown, Heart, MessageCircle, BadgeCheck, Flame, Star, Eye } from 'lucide-react'
 import { useAppStore, formatINR, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, parseListingImages } from '@/lib/store'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -38,6 +39,7 @@ const SORT_OPTIONS = [
 ]
 
 export default function ExplorePage() {
+  const { t } = useTranslation()
   const { searchQuery, setSearchQuery, selectedCategory, setSelectedCategory, wishlist, toggleWishlist, setCurrentPage, setSelectedProductId } = useAppStore()
   const [listings, setListings] = useState<Listing[]>([])
   const [loading, setLoading] = useState(true)
@@ -117,10 +119,10 @@ export default function ExplorePage() {
           className="mb-6"
         >
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
-            {cat ? cat.name : 'Explore'} <span className="gradient-text">Books</span>
+            {cat ? cat.name : t('explore.heading.explore')} <span className="gradient-text">{t('explore.heading.books')}</span>
           </h1>
           <p className="text-muted-foreground text-sm">
-            {total > 0 ? `${total} listings found` : 'Search for books, notes, and more'}
+            {total > 0 ? t('explore.listingsCount', { total }) : t('explore.searchFallback')}
           </p>
         </motion.div>
 
@@ -136,7 +138,7 @@ export default function ExplorePage() {
             <Input
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search books, notes, courses..."
+              placeholder={t('explore.searchPlaceholder')}
               className="h-11 border-0 bg-transparent focus-visible:ring-0 pl-3"
             />
             {searchQuery && (
@@ -150,7 +152,7 @@ export default function ExplorePage() {
             onClick={() => setFiltersOpen(!filtersOpen)}
             className="h-11 px-4 rounded-xl gap-2 relative shrink-0"
           >
-            <SlidersHorizontal className="w-4 h-4" /> Filters
+            <SlidersHorizontal className="w-4 h-4" /> {t('explore.filters')}
             {activeFilters.length > 0 && (
               <Badge className="absolute -top-1.5 -right-1.5 h-5 w-5 p-0 flex items-center justify-center text-[10px] bg-brand text-white border-0">
                 {activeFilters.length}
@@ -171,7 +173,7 @@ export default function ExplorePage() {
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
-              {opt.label}
+              {opt.value === 'newest' ? t('explore.sort.newest') : opt.value === 'price-low' ? t('explore.sort.priceLow') : opt.value === 'price-high' ? t('explore.sort.priceHigh') : t('explore.sort.popular')}
             </button>
           ))}
         </div>
@@ -193,7 +195,7 @@ export default function ExplorePage() {
               </Badge>
             ))}
             <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs text-muted-foreground h-6">
-              Clear all
+              {t('explore.clearAll')}
             </Button>
           </div>
         )}
@@ -209,11 +211,11 @@ export default function ExplorePage() {
             >
               <div className="p-5 rounded-2xl card-premium grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Category</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t('explore.filter.category')}</label>
                   <Select value={selectedCategory || 'all'} onValueChange={v => setSelectedCategory(v === 'all' ? null : v)}>
-                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="All Categories" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder={t('explore.filter.allCategories')} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
+                      <SelectItem value="all">{t('explore.filter.allCategories')}</SelectItem>
                       {CATEGORIES.map(c => (
                         <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
                       ))}
@@ -221,11 +223,11 @@ export default function ExplorePage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">City</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t('explore.filter.city')}</label>
                   <Select value={city} onValueChange={setCity}>
-                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="All Cities" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder={t('explore.filter.allCities')} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">All Cities</SelectItem>
+                      <SelectItem value="all">{t('explore.filter.allCities')}</SelectItem>
                       {INDIAN_CITIES.map(c => (
                         <SelectItem key={c} value={c}>{c}</SelectItem>
                       ))}
@@ -233,11 +235,11 @@ export default function ExplorePage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Condition</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t('explore.filter.condition')}</label>
                   <Select value={condition} onValueChange={setCondition}>
-                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="Any Condition" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder={t('explore.filter.anyCondition')} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Any Condition</SelectItem>
+                      <SelectItem value="all">{t('explore.filter.anyCondition')}</SelectItem>
                       {CONDITIONS.map(c => (
                         <SelectItem key={c} value={c}>{c}</SelectItem>
                       ))}
@@ -245,13 +247,13 @@ export default function ExplorePage() {
                   </Select>
                 </div>
                 <div>
-                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Semester</label>
+                  <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t('explore.filter.semester')}</label>
                   <Select value={semester} onValueChange={setSemester}>
-                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder="Any Semester" /></SelectTrigger>
+                    <SelectTrigger className="h-9 rounded-xl"><SelectValue placeholder={t('explore.filter.anySemester')} /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">Any Semester</SelectItem>
+                      <SelectItem value="all">{t('explore.filter.anySemester')}</SelectItem>
                       {SEMESTERS.map(s => (
-                        <SelectItem key={s} value={s}>{s} Sem</SelectItem>
+                        <SelectItem key={s} value={s}>{s} {t('explore.semSuffix')}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -281,9 +283,9 @@ export default function ExplorePage() {
             className="text-center py-20"
           >
             <BookOpen className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2">No listings found</h3>
-            <p className="text-muted-foreground text-sm mb-6">Try adjusting your search or filters</p>
-            <Button variant="outline" onClick={clearFilters}>Clear Filters</Button>
+            <h3 className="text-lg font-semibold text-foreground mb-2">{t('explore.noListings.heading')}</h3>
+            <p className="text-muted-foreground text-sm mb-6">{t('explore.noListings.message')}</p>
+            <Button variant="outline" onClick={clearFilters}>{t('explore.clearFilters')}</Button>
           </motion.div>
         ) : (
           <>
@@ -317,9 +319,9 @@ export default function ExplorePage() {
                         <BookOpen className="w-12 h-12 text-white/60" />
                       )}
                       <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                        {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Star className="w-3 h-3 mr-0.5" />Featured</Badge>}
-                        {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Flame className="w-3 h-3 mr-0.5" />Urgent</Badge>}
-                        {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><BadgeCheck className="w-3 h-3 mr-0.5" />Verified</Badge>}
+                        {listing.isFeatured && <Badge className="bg-amber-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Star className="w-3 h-3 mr-0.5" />{t('explore.badge.featured')}</Badge>}
+                        {listing.isUrgent && <Badge className="bg-red-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><Flame className="w-3 h-3 mr-0.5" />{t('explore.badge.urgent')}</Badge>}
+                        {listing.isVerified && <Badge className="bg-emerald-500 text-white border-0 text-[10px] px-2 py-0.5 rounded-full"><BadgeCheck className="w-3 h-3 mr-0.5" />{t('explore.badge.verified')}</Badge>}
                       </div>
                       <motion.button
                         className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 dark:bg-black/50 flex items-center justify-center backdrop-blur-sm"
@@ -330,7 +332,7 @@ export default function ExplorePage() {
                       </motion.button>
                       {savings > 0 && (
                         <div className="absolute bottom-3 left-3">
-                          <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">Save {savings}%</Badge>
+                          <Badge className="bg-emerald-500 text-white border-0 text-xs font-bold rounded-full px-2.5">{t('explore.badge.save', { savings })}</Badge>
                         </div>
                       )}
                       <div className="absolute bottom-3 right-3 flex items-center gap-1 text-white/80 text-xs">
@@ -356,7 +358,7 @@ export default function ExplorePage() {
                         </div>
                         <a href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on EduCampusHub`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
                           <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-3 gap-1 rounded-full">
-                            <MessageCircle className="w-3 h-3" /> Chat
+                            <MessageCircle className="w-3 h-3" /> {t('explore.chat')}
                           </Button>
                         </a>
                       </div>
@@ -370,7 +372,7 @@ export default function ExplorePage() {
             {hasMore && (
               <div className="text-center mt-8">
                 <Button variant="outline" onClick={loadMore} className="rounded-xl px-8">
-                  <ChevronDown className="w-4 h-4 mr-2" /> Load More
+                  <ChevronDown className="w-4 h-4 mr-2" /> {t('explore.loadMore')}
                 </Button>
               </div>
             )}

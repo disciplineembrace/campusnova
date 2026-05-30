@@ -25,6 +25,7 @@ import BookReaderPage from '@/components/campus/BookReaderPage'
 import LearningDashboard from '@/components/campus/LearningDashboard'
 import SavedMaterialsPage from '@/components/campus/SavedMaterialsPage'
 import CategoryExplorerPage from '@/components/campus/CategoryExplorerPage'
+import { useTranslation } from '@/lib/i18n/TranslationContext'
 
 function HomePage() {
   return (
@@ -55,16 +56,9 @@ const PAGE_COMPONENTS: Record<PageType, React.ComponentType> = {
   categories: CategoryExplorerPage,
 }
 
-const MOBILE_NAV_ITEMS: { icon: React.ElementType; label: string; page: PageType; isCenter?: boolean }[] = [
-  { icon: Home, label: 'Home', page: 'home' },
-  { icon: LayoutGrid, label: 'Categories', page: 'categories' },
-  { icon: PlusCircle, label: 'Sell', page: 'sell', isCenter: true },
-  { icon: BookOpen, label: 'Reader', page: 'reader' },
-  { icon: Brain, label: 'Dashboard', page: 'dashboard' },
-]
-
-function MobileBottomNav() {
+function MobileBottomNav({ navItems }: { navItems: { icon: React.ElementType; label: string; page: PageType; isCenter?: boolean }[] }) {
   const { currentPage, setCurrentPage, currentUser } = useAppStore()
+  const { t } = useTranslation()
 
   if (currentPage === 'reader') return null
 
@@ -89,7 +83,7 @@ function MobileBottomNav() {
   return (
     <div className="mobile-nav fixed bottom-0 left-0 right-0 z-50 md:hidden safe-area-bottom">
       <div className="flex items-center justify-around px-2 py-2">
-        {MOBILE_NAV_ITEMS.map(item => {
+        {navItems.map(item => {
           const isActive = getActivePage(item.page)
 
           if (item.isCenter) {
@@ -102,7 +96,7 @@ function MobileBottomNav() {
                 <div className="w-14 h-14 rounded-full btn-gradient flex items-center justify-center shadow-lg shadow-brand/30">
                   <PlusCircle className="w-7 h-7 text-white" />
                 </div>
-                <span className="text-[10px] font-medium text-brand mt-1">Sell</span>
+                <span className="text-[10px] font-medium text-brand mt-1">{t('mobileNav.sell')}</span>
               </button>
             )
           }
@@ -130,6 +124,15 @@ function MobileBottomNav() {
 
 export default function EduCampusHub() {
   const { currentPage, darkMode } = useAppStore()
+  const { t } = useTranslation()
+
+  const MOBILE_NAV_ITEMS: { icon: React.ElementType; label: string; page: PageType; isCenter?: boolean }[] = [
+    { icon: Home, label: t('mobileNav.home'), page: 'home' },
+    { icon: LayoutGrid, label: t('mobileNav.categories'), page: 'categories' },
+    { icon: PlusCircle, label: t('mobileNav.sell'), page: 'sell', isCenter: true },
+    { icon: BookOpen, label: t('mobileNav.reader'), page: 'reader' },
+    { icon: Brain, label: t('mobileNav.dashboard'), page: 'dashboard' },
+  ]
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode)
@@ -157,7 +160,7 @@ export default function EduCampusHub() {
         </AnimatePresence>
       </main>
       {!isReaderMode && <Footer />}
-      <MobileBottomNav />
+      <MobileBottomNav navItems={MOBILE_NAV_ITEMS} />
       <ToasterProvider />
     </div>
   )
