@@ -4,8 +4,8 @@
   "description": "Buy • Sell • Exchange — India's trusted student marketplace for books, notes, and study essentials.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#012B5E",
-  "theme_color": "#012B5E",
+  "background_color": "#002868",
+  "theme_color": "#002868",
   "orientation": "portrait-primary",
   "icons": [
     {

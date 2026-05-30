@@ -77,7 +77,12 @@ export default function Navbar() {
               <img 
                 src="/logo.jpeg" 
                 alt="EduCampusHub" 
-                className="w-9 h-9 rounded-xl object-cover shadow-md"
+                className="w-9 h-9 rounded-xl object-cover shadow-md dark:hidden"
+              />
+              <img 
+                src="/logo-dark.jpeg" 
+                alt="EduCampusHub" 
+                className="w-9 h-9 rounded-xl object-cover shadow-md hidden dark:block"
               />
               <span className="text-xl font-bold text-foreground font-heading">
                 {t('nav.logo.brandPrefix')}<span className="gradient-text">{t('nav.logo.brandName')}</span>

@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#012B5E',
+          backgroundColor: '#002868',
           padding: '40px',
         }}
       >
@@ -26,7 +26,7 @@ export default async function Image() {
               width: '80px',
               height: '80px',
               borderRadius: '20px',
-              background: 'linear-gradient(135deg, #F16404, #012B5E)',
+              background: 'linear-gradient(135deg, #FF6600, #002868)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -39,7 +39,7 @@ export default async function Image() {
             EduCampusHub
           </span>
         </div>
-        <span style={{ fontSize: '32px', color: '#F16404', fontWeight: 600, fontFamily: 'sans-serif' }}>
+        <span style={{ fontSize: '32px', color: '#FF6600', fontWeight: 600, fontFamily: 'sans-serif' }}>
           Buy • Sell • Exchange
         </span>
         <span style={{ fontSize: '20px', color: 'rgba(255,255,255,0.7)', marginTop: '16px', fontFamily: 'sans-serif' }}>

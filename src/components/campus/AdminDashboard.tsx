@@ -46,7 +46,7 @@ interface UserItem {
   _count: { listings: number }
 }
 
-const CHART_COLORS = ['#012B5E', '#F16404', '#06B6D4', '#10B981', '#FF8C38', '#22D3EE', '#F59E0B', '#EC4899', '#1A4B8C']
+const CHART_COLORS = ['#002868', '#FF6600', '#06B6D4', '#10B981', '#FF8C3A', '#22D3EE', '#F59E0B', '#EC4899', '#1A4D8C']
 
 export default function AdminDashboard() {
   const { currentUser, setCurrentPage } = useAppStore()
@@ -221,7 +221,7 @@ export default function AdminDashboard() {
                     <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                     <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                     <Tooltip />
-                    <Bar dataKey="listings" fill="#012B5E" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="listings" fill="#002868" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
