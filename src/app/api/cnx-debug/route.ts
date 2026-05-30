@@ -2,19 +2,22 @@ import { NextResponse } from 'next/server'
 
 /**
  * Debug endpoint - TEMPORARY - remove after fixing DB connection
- * Shows the DATABASE_URL configuration (masked) to diagnose connection issues
+ * Tests DB connectivity and reveals connection string (masked) 
  */
 export async function GET() {
   const dbUrl = process.env.DATABASE_URL || ''
   const directUrl = process.env.DIRECT_URL || ''
   
-  // Mask the password in the connection string
+  // Mask only the middle of the password
   const maskPassword = (url: string) => {
     if (!url) return 'NOT SET'
     try {
-      // Format: postgresql://user:password@host/db
       const match = url.match(/^(postgresql:\/\/[^:]+:)([^@]+)(@.+)$/)
       if (match) {
+        const pwd = match[2]
+        if (pwd.length > 8) {
+          return `${match[1]}${pwd.substring(0, 4)}...${pwd.substring(pwd.length - 4)}${match[3]}`
+        }
         return `${match[1]}***${match[3]}`
       }
       return url.substring(0, 30) + '...'
@@ -23,12 +26,32 @@ export async function GET() {
     }
   }
 
+  // Test Neon serverless driver connection
+  let dbTest = 'not_tested'
+  try {
+    const { neon } = await import('@neondatabase/serverless')
+    const sql = neon(dbUrl)
+    const result = await sql`SELECT 1 as test`
+    dbTest = 'SUCCESS: ' + JSON.stringify(result[0])
+  } catch (e: any) {
+    dbTest = 'FAILED: ' + e.message?.substring(0, 200)
+  }
+
+  // Test Prisma connection
+  let prismaTest = 'not_tested'
+  try {
+    const { db } = await import('@/lib/db')
+    const result = await db.$queryRaw`SELECT 1 as test`
+    prismaTest = 'SUCCESS: ' + JSON.stringify(result)
+  } catch (e: any) {
+    prismaTest = 'FAILED: ' + e.message?.substring(0, 200)
+  }
+
   return NextResponse.json({
-    DATABASE_URL: maskPassword(dbUrl),
-    DIRECT_URL: maskPassword(directUrl),
-    hasDbUrl: !!dbUrl,
-    hasDirectUrl: !!directUrl,
-    dbUrlStartsWith: dbUrl ? dbUrl.substring(0, 15) : 'N/A',
+    DATABASE_URL_masked: maskPassword(dbUrl),
+    DIRECT_URL_masked: maskPassword(directUrl),
+    neonDriverTest: dbTest,
+    prismaTest,
     nodeEnv: process.env.NODE_ENV,
   })
 }
