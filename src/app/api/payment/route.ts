@@ -1,8 +1,9 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 import QRCode from 'qrcode'
+import { checkApiRateLimit } from '@/lib/api-security'
 
-const UPI_ID = 'sagathiyapradip1137-3@oksbi'
+const UPI_ID = process.env.UPI_ID || 'sagathiyapradip1137-3@oksbi'
 const PAYMENT_AMOUNT = 10
 const FREE_UPLOAD_LIMIT = 5
 const PAYMENT_EXPIRY_MINUTES = 5
@@ -53,6 +54,12 @@ export async function GET(request: Request) {
 // POST: Create a payment session
 export async function POST(request: Request) {
   try {
+    // Rate limiting
+    const rateLimit = checkApiRateLimit(request)
+    if (rateLimit && !rateLimit.allowed) {
+      return NextResponse.json({ error: 'Too many payment requests. Please try again later.' }, { status: 429 })
+    }
+
     const { userId } = await request.json()
 
     if (!userId) {

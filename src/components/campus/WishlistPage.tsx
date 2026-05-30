@@ -15,6 +15,7 @@ interface WishListing {
   category: string
   city: string
   condition: string
+  images: string
   seller: { name: string; college: string | null }
 }
 

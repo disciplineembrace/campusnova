@@ -3,7 +3,10 @@ import { db } from './db'
 import { cookies } from 'next/headers'
 import bcrypt from 'bcryptjs'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-jwt-secret-2024-secure'
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.warn('WARNING: JWT_SECRET not set in environment. Using insecure default. Set JWT_SECRET in production!')
+  return 'campusnova-insecure-dev-secret-change-me'
+})()
 const ADMIN_COOKIE_NAME = 'cnx_admin_session'
 const SESSION_DURATION = 4 * 60 * 60 * 1000 // 4 hours
 const BCRYPT_ROUNDS = 12

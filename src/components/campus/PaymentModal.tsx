@@ -105,7 +105,8 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const UPI_ID = 'sagathiyapradip1137-3@oksbi'
+  // Get UPI ID from payment session or fallback
+  const UPI_ID = paymentSession?.upiId || 'sagathiyapradip1137-3@oksbi'
 
   const copyUpiId = useCallback(async () => {
     try {
@@ -123,7 +124,7 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
-  }, [])
+  }, [UPI_ID])
 
   const handleScreenshotUpload = async (file: File) => {
     if (!file.type.startsWith('image/')) {

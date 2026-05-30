@@ -1,0 +1,21 @@
+{
+  "name": "CampusNova - India's Premium Student Ecosystem",
+  "short_name": "CampusNova",
+  "description": "Buy and sell old books, notes, and study essentials directly with students. Save up to 70% on textbooks.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563EB",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["education", "shopping", "lifestyle"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}

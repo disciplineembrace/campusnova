@@ -1,5 +1,5 @@
-# CampusNova - https://campusnova.in
-# Sitemap: https://campusnova.in/sitemap.xml
+# CampusNova - India's Premium Student Ecosystem
+# https://campusnova.in
 
 User-agent: Googlebot
 Allow: /
@@ -21,9 +21,15 @@ Disallow: /cnx-admin-panel
 Disallow: /api/cnx-admin
 Disallow: /api/cnx-admin-auth
 Disallow: /api/payment
+Disallow: /api/payment/
 Disallow: /api/upload
 Disallow: /api/auth
-Disallow: /api/listings?*id=
+Disallow: /api/reports
+Disallow: /api/wishlist
+Disallow: /api/users
+Disallow: /api/stats
+Disallow: /.env
+Disallow: /.git
 
 # Sitemap
 Sitemap: https://campusnova.in/sitemap.xml

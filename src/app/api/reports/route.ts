@@ -1,6 +1,7 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 import { getAdminFromCookies } from '@/lib/admin-auth'
+import { checkApiRateLimit, sanitizeString } from '@/lib/api-security'
 
 export async function GET() {
   try {
@@ -26,12 +27,20 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    // Rate limiting
+    const rateLimit = checkApiRateLimit(request)
+    if (rateLimit && !rateLimit.allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    }
+
     // Anyone can create a report (for reporting listings)
     const { listingId, reporterId, reason } = await request.json()
     if (!listingId || !reporterId || !reason) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
-    const report = await db.report.create({ data: { listingId, reporterId, reason } })
+    // Sanitize reason
+    const sanitizedReason = sanitizeString(reason, 500)
+    const report = await db.report.create({ data: { listingId, reporterId, reason: sanitizedReason } })
     return NextResponse.json({ report }, { status: 201 })
   } catch (error) {
     console.error('Reports POST error:', error)

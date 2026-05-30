@@ -112,7 +112,7 @@ function sanitizeInput(str: string): string {
 
 export default function SellProductPage() {
   const { currentUser, setCurrentPage, setSelectedProductId } = useAppStore()
-  const [uploadCredits, setUploadCredits] = useState<{ freeRemaining: number; paidCredits: number; totalCredits: number; canUpload: boolean; freeUploadLimit: number } | null>(null)
+  const [uploadCredits, setUploadCredits] = useState<{ freeRemaining: number; paidCredits: number; totalCredits: number; canUpload: boolean; freeUploadLimit: number; paidUploadCredits: number } | null>(null)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [creditsLoading, setCreditsLoading] = useState(true)
   const [form, setForm] = useState({

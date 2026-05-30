@@ -1,10 +1,17 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
+import { checkApiRateLimit, isValidUTR } from '@/lib/api-security'
 
 // POST: Submit payment proof (UTR number or screenshot)
 // Sets payment to 'pending_verification' - admin must manually approve
 export async function POST(request: Request) {
   try {
+    // Rate limiting
+    const rateLimit = checkApiRateLimit(request)
+    if (rateLimit && !rateLimit.allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    }
+
     const { paymentId, userId, utrNumber, screenshotUrl } = await request.json()
 
     if (!paymentId || !userId) {
@@ -13,6 +20,11 @@ export async function POST(request: Request) {
 
     if (!utrNumber && !screenshotUrl) {
       return NextResponse.json({ error: 'Please provide either UTR number or payment screenshot' }, { status: 400 })
+    }
+
+    // Validate UTR format if provided
+    if (utrNumber && !isValidUTR(utrNumber)) {
+      return NextResponse.json({ error: 'Invalid UTR number format. Must be 6-12 digits.' }, { status: 400 })
     }
 
     // Find the payment

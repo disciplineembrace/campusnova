@@ -1,5 +1,6 @@
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
+import { checkApiRateLimit, isValidIndianMobile, isValidPrice, sanitizeString } from '@/lib/api-security'
 
 export async function GET(request: Request) {
   try {
@@ -80,6 +81,12 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    // Rate limiting
+    const rateLimit = checkApiRateLimit(request)
+    if (rateLimit && !rateLimit.allowed) {
+      return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+    }
+
     const body = await request.json()
     const { title, description, originalPrice, sellingPrice, category, subcategory, listingType, course, semester, standard, board, college, city, condition, whatsappNumber, sellerId, isDigital, fileUrl, images } = body
 

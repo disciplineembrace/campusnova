@@ -9,6 +9,7 @@ import Footer from '@/components/campus/Footer'
 import HeroSection from '@/components/campus/HeroSection'
 import CategoriesSection from '@/components/campus/CategoriesSection'
 import FeaturedListings from '@/components/campus/FeaturedListings'
+import ToasterProvider from '@/components/ToasterProvider'
 import WhyChooseSection from '@/components/campus/WhyChooseSection'
 import TestimonialsSection from '@/components/campus/TestimonialsSection'
 import AppDownloadSection from '@/components/campus/AppDownloadSection'
@@ -54,12 +55,12 @@ const PAGE_COMPONENTS: Record<PageType, React.ComponentType> = {
   categories: CategoryExplorerPage,
 }
 
-const MOBILE_NAV_ITEMS = [
-  { icon: Home, label: 'Home', page: 'home' as PageType },
-  { icon: LayoutGrid, label: 'Categories', page: 'categories' as PageType },
-  { icon: PlusCircle, label: 'Sell', page: 'sell' as PageType, isCenter: true },
-  { icon: BookOpen, label: 'Reader', page: 'reader' as PageType },
-  { icon: Brain, label: 'Dashboard', page: 'dashboard' as PageType },
+const MOBILE_NAV_ITEMS: { icon: React.ElementType; label: string; page: PageType; isCenter?: boolean }[] = [
+  { icon: Home, label: 'Home', page: 'home' },
+  { icon: LayoutGrid, label: 'Categories', page: 'categories' },
+  { icon: PlusCircle, label: 'Sell', page: 'sell', isCenter: true },
+  { icon: BookOpen, label: 'Reader', page: 'reader' },
+  { icon: Brain, label: 'Dashboard', page: 'dashboard' },
 ]
 
 function MobileBottomNav() {
@@ -76,11 +77,13 @@ function MobileBottomNav() {
   }
 
   const getActivePage = (page: PageType) => {
-    if (page === 'home') return currentPage === 'home'
-    if (page === 'categories') return currentPage === 'categories' || currentPage === 'explore'
-    if (page === 'reader') return currentPage === 'reader'
-    if (page === 'dashboard') return currentPage === 'dashboard' || currentPage === 'profile' || currentPage === 'saved' || currentPage === 'wishlist'
-    return currentPage === page
+    const p = page as string
+    const c = currentPage as string
+    if (p === 'home') return c === 'home'
+    if (p === 'categories') return c === 'categories' || c === 'explore'
+    if (p === 'reader') return c === 'reader'
+    if (p === 'dashboard') return c === 'dashboard' || c === 'profile' || c === 'saved' || c === 'wishlist'
+    return c === p
   }
 
   return (
@@ -155,6 +158,7 @@ export default function CampusNova() {
       </main>
       {!isReaderMode && <Footer />}
       <MobileBottomNav />
+      <ToasterProvider />
     </div>
   )
 }
