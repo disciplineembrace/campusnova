@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { db } from '@/lib/db'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://campusnova.in'
+  const baseUrl = 'https://campusnova-beta.vercel.app'
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -64,19 +64,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // If DB is unavailable, skip dynamic pages
   }
 
-  // Category pages
+  // Category pages with exam-specific pages
   const categories = [
     'school-books', 'cbse', 'gseb', 'icse', 'college-books', 'medical',
     'engineering', 'commerce-law', 'competitive', 'notes-pdfs', 'handwritten',
     'ebooks', 'notebooks', 'study-kits'
   ]
 
-  const categoryPages: MetadataRoute.Sitemap = categories.map(category => ({
-    url: `${baseUrl}/category/${category}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: 0.7,
-  }))
+  // Exam-specific category pages for better SEO targeting
+  const examCategories = [
+    'neet', 'jee', 'upsc', 'gate', 'cat', 'clat', 'gre', 'gmat',
+    'ssc', 'banking', 'railways', 'defence',
+  ]
+
+  const categoryPages: MetadataRoute.Sitemap = [
+    ...categories.map(category => ({
+      url: `${baseUrl}/category/${category}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.7,
+    })),
+    ...examCategories.map(exam => ({
+      url: `${baseUrl}/category/competitive/${exam}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+  ]
 
   return [...staticPages, ...listingPages, ...categoryPages]
 }

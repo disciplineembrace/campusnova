@@ -13,6 +13,7 @@ import ToasterProvider from '@/components/ToasterProvider'
 import WhyChooseSection from '@/components/campus/WhyChooseSection'
 import TestimonialsSection from '@/components/campus/TestimonialsSection'
 import AppDownloadSection from '@/components/campus/AppDownloadSection'
+import InstagramFeed from '@/components/campus/InstagramFeed'
 import ExplorePage from '@/components/campus/ExplorePage'
 import ProductDetailPage from '@/components/campus/ProductDetailPage'
 import SellProductPage from '@/components/campus/SellProductPage'
@@ -35,6 +36,7 @@ function HomePage() {
       <FeaturedListings />
       <WhyChooseSection />
       <TestimonialsSection />
+      <InstagramFeed />
       <AppDownloadSection />
     </div>
   )

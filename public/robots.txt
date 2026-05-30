@@ -1,9 +1,10 @@
-# EduCampusHub - India's Premium Student Ecosystem
-# https://campusnova.in
+# EduCampusHub — India's Student Marketplace
+# https://campusnova-beta.vercel.app
 
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
+Request-rate: 1/1s
 
 User-agent: Bingbot
 Allow: /
@@ -13,6 +14,12 @@ User-agent: Twitterbot
 Allow: /
 
 User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: InstagramBot
 Allow: /
 
 User-agent: *
@@ -31,5 +38,5 @@ Disallow: /api/stats
 Disallow: /.env
 Disallow: /.git
 
-# Sitemap
-Sitemap: https://campusnova.in/sitemap.xml
+# Sitemaps
+Sitemap: https://campusnova-beta.vercel.app/sitemap.xml

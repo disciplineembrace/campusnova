@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import { TranslationProvider } from "@/lib/i18n/TranslationContext";
+import { OrganizationJsonLd, WebSiteJsonLd, MarketplaceJsonLd } from "@/components/seo/JsonLd";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const inter = Inter({
@@ -57,7 +59,7 @@ export const metadata: Metadata = {
     "book exchange",
     "student community",
   ],
-  authors: [{ name: "EduCampusHub Team", url: "https://campusnova.in" }],
+  authors: [{ name: "EduCampusHub Team", url: "https://campusnova-beta.vercel.app" }],
   creator: "EduCampusHub",
   publisher: "EduCampusHub",
   formatDetection: {
@@ -65,15 +67,20 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://campusnova.in"),
+  metadataBase: new URL("https://campusnova-beta.vercel.app"),
   alternates: {
     canonical: "/",
+    languages: {
+      'en': '/',
+      'gu': '/?lang=gu',
+      'hi': '/?lang=hi',
+    },
   },
   openGraph: {
     title: "EduCampusHub — Buy • Sell • Exchange",
     description:
       "Buy & sell old books directly with students. Save up to 70% on textbooks for NEET, JEE, UPSC & more.",
-    url: "https://campusnova.in",
+    url: "https://campusnova-beta.vercel.app",
     siteName: "EduCampusHub",
     locale: "en_IN",
     type: "website",
@@ -92,7 +99,6 @@ export const metadata: Metadata = {
     description:
       "Buy & sell old books directly with students. Save up to 70% on textbooks.",
     images: ["/og-image.png"],
-    creator: "@campusnova",
   },
   robots: {
     index: true,
@@ -110,6 +116,14 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: "/manifest.json",
+  verification: {
+    google: "google-site-verification=PENDING",
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+  },
 };
 
 export default function RootLayout({
@@ -123,9 +137,13 @@ export default function RootLayout({
         className={`${inter.variable} ${poppins.variable} antialiased bg-background text-foreground font-sans`}
         style={{ fontFamily: 'var(--font-inter)' }}
       >
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+        <MarketplaceJsonLd />
         <TranslationProvider>
           {children}
         </TranslationProvider>
+        <Analytics />
       </body>
     </html>
   );

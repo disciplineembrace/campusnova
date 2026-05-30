@@ -64,7 +64,7 @@ export default function Footer() {
               {t('footer.brand.tagline')}
             </p>
             <div className="flex items-center gap-3">
-              <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-brand/30 transition-all hover:shadow-lg hover:shadow-brand/10">
+              <a href="https://www.instagram.com/educampushubofficial" target="_blank" rel="noopener noreferrer" title="Follow us on Instagram" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-brand/30 transition-all hover:shadow-lg hover:shadow-brand/10">
                 <Instagram className="w-4 h-4" />
               </a>
               <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-brand/30 transition-all hover:shadow-lg hover:shadow-brand/10">
@@ -77,6 +77,15 @@ export default function Footer() {
                 <Mail className="w-4 h-4" />
               </a>
             </div>
+            <a
+              href="https://www.instagram.com/educampushubofficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white text-sm font-medium hover:opacity-90 transition-opacity mt-4"
+            >
+              <Instagram className="w-4 h-4" />
+              Follow @educampushubofficial
+            </a>
           </div>
 
           {/* Links */}
