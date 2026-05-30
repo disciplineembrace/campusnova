@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Sparkles, ArrowRight, Rocket, BookOpen, Users, Library, GraduationCap } from 'lucide-react'
+import { Sparkles, ArrowRight, Rocket, BookOpen, Users, Library, GraduationCap, Instagram } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 
@@ -136,9 +136,27 @@ export default function HeroSection() {
             </Button>
           </motion.div>
 
+          {/* Instagram CTA */}
+          <motion.div
+            className="mt-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4, ease: 'easeOut' }}
+          >
+            <a
+              href="https://www.instagram.com/educampushubofficial"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-orange-500/10 border border-purple-500/20 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-purple-500/40 transition-all"
+            >
+              <Instagram className="w-4 h-4 text-pink-500" />
+              Follow @educampushubofficial for deals & study tips
+            </a>
+          </motion.div>
+
           {/* Stats */}
           <motion.div
-            className="mt-16 flex flex-wrap items-center justify-center gap-8 sm:gap-12"
+            className="mt-12 flex flex-wrap items-center justify-center gap-8 sm:gap-12"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5, ease: 'easeOut' }}
