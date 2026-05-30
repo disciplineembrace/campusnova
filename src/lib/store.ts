@@ -145,17 +145,6 @@ export const CATEGORIES = [
   { id: 'handwritten', name: 'Handwritten Notes', icon: 'PenTool', color: 'from-pink-500 to-rose-500', description: 'Topper notes' },
   { id: 'ebooks', name: 'E-books', icon: 'Tablet', color: 'from-violet-500 to-purple-600', description: 'Digital books' },
   { id: 'notebooks', name: 'Used Notebooks', icon: 'Notebook', color: 'from-yellow-500 to-amber-500', description: 'Bind, ruled, plain' },
-  { id: 'pens', name: 'Pens & Writing', icon: 'Pen', color: 'from-slate-500 to-gray-600', description: 'Pens, markers, highlighters' },
-  { id: 'stationery', name: 'Stationery Items', icon: 'Pencil', color: 'from-green-500 to-emerald-500', description: 'All stationery' },
-  { id: 'calculators', name: 'Calculators', icon: 'Calculator', color: 'from-indigo-500 to-blue-600', description: 'Scientific & standard' },
-  { id: 'drawing', name: 'Drawing Materials', icon: 'Palette', color: 'from-fuchsia-500 to-pink-500', description: 'Art & drafting' },
-  { id: 'bags', name: 'School Bags', icon: 'Backpack', color: 'from-amber-500 to-yellow-500', description: 'Bags & backpacks' },
-  { id: 'lab-coats', name: 'Lab Coats', icon: 'FlaskConical', color: 'from-sky-500 to-blue-500', description: 'Lab & aprons' },
-  { id: 'instruments', name: 'Instruments', icon: 'Ruler', color: 'from-teal-500 to-emerald-500', description: 'Compass, stethoscope' },
-  { id: 'study-lamps', name: 'Study Lamps', icon: 'Lamp', color: 'from-yellow-400 to-orange-500', description: 'LED desk lamps' },
-  { id: 'hostel', name: 'Hostel Essentials', icon: 'Bed', color: 'from-pink-500 to-fuchsia-500', description: 'All hostel needs' },
-  { id: 'projects', name: 'Project Files', icon: 'FolderOpen', color: 'from-orange-500 to-red-500', description: 'Projects & charts' },
-  { id: 'art-craft', name: 'Art & Craft', icon: 'Paintbrush', color: 'from-purple-500 to-fuchsia-500', description: 'Creative materials' },
   { id: 'study-kits', name: 'Study Kits', icon: 'Package', color: 'from-brand to-purple', description: 'Bundled essentials' },
 ] as const
 

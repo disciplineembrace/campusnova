@@ -1,11 +1,12 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText } from 'lucide-react'
+import { Stethoscope, Wrench, GraduationCap, Target, Scale, FileText, PenTool, Tablet, Notebook, Package, BookOpen, BookMarked } from 'lucide-react'
 import { useAppStore, CATEGORIES } from '@/lib/store'
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText,
+  BookOpen, BookMarked, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText,
+  PenTool, Tablet, Notebook, Package,
 }
 
 export default function CategoriesSection() {
@@ -30,12 +31,12 @@ export default function CategoriesSection() {
             Browse by <span className="gradient-text">Category</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Find exactly what you need from textbooks to hostel essentials
+            Find exactly what you need from textbooks to study kits
           </p>
         </motion.div>
 
         {/* Horizontal scroll on mobile, grid on desktop */}
-        <div className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide pb-2 md:pb-0 md:grid md:grid-cols-5 lg:grid-cols-9">
+        <div className="flex gap-3 sm:gap-4 overflow-x-auto scrollbar-hide pb-2 md:pb-0 md:grid md:grid-cols-5 lg:grid-cols-7">
           {CATEGORIES.map((cat, i) => {
             const Icon = ICON_MAP[cat.icon] || FileText
             return (

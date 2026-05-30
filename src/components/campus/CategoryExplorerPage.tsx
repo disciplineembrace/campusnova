@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Search, BookOpen, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText, PenTool, Calculator, Palette, Bed, FlaskConical, Ruler, Lamp, FolderOpen, Paintbrush, Package, BookMarked, Backpack, Sparkles, ArrowRight } from 'lucide-react'
+import { Search, BookOpen, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText, PenTool, Tablet, Notebook, Package, BookMarked, Backpack, Sparkles, ArrowRight } from 'lucide-react'
 import { useAppStore, CATEGORIES, formatINR, parseListingImages } from '@/lib/store'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -11,8 +11,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const ICON_MAP: Record<string, React.ElementType> = {
   BookOpen, GraduationCap, Stethoscope, Wrench, Scale, Target, FileText,
-  PenTool, Calculator, Palette, Bed, FlaskConical, Ruler, Lamp, FolderOpen,
-  Paintbrush, Package, BookMarked, Backpack,
+  PenTool, Tablet, Notebook, Package, BookMarked, Backpack,
 }
 
 interface Listing {
@@ -34,7 +33,6 @@ const FEATURED_COLLECTIONS = [
   { name: 'Back to School', description: 'Everything for new session', icon: Backpack, color: 'from-brand to-purple' },
   { name: 'Exam Prep Bundle', description: 'NEET, JEE, UPSC material', icon: Target, color: 'from-amber-500 to-orange-500' },
   { name: 'College Starter Kit', description: 'Essentials for freshers', icon: Package, color: 'from-emerald-500 to-green-600' },
-  { name: 'Study Lamp Collection', description: 'LED desk lamps', icon: Lamp, color: 'from-yellow-400 to-orange-500' },
 ]
 
 export default function CategoryExplorerPage() {
@@ -96,13 +94,13 @@ export default function CategoryExplorerPage() {
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand/10 text-brand text-sm font-medium mb-4 border border-brand/20">
             <Sparkles className="w-4 h-4" />
-            25+ Categories for Every Student
+            14 Categories for Every Student
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-3 font-heading">
             Explore <span className="gradient-text">Everything</span> for Students
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-            From school books to lab coats, calculators to handwritten notes — find it all on EduCampusHub
+            From school books to handwritten notes, competitive exam prep to e-books — find it all on EduCampusHub
           </p>
 
           {/* Search */}
@@ -112,7 +110,7 @@ export default function CategoryExplorerPage() {
               <Input
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
-                placeholder="Search books, notes, stationery..."
+                placeholder="Search books, notes, study kits..."
                 className="h-12 border-0 bg-transparent focus-visible:ring-0 text-base"
               />
               <Button type="submit" size="sm" className="btn-gradient text-white border-0 rounded-xl shrink-0">

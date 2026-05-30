@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   BookOpen, Upload, Check, ArrowLeft, Eye, X, ImagePlus,
   Loader2, AlertCircle, Camera, Sparkles, Trash2,
-  Stethoscope, Wrench, GraduationCap, Target, Landmark,
-  Scale, Calculator, Bed, FileText, ChevronRight, Shield,
-  ChevronLeft, RotateCcw, Info, CreditCard, Zap
+  Stethoscope, Wrench, GraduationCap, Target,
+  Scale, FileText, ChevronRight, Shield,
+  ChevronLeft, RotateCcw, Info, CreditCard, Zap,
+  PenTool, Tablet, Notebook, Package, BookMarked
 } from 'lucide-react'
 import { useAppStore, CATEGORIES, INDIAN_CITIES, CONDITIONS, SEMESTERS, BOARDS, STANDARDS, LISTING_TYPES, formatINR } from '@/lib/store'
 import { Button } from '@/components/ui/button'
@@ -22,7 +23,7 @@ import { toast } from 'sonner'
 import PaymentModal from '@/components/campus/PaymentModal'
 
 const ICON_MAP: Record<string, React.ElementType> = {
-  Stethoscope, Wrench, GraduationCap, Target, Landmark, Scale, Calculator, Bed, FileText,
+  Stethoscope, Wrench, GraduationCap, Target, Scale, FileText, PenTool, Tablet, Notebook, Package, BookOpen, BookMarked,
 }
 
 const MAX_IMAGES = 6

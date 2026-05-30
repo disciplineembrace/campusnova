@@ -66,9 +66,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Category pages
   const categories = [
-    'textbooks', 'notes', 'novels', 'electronics', 'stationery',
-    'competitive-exams', 'engineering', 'medical', 'law', 'commerce',
-    'arts', 'science', 'journals', 'magazines', 'other'
+    'school-books', 'cbse', 'gseb', 'icse', 'college-books', 'medical',
+    'engineering', 'commerce-law', 'competitive', 'notes-pdfs', 'handwritten',
+    'ebooks', 'notebooks', 'study-kits'
   ]
 
   const categoryPages: MetadataRoute.Sitemap = categories.map(category => ({

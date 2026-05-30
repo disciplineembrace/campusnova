@@ -62,7 +62,7 @@ export default function LearningDashboardPage() {
   const quickActions = [
     { icon: FileText, label: 'Browse Notes', page: 'explore' as const, category: 'notes-pdfs', color: 'from-cyan to-brand' },
     { icon: BookMarked, label: 'Read E-books', page: 'explore' as const, category: 'ebooks', color: 'from-violet-500 to-purple-600' },
-    { icon: PenTool, label: 'Find Stationery', page: 'explore' as const, category: 'stationery', color: 'from-green-500 to-emerald-500' },
+    { icon: PenTool, label: 'Handwritten Notes', page: 'explore' as const, category: 'handwritten', color: 'from-pink-500 to-rose-500' },
     { icon: Library, label: 'Sell Old Books', page: 'sell' as const, category: null, color: 'from-amber-500 to-orange-500' },
   ]
 
