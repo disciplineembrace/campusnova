@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { sql } from '@/lib/db'
+import { getNeonSql } from '@/lib/db'
 import { hashPassword } from '@/lib/admin-auth'
 
 /**
@@ -20,9 +20,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Get a fresh Neon SQL connection for this request
+    const sql = getNeonSql()
     const results: string[] = []
 
-    // 1. Create PasswordResetOTP table if not exists (using raw SQL via neon)
+    // 1. Create PasswordResetOTP table if not exists
     try {
       await sql`
         CREATE TABLE IF NOT EXISTS "PasswordResetOTP" (

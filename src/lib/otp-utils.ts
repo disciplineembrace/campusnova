@@ -1,33 +1,29 @@
 /**
  * OTP Utility Module for EduCampusHub
  * 
- * Handles OTP generation, delivery (SMS via Fast2SMS / fallback to server log),
- * verification, rate-limiting, and expiry.
- * 
- * SMS Provider: Fast2SMS (Indian SMS gateway - https://www.fast2sms.com)
- * Fallback: Server console log (for development)
+ * Uses Neon serverless driver (HTTP) for database queries
+ * to ensure reliable connectivity in serverless environments.
  */
 
-import { db } from './db'
+import { getNeonSql } from './db'
 import { randomInt } from 'crypto'
 
 // ─── Configuration ───
 
 const OTP_LENGTH = 6
 const OTP_EXPIRY_MINUTES = 5
-const OTP_RATE_LIMIT_WINDOW = 60 * 1000        // 1 minute between OTP requests
-const OTP_MAX_REQUESTS_PER_HOUR = 5             // Max 5 OTP requests per hour per phone
-const OTP_MAX_VERIFY_ATTEMPTS = 3               // Max 3 verification attempts per OTP
+const OTP_RATE_LIMIT_WINDOW = 60 * 1000
+const OTP_MAX_REQUESTS_PER_HOUR = 5
+const OTP_MAX_VERIFY_ATTEMPTS = 3
 
-// ─── Rate Limiting State (in-memory, production would use Redis) ───
+// ─── Rate Limiting State ───
 
 const otpRequestLog = new Map<string, { count: number; lastRequest: number; hourlyCount: number; hourlyReset: number }>()
-const otpVerifyAttempts = new Map<string, number>() // otpId -> attempt count
+const otpVerifyAttempts = new Map<string, number>()
 
 // ─── OTP Generation ───
 
 export function generateOTP(): string {
-  // Generate a cryptographically secure 6-digit OTP
   let otp = ''
   for (let i = 0; i < OTP_LENGTH; i++) {
     otp += randomInt(0, 10).toString()
@@ -46,13 +42,11 @@ export function checkOTPRateLimit(phone: string): { allowed: boolean; retryAfter
     return { allowed: true }
   }
 
-  // Check 1-minute cooldown
   if (now - record.lastRequest < OTP_RATE_LIMIT_WINDOW) {
     const retryAfterMs = OTP_RATE_LIMIT_WINDOW - (now - record.lastRequest)
     return { allowed: false, retryAfterMs, reason: `Please wait ${Math.ceil(retryAfterMs / 1000)} seconds before requesting a new OTP` }
   }
 
-  // Check hourly limit
   if (now > record.hourlyReset) {
     record.hourlyCount = 0
     record.hourlyReset = now + 60 * 60 * 1000
@@ -63,7 +57,6 @@ export function checkOTPRateLimit(phone: string): { allowed: boolean; retryAfter
     return { allowed: false, retryAfterMs, reason: `Too many OTP requests. Try again in ${Math.ceil(retryAfterMs / 60000)} minutes` }
   }
 
-  // Update rate limit counters
   record.count++
   record.lastRequest = now
   record.hourlyCount++
@@ -85,57 +78,58 @@ export function clearVerifyAttempts(otpId: string) {
   otpVerifyAttempts.delete(otpId)
 }
 
-// ─── OTP Storage ───
+// ─── OTP Storage (via Neon HTTP) ───
 
 export async function storeOTP(email: string, phone: string, otpCode: string) {
+  const sql = getNeonSql()
+  
   // Delete any unused OTPs for this email
-  await db.passwordResetOTP.deleteMany({
-    where: {
-      email,
-      isVerified: false,
-      usedAt: null,
-    }
-  })
+  await sql`
+    DELETE FROM "PasswordResetOTP" 
+    WHERE email = ${email} AND "isVerified" = false AND "usedAt" IS NULL
+  `
 
   // Store new OTP
   const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000)
-  const record = await db.passwordResetOTP.create({
-    data: {
-      email,
-      phone,
-      otpCode,
-      expiresAt,
-    }
-  })
+  const result = await sql`
+    INSERT INTO "PasswordResetOTP" (id, email, phone, "otpCode", "isVerified", "expiresAt", "createdAt")
+    VALUES (gen_random_uuid(), ${email}, ${phone}, ${otpCode}, false, ${expiresAt.toISOString()}, CURRENT_TIMESTAMP)
+    RETURNING id
+  `
 
-  return record
+  return result[0]
 }
 
 export async function verifyOTP(email: string, otpCode: string): Promise<{ valid: boolean; recordId?: string; reason?: string }> {
+  const sql = getNeonSql()
+
   // Find the OTP record
-  const record = await db.passwordResetOTP.findFirst({
-    where: {
-      email,
-      otpCode,
-      isVerified: false,
-      usedAt: null,
-      expiresAt: { gt: new Date() },
-    },
-    orderBy: { createdAt: 'desc' },
-  })
+  const records = await sql`
+    SELECT id, "isVerified", "usedAt", "expiresAt" 
+    FROM "PasswordResetOTP" 
+    WHERE email = ${email} AND "otpCode" = ${otpCode} AND "isVerified" = false AND "usedAt" IS NULL
+    ORDER BY "createdAt" DESC 
+    LIMIT 1
+  `
 
-  if (!record) {
+  if (!records || records.length === 0) {
     // Check if OTP exists but expired
-    const expiredRecord = await db.passwordResetOTP.findFirst({
-      where: { email, otpCode, isVerified: false, usedAt: null },
-      orderBy: { createdAt: 'desc' },
-    })
-
-    if (expiredRecord) {
+    const expired = await sql`
+      SELECT id FROM "PasswordResetOTP" 
+      WHERE email = ${email} AND "otpCode" = ${otpCode} AND "isVerified" = false AND "usedAt" IS NULL
+      LIMIT 1
+    `
+    if (expired && expired.length > 0) {
       return { valid: false, reason: 'OTP has expired. Please request a new one.' }
     }
-
     return { valid: false, reason: 'Invalid OTP code.' }
+  }
+
+  const record = records[0]
+
+  // Check if expired
+  if (new Date(record.expiresAt) < new Date()) {
+    return { valid: false, reason: 'OTP has expired. Please request a new one.' }
   }
 
   // Check verify attempt limit
@@ -144,13 +138,11 @@ export async function verifyOTP(email: string, otpCode: string): Promise<{ valid
   }
 
   // Mark as verified
-  await db.passwordResetOTP.update({
-    where: { id: record.id },
-    data: {
-      isVerified: true,
-      usedAt: new Date(),
-    }
-  })
+  await sql`
+    UPDATE "PasswordResetOTP" 
+    SET "isVerified" = true, "usedAt" = CURRENT_TIMESTAMP 
+    WHERE id = ${record.id}
+  `
 
   clearVerifyAttempts(record.id)
 
@@ -165,10 +157,6 @@ interface SMSResult {
   provider?: string
 }
 
-/**
- * Send OTP via Fast2SMS (Indian SMS Gateway)
- * Falls back to server log if no API key is configured.
- */
 export async function sendOTPSMS(phone: string, otp: string): Promise<SMSResult> {
   const FAST2SMS_API_KEY = process.env.FAST2SMS_API_KEY
 
@@ -189,47 +177,31 @@ export async function sendOTPSMS(phone: string, otp: string): Promise<SMSResult>
       })
 
       const data = await response.json()
-
       if (data.return === true) {
-        console.log(`📱 OTP sent via Fast2SMS to ${phone}`)
         return { success: true, message: 'OTP sent successfully', provider: 'Fast2SMS' }
-      } else {
-        console.error('Fast2SMS error:', data.message)
-        // Fall through to fallback
       }
     } catch (error) {
       console.error('Fast2SMS request error:', error)
-      // Fall through to fallback
     }
   }
 
-  // Fallback: Log OTP to server console + return it in development
-  console.log(`
-╔══════════════════════════════════════════════╗
-║  EDUCAMPUSHUB ADMIN PASSWORD RESET OTP       ║
-║  Phone: ${phone}                             ║
-║  OTP: ${otp}                                 ║
-║  Expires in: ${OTP_EXPIRY_MINUTES} minutes                   ║
-╚══════════════════════════════════════════════╝
-  `)
+  // Fallback: Log OTP to server console
+  console.log(`[OTP] Phone: ${phone}, OTP: ${otp}, Expires: ${OTP_EXPIRY_MINUTES}min`)
 
   return {
     success: true,
-    message: process.env.NODE_ENV === 'development'
-      ? `OTP sent (development mode - check server log). OTP: ${otp}`
-      : 'OTP sent to your registered mobile number',
+    message: 'OTP sent to your registered mobile number',
     provider: 'console_log',
   }
 }
 
-// ─── Cleanup Expired OTPs ───
+// ─── Cleanup ───
 
 export async function cleanupExpiredOTPs() {
   try {
-    const result = await db.passwordResetOTP.deleteMany({
-      where: { expiresAt: { lt: new Date() } }
-    })
-    return result.count
+    const sql = getNeonSql()
+    const result = await sql`DELETE FROM "PasswordResetOTP" WHERE "expiresAt" < CURRENT_TIMESTAMP`
+    return result.count || 0
   } catch {
     return 0
   }
@@ -238,12 +210,15 @@ export async function cleanupExpiredOTPs() {
 // ─── Get Admin Phone by Email ───
 
 export async function getAdminPhone(email: string): Promise<string | null> {
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { phone: true, isAdmin: true }
-  })
-
-  if (!user || !user.isAdmin || !user.phone) return null
-
-  return user.phone
+  try {
+    const sql = getNeonSql()
+    const result = await sql`
+      SELECT phone, "isAdmin" FROM "User" WHERE email = ${email} LIMIT 1
+    `
+    if (!result || result.length === 0) return null
+    if (!result[0].isAdmin || !result[0].phone) return null
+    return result[0].phone
+  } catch {
+    return null
+  }
 }

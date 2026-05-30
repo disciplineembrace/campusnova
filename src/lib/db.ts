@@ -27,11 +27,21 @@ if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.startsWith('postgresq
   console.error('ERROR: DATABASE_URL is not properly configured. Current value:', process.env.DATABASE_URL?.substring(0, 30))
 }
 
-// Create Neon SQL function for HTTP-based queries (works in serverless)
-export const sql = neon(process.env.DATABASE_URL || '')
+/**
+ * Get a Neon SQL function for HTTP-based database queries.
+ * This uses HTTPS instead of TCP, making it work reliably in serverless environments.
+ * Call this per-request to ensure the latest connection string is used.
+ */
+export function getNeonSql() {
+  const databaseUrl = process.env.DATABASE_URL
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL is not configured')
+  }
+  return neon(databaseUrl)
+}
 
 // Standard PrismaClient - uses TCP which may fail in serverless
-// But we keep it for local development and as primary in non-serverless contexts
+// Falls back gracefully; use getNeonSql() for critical serverless queries
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
