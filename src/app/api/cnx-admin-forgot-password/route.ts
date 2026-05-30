@@ -1,0 +1,214 @@
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+import { hashPassword, validatePasswordStrength } from '@/lib/admin-auth'
+import {
+  generateOTP,
+  storeOTP,
+  verifyOTP,
+  sendOTPSMS,
+  getAdminPhone,
+  checkOTPRateLimit,
+  cleanupExpiredOTPs,
+} from '@/lib/otp-utils'
+
+// ─── Rate Limiting for forgot-password endpoint ───
+
+const forgotPasswordAttempts = new Map<string, { count: number; lastAttempt: number }>()
+const MAX_FORGOT_ATTEMPTS = 5
+const FORGOT_LOCKOUT_MS = 15 * 60 * 1000 // 15 minutes
+
+/**
+ * POST /api/cnx-admin-forgot-password
+ * 
+ * Actions:
+ * 1. send_otp     — Verify admin email exists, generate OTP, send to registered phone
+ * 2. verify_otp   — Verify the OTP code
+ * 3. reset_password — Reset password after OTP is verified
+ */
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const { action } = body
+
+    // ─── Step 1: Send OTP ───
+    if (action === 'send_otp') {
+      const { email } = body
+
+      if (!email) {
+        return NextResponse.json({ error: 'Email is required' }, { status: 400 })
+      }
+
+      // Rate limit by IP
+      const forwarded = request.headers.get('x-forwarded-for')
+      const ip = forwarded?.split(',')[0]?.trim() || 'unknown'
+      const now = Date.now()
+      const attempt = forgotPasswordAttempts.get(ip)
+
+      if (attempt && attempt.count >= MAX_FORGOT_ATTEMPTS && now - attempt.lastAttempt < FORGOT_LOCKOUT_MS) {
+        const retryAfter = Math.ceil((FORGOT_LOCKOUT_MS - (now - attempt.lastAttempt)) / 60000)
+        return NextResponse.json(
+          { error: `Too many attempts. Try again in ${retryAfter} minutes.` },
+          { status: 429 }
+        )
+      }
+
+      if (attempt && now - attempt.lastAttempt > FORGOT_LOCKOUT_MS) {
+        forgotPasswordAttempts.delete(ip)
+      }
+
+      // Verify admin exists
+      const user = await db.user.findUnique({ where: { email } })
+      if (!user || !user.isAdmin) {
+        // Don't reveal whether the email exists (security)
+        // But we still rate-limit
+        const current = forgotPasswordAttempts.get(ip) || { count: 0, lastAttempt: 0 }
+        forgotPasswordAttempts.set(ip, { count: current.count + 1, lastAttempt: now })
+
+        return NextResponse.json(
+          { error: 'If this email belongs to an admin account, an OTP will be sent to the registered phone number.' },
+          { status: 200 }
+        )
+      }
+
+      if (user.isBanned) {
+        return NextResponse.json({ error: 'Account is banned. Contact support.' }, { status: 403 })
+      }
+
+      // Get admin's registered phone
+      const phone = await getAdminPhone(email)
+      if (!phone) {
+        return NextResponse.json(
+          { error: 'No phone number registered with this admin account. Contact super admin.' },
+          { status: 400 }
+        )
+      }
+
+      // Check OTP rate limit (per phone number)
+      const rateLimit = checkOTPRateLimit(phone)
+      if (!rateLimit.allowed) {
+        return NextResponse.json(
+          { error: rateLimit.reason, retryAfterMs: rateLimit.retryAfterMs },
+          { status: 429 }
+        )
+      }
+
+      // Generate and store OTP
+      const otp = generateOTP()
+      await storeOTP(email, phone, otp)
+
+      // Send OTP via SMS
+      const smsResult = await sendOTPSMS(phone, otp)
+
+      // Cleanup expired OTPs in background
+      cleanupExpiredOTPs().catch(() => {})
+
+      // Mask phone for response
+      const maskedPhone = phone.slice(0, 2) + '****' + phone.slice(-2)
+
+      return NextResponse.json({
+        success: true,
+        message: `OTP sent to ${maskedPhone}`,
+        maskedPhone,
+        // In development, include the OTP for testing
+        ...(process.env.NODE_ENV === 'development' && { devOtp: otp }),
+      })
+    }
+
+    // ─── Step 2: Verify OTP ───
+    if (action === 'verify_otp') {
+      const { email, otp } = body
+
+      if (!email || !otp) {
+        return NextResponse.json({ error: 'Email and OTP are required' }, { status: 400 })
+      }
+
+      const result = await verifyOTP(email, otp)
+
+      if (!result.valid) {
+        return NextResponse.json({ error: result.reason }, { status: 400 })
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: 'OTP verified successfully',
+        verificationToken: result.recordId, // Use this to authorize password reset
+      })
+    }
+
+    // ─── Step 3: Reset Password ───
+    if (action === 'reset_password') {
+      const { email, verificationToken, newPassword } = body
+
+      if (!email || !verificationToken || !newPassword) {
+        return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
+      }
+
+      // Verify the verification token is valid (the OTP was verified)
+      const otpRecord = await db.passwordResetOTP.findUnique({
+        where: { id: verificationToken },
+      })
+
+      if (!otpRecord || !otpRecord.isVerified || otpRecord.email !== email) {
+        return NextResponse.json({ error: 'Invalid or expired verification. Please start over.' }, { status: 400 })
+      }
+
+      // Check if OTP record is too old (max 10 minutes after verification)
+      if (otpRecord.usedAt && Date.now() - otpRecord.usedAt.getTime() > 10 * 60 * 1000) {
+        return NextResponse.json({ error: 'Verification expired. Please start over.' }, { status: 400 })
+      }
+
+      // Validate password strength
+      const validation = validatePasswordStrength(newPassword)
+      if (!validation.valid) {
+        return NextResponse.json({ error: validation.errors.join('. ') }, { status: 400 })
+      }
+
+      // Find admin user
+      const user = await db.user.findUnique({ where: { email } })
+      if (!user || !user.isAdmin) {
+        return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
+      }
+
+      // Update password
+      const newHash = await hashPassword(newPassword)
+      await db.user.update({
+        where: { id: user.id },
+        data: {
+          passwordHash: newHash,
+          mustChangePassword: false,
+        }
+      })
+
+      // Revoke all admin sessions (force re-login)
+      await db.adminSession.updateMany({
+        where: { userId: user.id, isRevoked: false },
+        data: { isRevoked: true }
+      })
+
+      // Delete the OTP record to prevent reuse
+      await db.passwordResetOTP.delete({ where: { id: verificationToken } })
+
+      // Create audit log
+      await db.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: 'password_reset_otp',
+          targetType: 'user',
+          targetId: user.id,
+          details: JSON.stringify({ method: 'mobile_otp', phone: otpRecord.phone }),
+          ipAddress: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || null,
+        }
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Password reset successfully. Please login with your new password.',
+      })
+    }
+
+    return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+  } catch (error) {
+    console.error('Forgot password error:', error)
+    return NextResponse.json({ error: 'An error occurred. Please try again.' }, { status: 500 })
+  }
+}

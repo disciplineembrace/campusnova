@@ -175,3 +175,18 @@ model UserSession {
   @@index([userId])
   @@index([expiresAt])
 }
+
+model PasswordResetOTP {
+  id         String   @id @default(cuid())
+  email      String                                    // admin email
+  phone      String                                    // phone number OTP sent to
+  otpCode    String                                    // 6-digit OTP
+  isVerified Boolean  @default(false)                  // whether OTP was successfully verified
+  expiresAt  DateTime                                  // 5-minute expiry
+  createdAt  DateTime  @default(now())
+  usedAt     DateTime?                                 // when OTP was used
+
+  @@index([email])
+  @@index([otpCode])
+  @@index([expiresAt])
+}

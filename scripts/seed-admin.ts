@@ -3,49 +3,32 @@ import { hashPassword } from '@/lib/admin-auth'
 
 async function seedAdmin() {
   const adminEmail = 'disciplineembrace@gmail.com'
-  const defaultPassword = 'EduCampusHub@2024!'
+  const adminPassword = '@deval1808'
+  const adminPhone = '9974331007'
 
   try {
     // Check if admin already exists
     const existing = await db.user.findUnique({ where: { email: adminEmail } })
 
     if (existing) {
-      if (existing.isAdmin) {
-        // Update existing user to be admin with password if not set
-        if (!existing.passwordHash) {
-          const hash = await hashPassword(defaultPassword)
-          await db.user.update({
-            where: { email: adminEmail },
-            data: {
-              isAdmin: true,
-              adminRole: 'super_admin',
-              passwordHash: hash,
-              mustChangePassword: true,
-              isVerified: true,
-            }
-          })
-          console.log(`✅ Admin password set for ${adminEmail}. Must change on first login.`)
-        } else {
-          console.log(`ℹ️  Admin ${adminEmail} already has a password set.`)
+      // Update existing user to be admin with correct password and phone
+      const hash = await hashPassword(adminPassword)
+      await db.user.update({
+        where: { email: adminEmail },
+        data: {
+          isAdmin: true,
+          adminRole: 'super_admin',
+          passwordHash: hash,
+          mustChangePassword: false, // Admin set their own password
+          isVerified: true,
+          phone: adminPhone,
+          name: 'EduCampusHub Admin',
         }
-      } else {
-        // Promote existing user to admin
-        const hash = await hashPassword(defaultPassword)
-        await db.user.update({
-          where: { email: adminEmail },
-          data: {
-            isAdmin: true,
-            adminRole: 'super_admin',
-            passwordHash: hash,
-            mustChangePassword: true,
-            isVerified: true,
-          }
-        })
-        console.log(`✅ User ${adminEmail} promoted to admin. Must change password on first login.`)
-      }
+      })
+      console.log(`✅ Admin ${adminEmail} updated with new password and phone.`)
     } else {
       // Create new admin user
-      const hash = await hashPassword(defaultPassword)
+      const hash = await hashPassword(adminPassword)
       await db.user.create({
         data: {
           email: adminEmail,
@@ -53,19 +36,19 @@ async function seedAdmin() {
           isAdmin: true,
           adminRole: 'super_admin',
           passwordHash: hash,
-          mustChangePassword: true,
+          mustChangePassword: false,
           isVerified: true,
+          phone: adminPhone,
           city: 'Delhi',
         }
       })
       console.log(`✅ Admin account created: ${adminEmail}`)
-      console.log(`   Default password: ${defaultPassword}`)
-      console.log(`   ⚠️  Must change password on first login!`)
     }
 
     console.log('\n📋 Admin credentials:')
     console.log(`   Email: ${adminEmail}`)
-    console.log(`   Password: ${defaultPassword}`)
+    console.log(`   Password: ${adminPassword}`)
+    console.log(`   Phone: ${adminPhone}`)
     console.log(`   Panel: /cnx-admin-panel`)
     console.log(`   Role: super_admin`)
   } catch (error) {
