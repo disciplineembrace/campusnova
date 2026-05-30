@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { checkRateLimit, getClientIdentifier } from '@/lib/rate-limit'
 
 // Routes that should NOT be rate-limited or blocked
-const ALLOWED_ADMIN_ROUTES = ['/cnx-admin-panel', '/api/cnx-admin', '/api/cnx-admin-auth', '/api/cnx-admin-forgot-password']
+const ALLOWED_ADMIN_ROUTES = ['/cnx-admin-panel', '/api/cnx-admin', '/api/cnx-admin-auth', '/api/cnx-admin-forgot-password', '/api/cnx-admin-init']
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
