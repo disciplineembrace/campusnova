@@ -1,6 +1,6 @@
 import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
-import { neon } from '@neondatabase/serverless'
+import { neon, type NeonQueryFunction } from '@neondatabase/serverless'
 import { config } from 'dotenv'
 import { resolve } from 'path'
 
@@ -31,33 +31,42 @@ if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.startsWith('postgresq
 /**
  * Create Prisma client using the Neon serverless adapter.
  * 
- * The adapter uses @neondatabase/serverless which connects over HTTPS,
- * bypassing TCP connection issues in serverless environments (Vercel).
- * This resolves "Can't reach database server" errors that occur with
- * Prisma's default TCP-based connection engine.
+ * Uses @neondatabase/serverless which connects over HTTPS,
+ * bypassing TCP connection issues in serverless environments.
  */
 function createPrismaClient(): PrismaClient {
   const databaseUrl = process.env.DATABASE_URL
   
   if (!databaseUrl) {
-    throw new Error('DATABASE_URL is not set')
+    console.error('CRITICAL: DATABASE_URL is not set!')
+    // Return a basic client that will fail gracefully
+    return new PrismaClient({
+      log: ['error'],
+    })
   }
 
-  // Use Neon serverless adapter for all Neon databases
+  // Use Neon serverless adapter for Neon databases
   if (databaseUrl.includes('neon.tech')) {
     try {
-      const sql = neon(databaseUrl)
+      // Create the Neon SQL function for HTTP-based queries
+      const sql: NeonQueryFunction<false, false> = neon(databaseUrl)
       const adapter = new PrismaNeon(sql)
-      return new PrismaClient({
+      
+      const client = new PrismaClient({
         adapter,
         log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
       })
+      
+      console.log('✅ Prisma client created with Neon serverless adapter')
+      return client
     } catch (adapterError) {
-      console.warn('Neon adapter failed, falling back to standard PrismaClient:', adapterError)
+      console.error('Neon adapter creation failed:', adapterError)
+      // Fall through to standard client
     }
   }
   
-  // Fallback: Standard PrismaClient
+  // Fallback: Standard PrismaClient with TCP connection
+  console.log('Using standard PrismaClient (TCP)')
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
   })
