@@ -166,3 +166,33 @@ Stage Summary:
 - Live domains: educampushub-beta.vercel.app + educampushub.vercel.app ✅
 - Zero campusnova references in live HTML ✅
 - 33 EduCampusHub brand references in HTML ✅
+
+---
+Task ID: 12
+Agent: Main Agent
+Task: Fix auth 500 error on Vercel - register/login returning "Authentication failed"
+
+Work Log:
+- Diagnosed: jsonwebtoken npm package causing runtime errors on Vercel serverless
+- Fix: Replaced jwt.sign() with custom HMAC-SHA256 (same pattern as admin-auth.ts)
+- Fix: UserSession DB create wrapped in try/catch for graceful failure
+- Fix: Login and register now both set httpOnly session cookie
+- Committed and pushed to GitHub
+- Deployed to Vercel - build successful
+
+Verification on live site (educampushub-beta.vercel.app):
+- ✅ Register: Creates user with bcrypt hash, returns safe user + token
+- ✅ passwordHash NOT leaked in response
+- ✅ Duplicate email: Returns 409 "Email already registered"
+- ✅ Login: Validates bcrypt password, returns user + token + httpOnly cookie
+- ✅ Wrong password: Returns 401 "Invalid email or password"
+- ✅ Weak password: Returns 400 "Password must be at least 8 characters"
+- ✅ Google OAuth: Endpoint active (returns 400 because no Google credentials configured yet)
+
+Stage Summary:
+- Auth system fully functional on production
+- Registration with name/email/password/phone works
+- Login with email/password works with bcrypt verification
+- Session tokens created using HMAC-SHA256 (no external JWT dependency)
+- Google OAuth ready (needs GOOGLE_CLIENT_ID/SECRET from user)
+- Security: passwordHash stripped from all API responses
