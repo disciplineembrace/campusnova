@@ -19,7 +19,7 @@ export default function AppDownloadSection() {
   }
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-br from-brand via-purple to-brand relative overflow-hidden">
+    <section className="py-16 sm:py-24 bg-gradient-to-br from-brand via-accent to-brand relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern opacity-20" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
@@ -77,7 +77,7 @@ export default function AppDownloadSection() {
             <div className="relative w-56 sm:w-64">
               <div className="w-full aspect-[9/18] rounded-[2.5rem] border-4 border-white/20 bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-sm overflow-hidden p-3">
                 <div className="w-full h-full rounded-[2rem] bg-navy/80 flex flex-col items-center justify-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-purple flex items-center justify-center shadow-lg shadow-brand/30">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-accent flex items-center justify-center shadow-lg shadow-brand/30">
                     <Sparkles className="w-7 h-7 text-white" />
                   </div>
                   <p className="text-sm font-bold text-white font-heading">EduCampusHub</p>

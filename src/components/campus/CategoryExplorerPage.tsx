@@ -31,7 +31,7 @@ interface Listing {
 }
 
 const FEATURED_COLLECTIONS = [
-  { key: 'backToSchool', icon: Backpack, color: 'from-brand to-purple' },
+  { key: 'backToSchool', icon: Backpack, color: 'from-brand to-accent' },
   { key: 'examPrepBundle', icon: Target, color: 'from-amber-500 to-orange-500' },
   { key: 'collegeStarterKit', icon: Package, color: 'from-emerald-500 to-green-600' },
 ]

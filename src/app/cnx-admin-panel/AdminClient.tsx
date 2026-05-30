@@ -322,7 +322,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
         {/* Logo area */}
         <div className="p-5 border-b border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-accent flex items-center justify-center">
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -360,7 +360,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
         {/* Admin info */}
         <div className="p-4 border-t border-slate-800">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-sm font-bold shrink-0">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-sm font-bold shrink-0">
               {admin.name.charAt(0)}
             </div>
             <div className="min-w-0 flex-1">
@@ -481,8 +481,8 @@ function OverviewTab({ stats, loading, onAction }: { stats: Stats | null; loadin
   }
 
   const statCards = [
-    { icon: Users, label: 'Total Users', value: stats.totalUsers, color: 'from-brand to-purple' },
-    { icon: BookOpen, label: 'Active Listings', value: stats.activeListings, color: 'from-purple to-violet-600' },
+    { icon: Users, label: 'Total Users', value: stats.totalUsers, color: 'from-brand to-accent' },
+    { icon: BookOpen, label: 'Active Listings', value: stats.activeListings, color: 'from-accent to-purple-light' },
     { icon: AlertTriangle, label: 'Open Reports', value: stats.unresolvedReports, color: 'from-red-500 to-rose-600' },
     { icon: Eye, label: 'Total Views', value: stats.totalViews, color: 'from-cyan-500 to-brand' },
     { icon: Star, label: 'Featured', value: stats.featuredListings, color: 'from-amber-500 to-orange-500' },
@@ -532,7 +532,7 @@ function OverviewTab({ stats, loading, onAction }: { stats: Stats | null; loadin
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
                       transition={{ delay: i * 0.05, duration: 0.5 }}
-                      className="h-full bg-gradient-to-r from-brand to-purple rounded-full"
+                      className="h-full bg-gradient-to-r from-brand to-accent rounded-full"
                     />
                   </div>
                   <span className="text-xs text-slate-300 font-mono w-8 text-right">{c.count}</span>
@@ -665,7 +665,7 @@ function UsersTab({ users, loading, onAction }: { users: UserItem[]; loading: bo
               <tr key={user.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                 <td className="py-2.5 px-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-xs font-bold shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-xs font-bold shrink-0">
                       {user.name.charAt(0)}
                     </div>
                     <div className="min-w-0">

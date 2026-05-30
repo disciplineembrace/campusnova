@@ -1605,7 +1605,7 @@ export default function SellProductPage() {
                     </Badge>
                   )}
                   {form.listingType === 'exchange' && (
-                    <Badge className="absolute top-3 left-3 bg-purple-500 text-white border-0 rounded-full">Exchange</Badge>
+                    <Badge className="absolute top-3 left-3 bg-accent text-white border-0 rounded-full">Exchange</Badge>
                   )}
                   {form.listingType === 'giveaway' && (
                     <Badge className="absolute top-3 left-3 bg-emerald-500 text-white border-0 rounded-full">FREE</Badge>
@@ -1639,7 +1639,7 @@ export default function SellProductPage() {
                     )}
                   </div>
                   <div className="pt-2 border-t border-border flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-purple-500 flex items-center justify-center text-white text-[10px] font-bold">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-[10px] font-bold">
                       {currentUser?.name?.charAt(0) || '?'}
                     </div>
                     <span className="text-xs font-medium">{currentUser?.name || 'You'}</span>

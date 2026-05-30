@@ -121,7 +121,7 @@ export default function ProfilePage() {
         >
           <Card className="p-6 card-premium">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-2xl font-bold shrink-0 ring-4 ring-brand/10">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-2xl font-bold shrink-0 ring-4 ring-brand/10">
                 {currentUser.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">

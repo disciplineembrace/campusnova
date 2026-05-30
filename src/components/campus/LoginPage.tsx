@@ -47,7 +47,7 @@ export default function LoginPage() {
   return (
     <div className="pt-16 min-h-screen flex">
       {/* Left side - Gradient branding (hidden on mobile) */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand via-purple to-brand relative overflow-hidden items-center justify-center">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand via-accent to-brand relative overflow-hidden items-center justify-center">
         <div className="absolute inset-0 bg-pattern opacity-20" />
         <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-[80px]" />
         <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-light/10 rounded-full blur-[100px]" />
@@ -103,7 +103,7 @@ export default function LoginPage() {
           {/* Mobile header gradient bar */}
           <div className="lg:hidden mb-8 text-center">
             <div className="inline-flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-accent flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold font-heading">

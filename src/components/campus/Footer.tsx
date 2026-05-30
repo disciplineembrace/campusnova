@@ -44,21 +44,23 @@ export default function Footer() {
   return (
     <footer className="bg-navy dark:bg-navy-light text-white mt-auto relative">
       {/* Gradient top border */}
-      <div className="h-1 bg-gradient-to-r from-brand via-purple to-cyan" />
+      <div className="h-1 bg-gradient-to-r from-brand via-accent to-cyan" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
+              <img 
+                src="/logo.jpeg" 
+                alt="EduCampusHub" 
+                className="w-9 h-9 rounded-xl object-cover"
+              />
               <span className="text-xl font-bold font-heading">
                 {t('footer.logo.brandPrefix')}<span className="gradient-text">{t('footer.logo.brandName')}</span>
               </span>
             </div>
-            <p className="text-sm text-blue-200/70 leading-relaxed mb-6 max-w-sm">
+            <p className="text-sm text-white/70 leading-relaxed mb-6 max-w-sm">
               {t('footer.brand.tagline')}
             </p>
             <div className="flex items-center gap-3">
@@ -83,8 +85,8 @@ export default function Footer() {
               <h3 className="text-sm font-semibold text-white mb-4 uppercase tracking-wider font-heading">{t(SECTION_TITLE_KEYS[sectionKey])}</h3>
               {sectionKey === 'connect' ? (
                 <div className="space-y-2.5">
-                  <p className="text-sm text-blue-200/70">{t('footer.connect.email')}</p>
-                  <p className="text-sm text-blue-200/70">{t('footer.connect.location')}</p>
+                  <p className="text-sm text-white/70">{t('footer.connect.email')}</p>
+                  <p className="text-sm text-white/70">{t('footer.connect.location')}</p>
                 </div>
               ) : (
                 <ul className="space-y-2.5">
@@ -92,7 +94,7 @@ export default function Footer() {
                     <li key={link.labelKey}>
                       <button
                         onClick={() => handleLinkClick(link.page, 'category' in link ? link.category : undefined)}
-                        className="text-sm text-blue-200/70 hover:text-white transition-colors hover:translate-x-1 inline-block"
+                        className="text-sm text-white/70 hover:text-white transition-colors hover:translate-x-1 inline-block"
                       >
                         {t(link.labelKey)}
                       </button>
@@ -105,10 +107,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-blue-200/50">
+          <p className="text-xs text-white/50">
             {t('footer.copyright')}
           </p>
-          <p className="text-xs text-blue-200/50 flex items-center gap-1">
+          <p className="text-xs text-white/50 flex items-center gap-1">
             {t('footer.madeWith')} <Heart className="w-3 h-3 text-red-400 fill-red-400" /> {t('footer.inIndia')}
           </p>
         </div>

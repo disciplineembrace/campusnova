@@ -40,12 +40,12 @@ export default function HeroSection() {
   return (
     <section className="relative overflow-hidden pt-16">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-navy dark:via-background dark:to-navy-light" />
+      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-white to-brand/5 dark:from-navy dark:via-background dark:to-navy-light" />
       <div className="absolute inset-0 bg-pattern opacity-40" />
 
       {/* Decorative gradient orbs */}
       <div className="absolute top-20 left-[10%] w-72 h-72 bg-brand/10 rounded-full blur-[100px] dark:bg-brand/5" />
-      <div className="absolute bottom-20 right-[10%] w-96 h-96 bg-purple/10 rounded-full blur-[120px] dark:bg-purple/5" />
+      <div className="absolute bottom-20 right-[10%] w-96 h-96 bg-accent/10 rounded-full blur-[120px] dark:bg-accent/5" />
 
       {/* Floating elements */}
       <motion.div
@@ -53,7 +53,7 @@ export default function HeroSection() {
         animate={{ y: [0, -15, 0], rotate: [0, 5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <div className="w-16 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-light dark:from-brand dark:to-purple flex items-center justify-center shadow-xl shadow-brand/20 animate-pulse-glow">
+        <div className="w-16 h-20 rounded-2xl bg-gradient-to-br from-brand to-brand-light dark:from-brand dark:to-accent flex items-center justify-center shadow-xl shadow-brand/20 animate-pulse-glow">
           <Sparkles className="w-8 h-8 text-white" />
         </div>
       </motion.div>
@@ -63,7 +63,7 @@ export default function HeroSection() {
         animate={{ y: [0, -20, 0], rotate: [0, -5, 0] }}
         transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
       >
-        <div className="w-14 h-18 rounded-2xl bg-gradient-to-br from-purple to-purple-light dark:from-purple dark:to-purple-light flex items-center justify-center shadow-xl shadow-purple/20 p-3">
+        <div className="w-14 h-18 rounded-2xl bg-gradient-to-br from-accent to-purple-light dark:from-accent dark:to-purple-light flex items-center justify-center shadow-xl shadow-accent/20 p-3">
           <Rocket className="w-8 h-8 text-white" />
         </div>
       </motion.div>
@@ -145,7 +145,7 @@ export default function HeroSection() {
           >
             {STATS.map(stat => (
               <div key={stat.label} className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center border border-brand/10">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand/10 to-accent/10 flex items-center justify-center border border-brand/10">
                   <stat.icon className="w-5 h-5 text-brand" />
                 </div>
                 <div className="text-left">

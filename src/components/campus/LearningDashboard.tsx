@@ -49,7 +49,7 @@ export default function LearningDashboardPage() {
   }, [])
 
   const stats = [
-    { icon: BookOpen, label: 'Books Reading', value: Object.keys(readingProgress).length, color: 'from-brand to-purple', change: 'Active' },
+    { icon: BookOpen, label: 'Books Reading', value: Object.keys(readingProgress).length, color: 'from-brand to-accent', change: 'Active' },
     { icon: Bookmark, label: 'Saved Materials', value: savedMaterials.length, color: 'from-amber-500 to-orange-500', change: 'Active' },
     { icon: BookMarked, label: 'Bookmarks', value: bookmarks.length, color: 'from-emerald-500 to-green-600', change: 'Saved' },
     { icon: Clock, label: 'Recently Viewed', value: recentlyViewed.length, color: 'from-rose-500 to-pink-500', change: 'Items' },
@@ -61,7 +61,7 @@ export default function LearningDashboardPage() {
 
   const quickActions = [
     { icon: FileText, label: 'Browse Notes', page: 'explore' as const, category: 'notes-pdfs', color: 'from-cyan to-brand' },
-    { icon: BookMarked, label: 'Read E-books', page: 'explore' as const, category: 'ebooks', color: 'from-violet-500 to-purple-600' },
+    { icon: BookMarked, label: 'Read E-books', page: 'explore' as const, category: 'ebooks', color: 'from-accent to-purple-light' },
     { icon: PenTool, label: 'Handwritten Notes', page: 'explore' as const, category: 'handwritten', color: 'from-pink-500 to-rose-500' },
     { icon: Library, label: 'Sell Old Books', page: 'sell' as const, category: null, color: 'from-amber-500 to-orange-500' },
   ]
@@ -86,7 +86,7 @@ export default function LearningDashboardPage() {
           className="mb-8"
         >
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand to-accent flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -201,7 +201,7 @@ export default function LearningDashboardPage() {
                     onClick={() => { setSelectedProductId(id); setCurrentPage('reader') }}
                     className="w-full p-4 rounded-2xl card-premium glow-hover flex items-center gap-4 text-left group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand to-accent flex items-center justify-center shrink-0">
                       <BookOpen className="w-6 h-6 text-white" />
                     </div>
                     <div className="flex-1 min-w-0">

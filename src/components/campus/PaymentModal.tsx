@@ -243,7 +243,7 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
             onClick={e => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="relative bg-gradient-to-br from-brand via-purple to-brand p-6 text-white">
+            <div className="relative bg-gradient-to-br from-brand via-accent to-brand p-6 text-white">
               <button
                 onClick={handleClose}
                 className="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors"
@@ -348,10 +348,10 @@ export default function PaymentModal({ isOpen, onClose, userId, onPaymentSuccess
               {/* Step: Submit Proof */}
               {step === 'submit_proof' && (
                 <div className="space-y-5">
-                  <div className="bg-blue-50 dark:bg-blue-950/30 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
+                  <div className="bg-brand/5 dark:bg-brand/10 rounded-xl p-4 border border-brand/20 dark:border-brand/30">
                     <div className="flex items-start gap-2">
-                      <Shield className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                      <div className="text-sm text-blue-800 dark:text-blue-200">
+                      <Shield className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+                      <div className="text-sm text-brand dark:text-brand-light">
                         <p className="font-medium mb-1">Payment Proof Required</p>
                         <p className="text-xs opacity-80">Enter the UTR/Reference number from your UPI payment. This is a 12-digit number found in your payment receipt.</p>
                       </div>

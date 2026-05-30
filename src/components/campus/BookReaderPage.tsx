@@ -200,7 +200,7 @@ export default function BookReaderPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-md"
           >
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-accent/10 flex items-center justify-center mx-auto mb-6">
               <BookOpen className="w-10 h-10 text-brand" />
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2 font-heading">No Book Selected</h2>
@@ -238,7 +238,7 @@ export default function BookReaderPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-md"
           >
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-purple/10 flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-brand/10 to-accent/10 flex items-center justify-center mx-auto mb-6">
               <BookOpen className="w-10 h-10 text-brand" />
             </div>
             <h2 className="text-xl font-bold text-foreground mb-2 font-heading">{bookData.title}</h2>

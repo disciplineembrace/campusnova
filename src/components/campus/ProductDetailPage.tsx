@@ -88,7 +88,7 @@ export default function ProductDetailPage() {
   const cat = listing ? CATEGORIES.find(c => c.id === listing.category) : null
   const conditionColor: Record<string, string> = {
     'Like New': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-    'Good': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    'Good': 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light',
     'Fair': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     'Poor': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   }
@@ -283,7 +283,7 @@ export default function ProductDetailPage() {
               <div className="p-5 rounded-2xl card-premium glow-hover">
                 <h3 className="text-sm font-semibold text-foreground mb-3">Seller Information</h3>
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-lg font-bold ring-2 ring-brand/10">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-lg font-bold ring-2 ring-brand/10">
                     {listing.seller.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -324,7 +324,7 @@ export default function ProductDetailPage() {
 
                 {/* Exchange badge */}
                 {listingType === 'exchange' && (
-                  <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 text-center">
+                  <div className="p-3 rounded-xl bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/30 text-center">
                     <p className="text-sm font-semibold text-brand">This item is available for exchange</p>
                   </div>
                 )}
@@ -361,7 +361,7 @@ export default function ProductDetailPage() {
               </div>
 
               {/* Trust & Safety */}
-              <div className="p-4 rounded-2xl bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
+              <div className="p-4 rounded-2xl bg-brand/5 dark:bg-brand/10 border border-brand/20 dark:border-brand/30">
                 <div className="flex items-start gap-3">
                   <Shield className="w-5 h-5 text-brand shrink-0 mt-0.5" />
                   <div>

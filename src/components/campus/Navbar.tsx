@@ -74,9 +74,11 @@ export default function Navbar() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand to-purple flex items-center justify-center shadow-md">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
+              <img 
+                src="/logo.jpeg" 
+                alt="EduCampusHub" 
+                className="w-9 h-9 rounded-xl object-cover shadow-md"
+              />
               <span className="text-xl font-bold text-foreground font-heading">
                 {t('nav.logo.brandPrefix')}<span className="gradient-text">{t('nav.logo.brandName')}</span>
               </span>
@@ -178,7 +180,7 @@ export default function Navbar() {
                     onClick={() => setProfileOpen(!profileOpen)}
                     className="h-9 gap-2 px-2 rounded-xl"
                   >
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-xs font-bold ring-2 ring-brand/20">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-xs font-bold ring-2 ring-brand/20">
                       {currentUser.name.charAt(0)}
                     </div>
                     <span className="text-sm font-medium max-w-[80px] truncate hidden lg:block">{currentUser.name.split(' ')[0]}</span>
@@ -192,7 +194,7 @@ export default function Navbar() {
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
                         className="absolute right-0 mt-1 w-56 rounded-2xl bg-card border border-border shadow-xl overflow-hidden z-50"
                       >
-                        <div className="p-4 border-b border-border bg-gradient-to-r from-brand/5 to-purple/5">
+                        <div className="p-4 border-b border-border bg-gradient-to-r from-brand/5 to-accent/5">
                           <p className="text-sm font-semibold text-foreground">{currentUser.name}</p>
                           <p className="text-xs text-muted-foreground">{currentUser.college || currentUser.email}</p>
                         </div>
@@ -305,7 +307,7 @@ export default function Navbar() {
                     <>
                       <div className="px-4 py-3 mb-2 rounded-2xl bg-muted/50">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-sm font-bold ring-2 ring-brand/20">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-sm font-bold ring-2 ring-brand/20">
                             {currentUser.name.charAt(0)}
                           </div>
                           <div>

@@ -46,7 +46,7 @@ interface UserItem {
   _count: { listings: number }
 }
 
-const CHART_COLORS = ['#2563EB', '#7C3AED', '#06B6D4', '#10B981', '#8B5CF6', '#22D3EE', '#F59E0B', '#EC4899', '#3B82F6']
+const CHART_COLORS = ['#012B5E', '#F16404', '#06B6D4', '#10B981', '#FF8C38', '#22D3EE', '#F59E0B', '#EC4899', '#1A4B8C']
 
 export default function AdminDashboard() {
   const { currentUser, setCurrentPage } = useAppStore()
@@ -185,8 +185,8 @@ export default function AdminDashboard() {
             {/* Stats Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {[
-                { icon: Users, label: 'Total Users', value: stats.totalUsers, color: 'from-brand to-purple' },
-                { icon: BookOpen, label: 'Total Listings', value: stats.totalListings, color: 'from-purple to-purple-light' },
+                { icon: Users, label: 'Total Users', value: stats.totalUsers, color: 'from-brand to-accent' },
+                { icon: BookOpen, label: 'Total Listings', value: stats.totalListings, color: 'from-accent to-purple-light' },
                 { icon: AlertTriangle, label: 'Active Reports', value: stats.unresolvedReports, color: 'from-red-500 to-rose-500' },
                 { icon: Eye, label: 'Total Views', value: stats.totalViews, color: 'from-cyan to-brand' },
               ].map((stat, i) => (
@@ -221,7 +221,7 @@ export default function AdminDashboard() {
                     <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                     <YAxis tick={{ fontSize: 11 }} stroke="var(--muted-foreground)" />
                     <Tooltip />
-                    <Bar dataKey="listings" fill="#2563EB" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="listings" fill="#012B5E" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>
@@ -284,7 +284,7 @@ export default function AdminDashboard() {
                     <Card key={user.id} className="p-4 card-premium">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white font-bold text-sm shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white font-bold text-sm shrink-0">
                             {user.name.charAt(0)}
                           </div>
                           <div>

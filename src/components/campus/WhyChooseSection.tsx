@@ -5,11 +5,11 @@ import { Shield, PiggyBank, MessageSquare, Users, Upload, Search } from 'lucide-
 import { useTranslation } from '@/lib/i18n/TranslationContext'
 
 const FEATURES = [
-  { icon: Shield, key: 'noMiddleman', color: 'from-blue-600 to-purple' },
-  { icon: PiggyBank, key: 'save70', color: 'from-purple to-purple-light' },
+  { icon: Shield, key: 'noMiddleman', color: 'from-brand to-accent' },
+  { icon: PiggyBank, key: 'save70', color: 'from-accent to-purple-light' },
   { icon: MessageSquare, key: 'directContact', color: 'from-emerald to-cyan' },
   { icon: Users, key: 'trustedCommunity', color: 'from-brand to-cyan' },
-  { icon: Upload, key: 'easySelling', color: 'from-cyan to-purple' },
+  { icon: Upload, key: 'easySelling', color: 'from-cyan to-accent' },
   { icon: Search, key: 'smartSearch', color: 'from-purple-light to-brand' },
 ]
 

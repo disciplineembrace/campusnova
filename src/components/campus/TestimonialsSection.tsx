@@ -79,7 +79,7 @@ export default function TestimonialsSection() {
               </div>
               <p className="text-sm text-foreground/80 leading-relaxed mb-4">&ldquo;{t.comment}&rdquo;</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-sm font-bold ring-2 ring-brand/10">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-sm font-bold ring-2 ring-brand/10">
                   {t.reviewer.name.charAt(0)}
                 </div>
                 <div>

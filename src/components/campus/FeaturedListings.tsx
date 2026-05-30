@@ -37,7 +37,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
   const listingImages = parseListingImages(listing.images)
   const conditionColor: Record<string, string> = {
     'Like New': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-    'Good': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    'Good': 'bg-brand/10 text-brand dark:bg-brand/20 dark:text-brand-light',
     'Fair': 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
     'Poor': 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
   }
@@ -132,7 +132,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
 
         <div className="flex items-center justify-between pt-3 border-t border-border">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-purple flex items-center justify-center text-white text-[10px] font-bold shrink-0 ring-2 ring-brand/10">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-brand to-accent flex items-center justify-center text-white text-[10px] font-bold shrink-0 ring-2 ring-brand/10">
               {listing.seller.name.charAt(0)}
             </div>
             <div className="min-w-0">
