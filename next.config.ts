@@ -3,17 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  output: 'standalone',
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  // Use webpack instead of Turbopack to avoid prerendering bugs
-  turbopack: false,
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', 'recharts'],
   },
+  staticPageGenerationTimeout: 120,
   async headers() {
     return [
       {
