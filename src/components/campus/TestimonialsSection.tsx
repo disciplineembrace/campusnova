@@ -54,7 +54,7 @@ export default function TestimonialsSection() {
             What Students <span className="gradient-text">Say</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Hear from students who saved thousands using CampusNova
+            Hear from students who saved thousands using EduCampusHub
           </p>
         </motion.div>
 

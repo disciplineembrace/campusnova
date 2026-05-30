@@ -3,7 +3,7 @@ import { hashPassword } from '@/lib/admin-auth'
 
 async function seedAdmin() {
   const adminEmail = 'disciplineembrace@gmail.com'
-  const defaultPassword = 'CampusNova@2024!'
+  const defaultPassword = 'EduCampusHub@2024!'
 
   try {
     // Check if admin already exists
@@ -49,7 +49,7 @@ async function seedAdmin() {
       await db.user.create({
         data: {
           email: adminEmail,
-          name: 'CampusNova Admin',
+          name: 'EduCampusHub Admin',
           isAdmin: true,
           adminRole: 'super_admin',
           passwordHash: hash,

@@ -34,7 +34,7 @@ export default function AppDownloadSection() {
                 <Smartphone className="w-4 h-4" /> Coming Soon on Play Store
               </div>
               <h2 className="text-3xl sm:text-4xl font-bold mb-4 font-heading text-white">
-                Get CampusNova on Your Phone
+                Get EduCampusHub on Your Phone
               </h2>
               <p className="text-white/70 max-w-lg mb-8 leading-relaxed">
                 Browse, buy and sell on the go. Get notified instantly when someone lists a book you need. Be the first to grab the best deals!
@@ -80,7 +80,7 @@ export default function AppDownloadSection() {
                   <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand to-purple flex items-center justify-center shadow-lg shadow-brand/30">
                     <Sparkles className="w-7 h-7 text-white" />
                   </div>
-                  <p className="text-sm font-bold text-white font-heading">CampusNova</p>
+                  <p className="text-sm font-bold text-white font-heading">EduCampusHub</p>
                   <p className="text-[10px] text-white/60">Coming to Play Store</p>
                   <div className="flex gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

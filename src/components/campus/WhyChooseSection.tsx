@@ -24,7 +24,7 @@ export default function WhyChooseSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3 font-heading">
-            Why Students <span className="gradient-text">Love CampusNova</span>
+            Why Students <span className="gradient-text">Love EduCampusHub</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Built by students, for students. Every feature designed to make your life easier.

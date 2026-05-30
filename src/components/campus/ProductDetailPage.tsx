@@ -331,7 +331,7 @@ export default function ProductDetailPage() {
 
                 <div className="flex gap-3">
                   <a
-                    href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
+                    href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on EduCampusHub`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1"
@@ -367,7 +367,7 @@ export default function ProductDetailPage() {
                   <div>
                     <p className="text-sm font-semibold text-foreground">Trust & Safety</p>
                     <p className="text-xs text-muted-foreground mt-1">
-                      Always meet in a public place. Check the book before paying. CampusNova never asks for payment directly.
+                      Always meet in a public place. Check the book before paying. EduCampusHub never asks for payment directly.
                     </p>
                   </div>
                 </div>

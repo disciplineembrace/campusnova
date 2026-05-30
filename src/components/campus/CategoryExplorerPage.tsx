@@ -102,7 +102,7 @@ export default function CategoryExplorerPage() {
             Explore <span className="gradient-text">Everything</span> for Students
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-            From school books to lab coats, calculators to handwritten notes — find it all on CampusNova
+            From school books to lab coats, calculators to handwritten notes — find it all on EduCampusHub
           </p>
 
           {/* Search */}

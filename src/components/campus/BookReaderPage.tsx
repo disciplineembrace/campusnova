@@ -39,7 +39,7 @@ export default function BookReaderPage() {
   const [pageBookmarks, setPageBookmarks] = useState<PageBookmark[]>(() => {
     if (typeof window === 'undefined') return []
     try {
-      const stored = localStorage.getItem(`campusnova-bookmarks-${bookId}`)
+      const stored = localStorage.getItem(`educampushub-bookmarks-${bookId}`)
       return stored ? JSON.parse(stored) : []
     } catch {
       return []
@@ -94,7 +94,7 @@ export default function BookReaderPage() {
   const savePageBookmarks = useCallback((newBookmarks: PageBookmark[]) => {
     setPageBookmarks(newBookmarks)
     try {
-      localStorage.setItem(`campusnova-bookmarks-${bookId}`, JSON.stringify(newBookmarks))
+      localStorage.setItem(`educampushub-bookmarks-${bookId}`, JSON.stringify(newBookmarks))
     } catch {
       // ignore
     }

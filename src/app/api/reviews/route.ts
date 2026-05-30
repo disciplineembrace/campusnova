@@ -6,7 +6,7 @@ const TESTIMONIALS = [
   {
     id: 'rev-1',
     rating: 5,
-    comment: 'Saved over ₹2000 on my engineering textbooks! The books were in great condition and the seller was very responsive on WhatsApp. Highly recommend CampusNova to every student.',
+    comment: 'Saved over ₹2000 on my engineering textbooks! The books were in great condition and the seller was very responsive on WhatsApp. Highly recommend EduCampusHub to every student.',
     reviewer: { name: 'Priya Sharma', college: 'IIT Delhi' },
   },
   {
@@ -36,7 +36,7 @@ const TESTIMONIALS = [
   {
     id: 'rev-6',
     rating: 5,
-    comment: 'As a CA student, finding affordable study material was always a challenge. CampusNova solved that! Got all my reference books at amazing prices.',
+    comment: 'As a CA student, finding affordable study material was always a challenge. EduCampusHub solved that! Got all my reference books at amazing prices.',
     reviewer: { name: 'Arjun Mehta', college: 'SRCC Delhi' },
   },
 ]

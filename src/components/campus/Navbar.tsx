@@ -72,7 +72,7 @@ export default function Navbar() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold text-foreground font-heading">
-                Campus<span className="gradient-text">Nova</span>
+                Edu<span className="gradient-text">CampusHub</span>
               </span>
             </motion.div>
 

@@ -128,7 +128,7 @@ function MobileBottomNav() {
   )
 }
 
-export default function CampusNova() {
+export default function EduCampusHub() {
   const { currentPage, darkMode } = useAppStore()
 
   useEffect(() => {

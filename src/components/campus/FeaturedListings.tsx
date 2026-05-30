@@ -141,7 +141,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
             </div>
           </div>
           <a
-            href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`}
+            href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on EduCampusHub`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}

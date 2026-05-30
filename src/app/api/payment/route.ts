@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
     if (existingPending) {
       // Return existing payment session
-      const upiUrl = `upi://pay?pa=${UPI_ID}&pn=CampusNova&am=${PAYMENT_AMOUNT}&cu=INR&tn=CampusNova+Upload+Credit`
+      const upiUrl = `upi://pay?pa=${UPI_ID}&pn=EduCampusHub&am=${PAYMENT_AMOUNT}&cu=INR&tn=EduCampusHub+Upload+Credit`
       const qrDataUrl = await QRCode.toDataURL(upiUrl, {
         width: 256,
         margin: 2,
@@ -117,7 +117,7 @@ export async function POST(request: Request) {
     })
 
     // Generate QR code
-    const upiUrl = `upi://pay?pa=${UPI_ID}&pn=CampusNova&am=${PAYMENT_AMOUNT}&cu=INR&tn=CampusNova+Upload+Credit`
+    const upiUrl = `upi://pay?pa=${UPI_ID}&pn=EduCampusHub&am=${PAYMENT_AMOUNT}&cu=INR&tn=EduCampusHub+Upload+Credit`
     const qrDataUrl = await QRCode.toDataURL(upiUrl, {
       width: 256,
       margin: 2,

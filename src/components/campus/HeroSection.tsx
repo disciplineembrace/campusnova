@@ -87,7 +87,7 @@ export default function HeroSection() {
           >
             <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-brand/10 text-brand text-sm font-medium mb-6 border border-brand/20">
               <Sparkles className="w-4 h-4" />
-              India&apos;s Premium Student Ecosystem
+              Buy • Sell • Exchange
             </div>
           </motion.div>
 

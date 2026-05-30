@@ -407,14 +407,14 @@ export default function SellProductPage() {
   // Save listing locally as fallback (when API is unreachable)
   const saveListingLocally = (listingData: Record<string, unknown>) => {
     try {
-      const localListings = JSON.parse(localStorage.getItem('campusnova-pending-listings') || '[]')
+      const localListings = JSON.parse(localStorage.getItem('educampushub-pending-listings') || '[]')
       localListings.push({
         ...listingData,
         id: listingData.id || generateId(),
         createdAt: new Date().toISOString(),
         pendingSync: true,
       })
-      localStorage.setItem('campusnova-pending-listings', JSON.stringify(localListings))
+      localStorage.setItem('educampushub-pending-listings', JSON.stringify(localListings))
     } catch {
       // Silently fail
     }
@@ -639,7 +639,7 @@ export default function SellProductPage() {
           </motion.div>
           <h2 className="text-2xl font-bold text-foreground mb-3 font-heading">Listing Created!</h2>
           <p className="text-muted-foreground mb-6">
-            Your product is now live on CampusNova. Students across India can find and contact you on WhatsApp.
+            Your product is now live on EduCampusHub. Students across India can find and contact you on WhatsApp.
           </p>
           <div className="bg-muted/50 rounded-xl p-4 mb-6 text-left">
             <div className="flex items-center gap-3 mb-2">
@@ -708,7 +708,7 @@ export default function SellProductPage() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
-            Sell on <span className="gradient-text">CampusNova</span>
+            Sell on <span className="gradient-text">EduCampusHub</span>
           </h1>
           <p className="text-muted-foreground">List your product in under 2 minutes and reach thousands of students across India</p>
 
@@ -1557,7 +1557,7 @@ export default function SellProductPage() {
 
                   {/* Submit note */}
                   <p className="text-xs text-muted-foreground text-center">
-                    By posting, you agree to CampusNova&apos;s Terms of Service and that your listing is authentic.
+                    By posting, you agree to EduCampusHub&apos;s Terms of Service and that your listing is authentic.
                   </p>
                 </motion.div>
               )}

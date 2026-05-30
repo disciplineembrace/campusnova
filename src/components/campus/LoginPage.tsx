@@ -65,9 +65,9 @@ export default function LoginPage() {
                 <Sparkles className="w-12 h-12 text-white" />
               </div>
             </motion.div>
-            <h2 className="text-3xl font-bold text-white mb-4 font-heading">Welcome to CampusNova</h2>
+            <h2 className="text-3xl font-bold text-white mb-4 font-heading">Welcome to EduCampusHub</h2>
             <p className="text-white/70 max-w-sm mx-auto mb-8 leading-relaxed">
-              India&apos;s premium student ecosystem. Buy & sell books directly with students.
+              Buy • Sell • Exchange — India&apos;s trusted student marketplace.
             </p>
 
             {/* Floating stats */}
@@ -105,15 +105,15 @@ export default function LoginPage() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-bold font-heading">
-                Campus<span className="gradient-text">Nova</span>
+                Edu<span className="gradient-text">CampusHub</span>
               </span>
             </div>
-            <p className="text-muted-foreground text-sm">India&apos;s premium student ecosystem</p>
+            <p className="text-muted-foreground text-sm">Buy • Sell • Exchange</p>
           </div>
 
           <div className="mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2 font-heading">
-              Welcome to <span className="gradient-text">CampusNova</span>
+              Welcome to <span className="gradient-text">EduCampusHub</span>
             </h1>
             <p className="text-muted-foreground">
               Login with your college email to start buying and selling

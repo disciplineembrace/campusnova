@@ -30,12 +30,12 @@ export default function TermsPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">1. Acceptance of Terms</h3>
-              <p>By accessing and using CampusNova, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our platform.</p>
+              <p>By accessing and using EduCampusHub, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our platform.</p>
             </section>
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">2. Eligibility</h3>
-              <p>You must be at least 16 years old and a current or former student of a recognized educational institution in India to use CampusNova. By using this platform, you represent that you meet these eligibility requirements.</p>
+              <p>You must be at least 16 years old and a current or former student of a recognized educational institution in India to use EduCampusHub. By using this platform, you represent that you meet these eligibility requirements.</p>
             </section>
 
             <section>
@@ -45,7 +45,7 @@ export default function TermsPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">4. Listings & Transactions</h3>
-              <p>CampusNova is a platform that connects buyers and sellers. We do not participate in the actual transaction between buyers and sellers. All transactions are conducted directly between users via WhatsApp or other communication channels. CampusNova is not responsible for the quality, safety, or legality of the items listed, the accuracy of listings, or the ability of sellers to sell items or buyers to pay for items.</p>
+              <p>EduCampusHub is a platform that connects buyers and sellers. We do not participate in the actual transaction between buyers and sellers. All transactions are conducted directly between users via WhatsApp or other communication channels. EduCampusHub is not responsible for the quality, safety, or legality of the items listed, the accuracy of listings, or the ability of sellers to sell items or buyers to pay for items.</p>
             </section>
 
             <section>
@@ -60,7 +60,7 @@ export default function TermsPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">7. Liability</h3>
-              <p>CampusNova provides the platform &ldquo;as is&rdquo; without any warranties. We are not liable for any damages arising from your use of the platform or from any transactions conducted through the platform. Users engage in transactions at their own risk.</p>
+              <p>EduCampusHub provides the platform &ldquo;as is&rdquo; without any warranties. We are not liable for any damages arising from your use of the platform or from any transactions conducted through the platform. Users engage in transactions at their own risk.</p>
             </section>
 
             <section>

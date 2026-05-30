@@ -104,7 +104,7 @@ export async function POST(request: Request) {
       console.error('Session creation error:', sessionError)
       // Fallback: create token without DB session (stateless)
       const { createHmac } = await import('crypto')
-      const JWT_SECRET = process.env.JWT_SECRET || 'campusnova-jwt-secret-2024-secure'
+      const JWT_SECRET = process.env.JWT_SECRET || 'educampushub-jwt-secret-2024-secure'
       const iat = Math.floor(Date.now() / 1000)
       const exp = iat + (4 * 60 * 60)
       const payload = { userId: user.id, email: user.email, role, iat, exp }

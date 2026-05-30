@@ -1,4 +1,4 @@
-# CampusNova - India's Premium Student Ecosystem
+# EduCampusHub - India's Premium Student Ecosystem
 # https://campusnova.in
 
 User-agent: Googlebot

@@ -30,7 +30,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">1. Information We Collect</h3>
-              <p>We collect information you provide directly to us, including your name, email address, phone number, college name, city, and WhatsApp number. We also collect information about your listings and transactions on CampusNova.</p>
+              <p>We collect information you provide directly to us, including your name, email address, phone number, college name, city, and WhatsApp number. We also collect information about your listings and transactions on EduCampusHub.</p>
             </section>
 
             <section>
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">5. Cookies</h3>
-              <p>We use cookies and similar technologies to improve your experience on CampusNova. These help us remember your preferences, keep you logged in, and understand how you use our platform.</p>
+              <p>We use cookies and similar technologies to improve your experience on EduCampusHub. These help us remember your preferences, keep you logged in, and understand how you use our platform.</p>
             </section>
 
             <section>
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">7. Children&apos;s Privacy</h3>
-              <p>CampusNova is not intended for children under 16. We do not knowingly collect personal information from children under 16. If we learn that we have collected information from a child under 16, we will take steps to delete it.</p>
+              <p>EduCampusHub is not intended for children under 16. We do not knowingly collect personal information from children under 16. If we learn that we have collected information from a child under 16, we will take steps to delete it.</p>
             </section>
 
             <section>

@@ -354,7 +354,7 @@ export default function ExplorePage() {
                           </div>
                           <p className="text-xs font-medium text-foreground truncate">{listing.seller.name}</p>
                         </div>
-                        <a href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on CampusNova`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
+                        <a href={`https://wa.me/91${listing.whatsappNumber}?text=Hi! I saw your listing "${listing.title}" on EduCampusHub`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}>
                           <Button size="sm" className="h-7 bg-emerald-500 hover:bg-emerald-600 text-white border-0 text-xs px-3 gap-1 rounded-full">
                             <MessageCircle className="w-3 h-3" /> Chat
                           </Button>

@@ -46,11 +46,11 @@ export default function Footer() {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold font-heading">
-                Campus<span className="gradient-text">Nova</span>
+                Edu<span className="gradient-text">CampusHub</span>
               </span>
             </div>
             <p className="text-sm text-blue-200/70 leading-relaxed mb-6 max-w-sm">
-              India&apos;s premium student ecosystem for buying and selling old books, notes, and study essentials directly with fellow students.
+              Buy • Sell • Exchange — India&apos;s trusted student marketplace for books, notes, and study essentials.
             </p>
             <div className="flex items-center gap-3">
               <a href="#" className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-brand/30 transition-all hover:shadow-lg hover:shadow-brand/10">
@@ -97,7 +97,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-blue-200/50">
-            © 2025 CampusNova. All rights reserved.
+            © 2025 EduCampusHub. All rights reserved.
           </p>
           <p className="text-xs text-blue-200/50 flex items-center gap-1">
             Made with <Heart className="w-3 h-3 text-red-400 fill-red-400" /> in India

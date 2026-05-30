@@ -326,7 +326,7 @@ export default function AdminClient({ admin: initialAdmin }: { admin: AdminInfo 
               <Shield className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-100">CampusNova</p>
+              <p className="text-sm font-bold text-slate-100">EduCampusHub</p>
               <p className="text-[10px] text-slate-500 uppercase tracking-wider">Control Panel</p>
             </div>
           </div>

@@ -27,13 +27,13 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "CampusNova - India's Premium Student Ecosystem Platform",
-    template: "%s | CampusNova",
+    default: "EduCampusHub — Buy • Sell • Exchange",
+    template: "%s | EduCampusHub",
   },
   description:
-    "Buy and sell old books, notes, and study essentials directly with students. India's most trusted student marketplace. Save up to 70% on textbooks for NEET, JEE, UPSC, and more.",
+    "Buy • Sell • Exchange — India's trusted student marketplace for books, notes, and study essentials. Save up to 70% on textbooks for NEET, JEE, UPSC, and more.",
   keywords: [
-    "CampusNova",
+    "EduCampusHub",
     "student marketplace",
     "buy books",
     "sell books",
@@ -59,9 +59,9 @@ export const metadata: Metadata = {
     "book exchange",
     "student community",
   ],
-  authors: [{ name: "CampusNova Team", url: "https://campusnova.in" }],
-  creator: "CampusNova",
-  publisher: "CampusNova",
+  authors: [{ name: "EduCampusHub Team", url: "https://campusnova.in" }],
+  creator: "EduCampusHub",
+  publisher: "EduCampusHub",
   formatDetection: {
     email: false,
     address: false,
@@ -72,11 +72,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "CampusNova - India's Premium Student Ecosystem",
+    title: "EduCampusHub — Buy • Sell • Exchange",
     description:
       "Buy & sell old books directly with students. Save up to 70% on textbooks for NEET, JEE, UPSC & more.",
     url: "https://campusnova.in",
-    siteName: "CampusNova",
+    siteName: "EduCampusHub",
     locale: "en_IN",
     type: "website",
     images: [
@@ -84,13 +84,13 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CampusNova - Student Marketplace",
+        alt: "EduCampusHub - Student Marketplace",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CampusNova - India's Premium Student Ecosystem",
+    title: "EduCampusHub — Buy • Sell • Exchange",
     description:
       "Buy & sell old books directly with students. Save up to 70% on textbooks.",
     images: ["/og-image.png"],

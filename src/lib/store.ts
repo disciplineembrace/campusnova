@@ -117,7 +117,7 @@ export const useAppStore = create<AppState>()(
       },
     }),
     {
-      name: 'campusnova-storage',
+      name: 'educampushub-storage',
       partialize: (state) => ({
         currentUser: state.currentUser,
         darkMode: state.darkMode,
