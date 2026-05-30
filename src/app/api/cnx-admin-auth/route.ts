@@ -1,11 +1,34 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
+import { getNeonSql } from '@/lib/db'
 import { createAdminSession, verifyPassword, hashPassword, validatePasswordStrength, type AdminRole } from '@/lib/admin-auth'
 
 // Rate limiting in-memory (production would use Redis)
 const loginAttempts = new Map<string, { count: number; lastAttempt: number }>()
 const MAX_ATTEMPTS = 5
-const LOCKOUT_DURATION = 15 * 60 * 1000 // 15 minutes
+const LOCKOUT_DURATION = 15 * 60 * 1000
+
+/**
+ * Helper: Find admin user by email using Neon HTTP driver
+ */
+async function findAdminUser(email: string) {
+  const sql = getNeonSql()
+  const users = await sql`
+    SELECT id, email, name, "isAdmin", "isBanned", "passwordHash", "mustChangePassword", "adminRole"
+    FROM "User" WHERE email = ${email} LIMIT 1
+  `
+  return users?.[0] || null
+}
+
+/**
+ * Helper: Update user password using Neon HTTP driver
+ */
+async function updateUserPassword(userId: string, newHash: string) {
+  const sql = getNeonSql()
+  await sql`
+    UPDATE "User" SET "passwordHash" = ${newHash}, "mustChangePassword" = false, "updatedAt" = CURRENT_TIMESTAMP
+    WHERE id = ${userId}
+  `
+}
 
 // POST - Admin login with email + password
 export async function POST(request: Request) {
@@ -20,7 +43,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
       }
 
-      const user = await db.user.findUnique({ where: { email } })
+      const user = await findAdminUser(email)
       if (!user || !user.isAdmin || !user.passwordHash) {
         return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
       }
@@ -36,13 +59,7 @@ export async function POST(request: Request) {
       }
 
       const newHash = await hashPassword(newPassword)
-      await db.user.update({
-        where: { id: user.id },
-        data: {
-          passwordHash: newHash,
-          mustChangePassword: false,
-        }
-      })
+      await updateUserPassword(user.id, newHash)
 
       return NextResponse.json({ success: true, message: 'Password changed successfully' })
     }
@@ -66,10 +83,10 @@ export async function POST(request: Request) {
       loginAttempts.delete(ip)
     }
 
-    // Step 1: Find admin user by email
+    // Find admin user by email
     let user
     try {
-      user = await db.user.findUnique({ where: { email } })
+      user = await findAdminUser(email)
     } catch (dbError) {
       console.error('DB lookup error:', dbError)
       return NextResponse.json({ error: 'Service temporarily unavailable' }, { status: 503 })
@@ -81,9 +98,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
-    // Step 2: Verify password with bcrypt
+    // Verify password with bcrypt
     if (!user.passwordHash) {
-      // Admin has no password set yet - shouldn't happen but handle gracefully
       return NextResponse.json({ error: 'Account not configured. Contact super admin.' }, { status: 403 })
     }
 
@@ -94,7 +110,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
-    // Step 3: Create session token
+    // Create session token
     const role = (user.adminRole || 'support_admin') as AdminRole
     let token
     try {
@@ -134,7 +150,7 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       path: '/cnx-admin-panel',
-      maxAge: 4 * 60 * 60, // 4 hours
+      maxAge: 4 * 60 * 60,
     })
 
     return response
