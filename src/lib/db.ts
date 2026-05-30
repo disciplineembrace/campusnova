@@ -1,6 +1,4 @@
-import { PrismaNeon } from '@prisma/adapter-neon'
 import { PrismaClient } from '@prisma/client'
-import { neon } from '@neondatabase/serverless'
 import { config } from 'dotenv'
 import { resolve } from 'path'
 
@@ -28,32 +26,18 @@ if (!process.env.DATABASE_URL || !process.env.DATABASE_URL.startsWith('postgresq
   console.error('ERROR: DATABASE_URL is not properly configured. Current value:', process.env.DATABASE_URL?.substring(0, 30))
 }
 
-// Create Prisma client with Neon serverless adapter for better Vercel compatibility
-// Falls back to standard PrismaClient if Neon adapter isn't available
-function createPrismaClient(): PrismaClient {
-  const databaseUrl = process.env.DATABASE_URL
-  
-  // Try to use Neon serverless adapter for HTTP-based connections (better for serverless)
-  if (databaseUrl && databaseUrl.includes('neon.tech')) {
-    try {
-      const sql = neon(databaseUrl)
-      const adapter = new PrismaNeon(sql)
-      return new PrismaClient({
-        adapter,
-        log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-      })
-    } catch (adapterError) {
-      console.warn('Neon adapter failed, falling back to standard PrismaClient:', adapterError)
-      // Fall through to standard client
-    }
-  }
-  
-  // Standard PrismaClient for non-Neon databases or as fallback
-  return new PrismaClient({
+// Use standard PrismaClient with connection pooling for Neon
+// The Prisma engine handles Neon connections natively with the pooled connection string
+export const db =
+  globalForPrisma.prisma ??
+  new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+    // Increase connection timeout for Neon cold starts
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
   })
-}
-
-export const db = globalForPrisma.prisma ?? createPrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
