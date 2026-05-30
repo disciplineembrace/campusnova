@@ -70,7 +70,7 @@ export default function PrivacyPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">9. Contact</h3>
-              <p>If you have questions about this Privacy Policy, please contact us at privacy@campusnova.in</p>
+              <p>If you have questions about this Privacy Policy, please contact us at privacy@educampushub.in</p>
             </section>
           </div>
         </motion.div>

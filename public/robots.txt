@@ -1,5 +1,5 @@
 # EduCampusHub — India's Student Marketplace
-# https://campusnova-beta.vercel.app
+# https://educampushub-beta.vercel.app
 
 User-agent: Googlebot
 Allow: /
@@ -39,4 +39,4 @@ Disallow: /.env
 Disallow: /.git
 
 # Sitemaps
-Sitemap: https://campusnova-beta.vercel.app/sitemap.xml
+Sitemap: https://educampushub-beta.vercel.app/sitemap.xml

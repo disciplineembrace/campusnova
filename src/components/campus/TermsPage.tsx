@@ -70,7 +70,7 @@ export default function TermsPage() {
 
             <section>
               <h3 className="text-lg font-semibold text-foreground mb-2">9. Contact</h3>
-              <p>For questions about these Terms, please contact us at support@campusnova.in</p>
+              <p>For questions about these Terms, please contact us at support@educampushub.in</p>
             </section>
           </div>
         </motion.div>
