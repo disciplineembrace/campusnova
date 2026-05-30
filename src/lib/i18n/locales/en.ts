@@ -719,11 +719,29 @@ export const translations: Record<string, unknown> = {
       highlight: 'EduCampusHub',
     },
     subheading: 'Login with your college email to start buying and selling',
+    tabs: {
+      login: 'Login',
+      register: 'Register',
+    },
     label: {
       collegeEmail: 'College Email',
+      name: 'Full Name',
+      password: 'Password',
+      confirmPassword: 'Confirm Password',
+      phone: 'Phone (Optional)',
     },
     placeholder: {
       email: 'you@college.ac.in',
+      name: 'Enter your full name',
+      password: 'Enter your password',
+      confirmPassword: 'Confirm your password',
+      phone: '+91 XXXXX XXXXX',
+    },
+    button: {
+      login: 'Login',
+      register: 'Create Account',
+      loggingIn: 'Logging in...',
+      registering: 'Creating Account...',
     },
     continueButton: 'Continue',
     loggingIn: 'Logging in...',
@@ -732,7 +750,23 @@ export const translations: Record<string, unknown> = {
     error: {
       loginFailed: 'Login failed',
       wentWrong: 'Something went wrong. Please try again.',
+      emailRequired: 'Email is required',
+      passwordRequired: 'Password is required',
+      nameRequired: 'Name is required',
+      invalidEmail: 'Please enter a valid email',
+      passwordTooShort: 'Password must be at least 8 characters',
+      passwordWeak: 'Password must include uppercase, lowercase, number, and special character',
+      passwordMismatch: 'Passwords do not match',
+      emailExists: 'An account with this email already exists',
+      invalidCredentials: 'Invalid email or password',
+      accountBanned: 'This account has been banned',
     },
+    success: {
+      registered: 'Account created successfully!',
+    },
+    noAccount: "Don't have an account?",
+    hasAccount: 'Already have an account?',
+    forgotPassword: 'Forgot password?',
   },
 
   // ===================== MOBILE NAV (page.tsx) =====================
